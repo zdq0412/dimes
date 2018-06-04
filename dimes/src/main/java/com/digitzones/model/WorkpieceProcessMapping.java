@@ -25,6 +25,10 @@ public class WorkpieceProcessMapping {
 	private String unit;
 	/**备注*/
 	private String note;
+	/**上线*/
+	private Float upLine;
+	/**下线*/
+	private Float LowLine;
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
@@ -60,5 +64,17 @@ public class WorkpieceProcessMapping {
 	}
 	public void setNote(String note) {
 		this.note = note;
+	}
+	public Float getUpLine() {
+		return upLine;
+	}
+	public void setUpLine(Float upLine) {
+		this.upLine = upLine;
+	}
+	public Float getLowLine() {
+		return LowLine;
+	}
+	public void setLowLine(Float lowLine) {
+		LowLine = lowLine;
 	}
 }

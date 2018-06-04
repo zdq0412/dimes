@@ -17,8 +17,8 @@ public class Workpiece extends CommonModel {
 	private String unitType;
 	/**版本号*/
 	private String version;
-	/**设计号*/
-	private String designNo;
+	/**图号*/
+	private String raphNumber;
 	/**客户图号*/
 	private String customerGraphNumber;
 	/**计量单位*/
@@ -37,11 +37,12 @@ public class Workpiece extends CommonModel {
 	public void setVersion(String version) {
 		this.version = version;
 	}
-	public String getDesignNo() {
-		return designNo;
+	
+	public String getRaphNumber() {
+		return raphNumber;
 	}
-	public void setDesignNo(String designNo) {
-		this.designNo = designNo;
+	public void setRaphNumber(String raphNumber) {
+		this.raphNumber = raphNumber;
 	}
 	public String getCustomerGraphNumber() {
 		return customerGraphNumber;

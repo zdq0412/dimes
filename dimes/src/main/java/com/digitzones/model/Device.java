@@ -38,7 +38,10 @@ public class Device extends CommonModel {
 	private Boolean bottleneck;
 	/**目标OEE*/
 	private Float goalOee;
-	/**参数取值*/
+	/**参数取值
+	 * 固定值
+	 * 变动值
+	 * */
 	private String parameterValueType;
 	/**设备类别*/
 	private DeviceType deviceType;

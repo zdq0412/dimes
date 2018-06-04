@@ -1,12 +1,9 @@
 package com.digitzones.model;
 
 import java.util.Date;
-import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -34,10 +31,14 @@ public class Equipment extends CommonModel {
 	private Float measurementObjective;
 	/**计量类型*/
 	private Float measurementType;
+	/**计量累积*/
+	private Float cumulation;
+	/**计量差异*/
+	private Float measurementDifference;
 	/**装备类型*/
 	private EquipmentType equipmentType;
-	/**设备*/
-	private Set<Device> devices;
+	/**装备图片*/
+	private String pic;
 	public String getUnitType() {
 		return unitType;
 	}
@@ -89,14 +90,23 @@ public class Equipment extends CommonModel {
 	public void setEquipmentType(EquipmentType equipmentType) {
 		this.equipmentType = equipmentType;
 	}
-	@ManyToMany(targetEntity=Device.class)
-	@JoinTable(name="EQUIPMENT_DEVICE",
-	joinColumns= {@JoinColumn(name="EQUIPMENT_ID")},
-	inverseJoinColumns= {@JoinColumn(name="DEVICE_ID")})
-	public Set<Device> getDevices() {
-		return devices;
+	public Float getCumulation() {
+		return cumulation;
 	}
-	public void setDevices(Set<Device> devices) {
-		this.devices = devices;
+	public void setCumulation(Float cumulation) {
+		this.cumulation = cumulation;
 	}
+	public Float getMeasurementDifference() {
+		return measurementDifference;
+	}
+	public void setMeasurementDifference(Float measurementDifference) {
+		this.measurementDifference = measurementDifference;
+	}
+	public String getPic() {
+		return pic;
+	}
+	public void setPic(String pic) {
+		this.pic = pic;
+	}
+	
 }
