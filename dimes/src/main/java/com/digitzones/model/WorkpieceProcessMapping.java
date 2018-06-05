@@ -21,14 +21,6 @@ public class WorkpieceProcessMapping {
 	private Workpiece workpiece;
 	/**工序*/
 	private Processes process;
-	/**单位*/
-	private String unit;
-	/**备注*/
-	private String note;
-	/**上线*/
-	private Float upLine;
-	/**下线*/
-	private Float LowLine;
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
@@ -52,29 +44,5 @@ public class WorkpieceProcessMapping {
 	}
 	public void setProcess(Processes process) {
 		this.process = process;
-	}
-	public String getUnit() {
-		return unit;
-	}
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
-	public String getNote() {
-		return note;
-	}
-	public void setNote(String note) {
-		this.note = note;
-	}
-	public Float getUpLine() {
-		return upLine;
-	}
-	public void setUpLine(Float upLine) {
-		this.upLine = upLine;
-	}
-	public Float getLowLine() {
-		return LowLine;
-	}
-	public void setLowLine(Float lowLine) {
-		LowLine = lowLine;
 	}
 }

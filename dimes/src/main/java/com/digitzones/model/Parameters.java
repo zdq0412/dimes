@@ -1,8 +1,6 @@
 package com.digitzones.model;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
 /**
  * 参数
  * @author zdq

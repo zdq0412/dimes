@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 /**
- * 站点关联设备
+ * 站点关联装备
  * @author zdq
  * 2018年6月4日
  */
@@ -32,6 +32,14 @@ public class EquipmentDeviceSiteMapping {
 	private Date mappingDate;
 	/**设备序号，具体设备的 编号*/
 	private String deviceNo;
+	/**使用频次*/
+	private Float usageRate;
+	public Float getUsageRate() {
+		return usageRate;
+	}
+	public void setUsageRate(Float usageRate) {
+		this.usageRate = usageRate;
+	}
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
