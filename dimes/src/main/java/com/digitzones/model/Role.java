@@ -41,6 +41,8 @@ public class Role {
 	private Date modifyDate;
 	/**对应权限*/
 	private Set<Power> powers;
+	/**该角色可操作的功能模块*/
+	private Set<Module> modules;
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
@@ -115,5 +117,14 @@ public class Role {
 	public void setPowers(Set<Power> powers) {
 		this.powers = powers;
 	}
-	
+	@ManyToMany(targetEntity=Module.class)
+	@JoinTable(name="ROLE_Module",
+	joinColumns= {@JoinColumn(name="ROLE_ID")},
+	inverseJoinColumns= {@JoinColumn(name="Module_ID")})
+	public Set<Module> getModules() {
+		return modules;
+	}
+	public void setModules(Set<Module> modules) {
+		this.modules = modules;
+	}
 }

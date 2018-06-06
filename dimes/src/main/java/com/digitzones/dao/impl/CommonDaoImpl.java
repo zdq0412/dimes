@@ -14,7 +14,7 @@ import com.digitzones.dao.ICommonDao;
 import com.digitzones.model.Pager;
 @SuppressWarnings("deprecation")
 @Repository
-public class CommonDaoImpl<T> implements ICommonDao<T> {
+public abstract class CommonDaoImpl<T> implements ICommonDao<T> {
 	private Class<T> clazz; 
 	private HibernateTemplate hibernateTemplate;
 	public HibernateTemplate getHibernateTemplate() {
@@ -23,8 +23,8 @@ public class CommonDaoImpl<T> implements ICommonDao<T> {
 	public CommonDaoImpl(Class<T> clazz) {
 		this.clazz = clazz;
 	}
-	public CommonDaoImpl() {
-	}
+/*	public CommonDaoImpl() {
+	}*/
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		hibernateTemplate = new HibernateTemplate(sessionFactory);
