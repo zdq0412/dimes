@@ -16,7 +16,7 @@ public class Pager<T> {
 	    private List<T> data;//当前页存放的记录
 
 	    public Pager(){
-	        this(0,0,DEFAULT_PAGE_SIZED,new ArrayList<T>());
+	        this(0,DEFAULT_PAGE_SIZED,0,new ArrayList<T>());
 	    }
 
 	    public Pager(int start, int pageSize, long totalCount, List<T> data) {

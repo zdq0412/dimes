@@ -29,7 +29,7 @@ public class ModuleTest {
 		
 		Module son1 = new Module();
 		son1.setParent(parent1);
-		son1.setName("生产单元");
+		son1.setName("生产工单");
 		son1.setLeaf(true);
 		moduleService.addModule(son1);
 		
@@ -244,6 +244,7 @@ public class ModuleTest {
 		basicSon11.setParent(basicSon1);
 		basicSon11.setName("组织结构");
 		basicSon11.setLeaf(true);
+		basicSon11.setUrl("console/jsp/org.jsp");
 		moduleService.addModule(basicSon11);
 		
 		Module basicSon12 = new Module();

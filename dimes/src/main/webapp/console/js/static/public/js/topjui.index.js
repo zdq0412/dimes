@@ -421,7 +421,7 @@ function generateMenu(menuId, systemName) {
                             lines: false,
                             animate: true,
                             onBeforeExpand: function (node, param) {
-                               // $("#tree" + e.id).tree('options').url = url + "?pid="+node.id;
+                               $("#tree" + e.id).tree('options').url = e.url;
                             },
                             onClick: function (node) {
                                 if (node.url) {

@@ -29,6 +29,14 @@ public class Module {
 	private Boolean disabled = false;
 	/**是否为叶子节点*/
 	private Boolean leaf = false;
+	/**优先级*/
+	private Integer priority;
+	public Integer getPriority() {
+		return priority;
+	}
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
 	public Boolean getLeaf() {
 		return leaf;
 	}

@@ -1,10 +1,15 @@
 package com.digitzones.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * 部门实体
  * @author zdq
@@ -16,8 +21,20 @@ public class Department extends CommonModel {
 	private static final long serialVersionUID = 1L;
 	/**父部门*/
 	private Department parent;
-	@ManyToOne(fetch=FetchType.EAGER)
+	/**
+	 * 子部门
+	 */
+	private List<Department> children;
+	@OneToMany(fetch=FetchType.EAGER,mappedBy="parent")
+	public List<Department> getChildren() {
+		return children;
+	}
+	public void setChildren(List<Department> children) {
+		this.children = children;
+	}
+	@ManyToOne
 	@JoinColumn(name="PARENT_ID")
+	@JsonIgnore
 	public Department getParent() {
 		return parent;
 	}

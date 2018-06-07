@@ -26,7 +26,7 @@ public class CommonModel implements Serializable {
 	/**备注*/
 	protected String note;
 	/**是否停用*/
-	protected Boolean disabled ;
+	protected Boolean disabled = false;
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
