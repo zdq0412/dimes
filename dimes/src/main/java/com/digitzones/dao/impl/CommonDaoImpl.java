@@ -74,14 +74,14 @@ public abstract class CommonDaoImpl<T> implements ICommonDao<T> {
 		return (List<T>) this.hibernateTemplate.find(hql, values);
 	}
 	@Override
-	public T findSingleByProperty(String property, String value) {
+	public T findSingleByProperty(String property, Object value) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(clazz);
 		criteria.add(Restrictions.eq(property, value));
 		List<T> list = findByCriteria(criteria);
 		return (list!=null &&list.size()>0)?list.get(0):null;
 	}
 	@Override
-	public List<T> findListByProperty(String property, String value) {
+	public List<T> findListByProperty(String property, Object value) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(clazz);
 		criteria.add(Restrictions.eq(property, value));
 		List<T> list = findByCriteria(criteria);

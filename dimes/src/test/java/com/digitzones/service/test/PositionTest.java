@@ -7,18 +7,24 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.digitzones.model.Department;
 import com.digitzones.model.Position;
+import com.digitzones.service.IDepartmentService;
 import com.digitzones.service.IPositionService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations= {"classpath*:springContext-*.xml"})
 public class PositionTest {
 	private IPositionService positionService;
+	private IDepartmentService departmentService;
+	@Autowired
+	public void setDepartmentService(IDepartmentService departmentService) {
+		this.departmentService = departmentService;
+	}
 	@Autowired
 	public void setPositionService(IPositionService positionService) {
 		this.positionService = positionService;
 	}
 	@Test
 	public void testAddPosition() {
-		Department d = new Department();
+		Department d = departmentService.queryDepartmentByProperty("name","研发部一");
 		d.setId(58l);
 		
 		Position p0 = new Position();

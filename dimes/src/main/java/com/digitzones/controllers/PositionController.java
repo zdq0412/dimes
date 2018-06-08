@@ -36,9 +36,10 @@ public class PositionController {
 	 * @param page
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/queryPositionsByDepartmentId.do")
 	@ResponseBody
-	public ModelMap queryPositionsByDepartmentId(@RequestParam("deptId")Long deptId,@RequestParam(defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
+	public ModelMap queryPositionsByDepartmentId(@RequestParam("id")Long deptId,@RequestParam(defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
 		Pager<Position> pager = positionService.queryObjs("select p from Position p inner join p.department d where d.id=?0", page, rows,new Object[] {deptId});
 		ModelMap mm = new ModelMap();
 		mm.addAttribute("rows",pager.getData());

@@ -38,4 +38,19 @@ public class DepartmentServiceImpl implements IDepartmentService {
 	public Pager queryObjs(String hql, int pageNo, int pageSize, Object... values) {
 		return departmentDao.findByPage(hql, pageNo, pageSize, values);
 	}
+
+	@Override
+	public Department queryDepartmentById(Serializable id) {
+		return departmentDao.findById(id);
+	}
+
+	@Override
+	public Department queryDepartmentByProperty(String name, Object value) {
+		return departmentDao.findSingleByProperty(name, value);
+	}
+
+	@Override
+	public List<Department> queryAllDepartments() {
+		return departmentDao.findAll();
+	}
 }

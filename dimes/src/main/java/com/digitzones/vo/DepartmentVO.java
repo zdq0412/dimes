@@ -19,6 +19,13 @@ public class DepartmentVO {
 	private Set children;
 	private Department parent;
 	private String code;
+	private Boolean disabled;
+	public Boolean getDisabled() {
+		return disabled;
+	}
+	public void setDisabled(Boolean disabled) {
+		this.disabled = disabled;
+	}
 	public String getCode() {
 		return code;
 	}

@@ -28,5 +28,23 @@ public interface IDepartmentService extends ICommonService<Department>{
 	 * @return
 	 */
 	public Serializable addDepartment(Department department);
+	/**
+	 * 根据id查找部门
+	 * @param id
+	 * @return
+	 */
+	public Department queryDepartmentById(Serializable id);
+	/**
+	 * 根据属性名称查找部门信息
+	 * @param name
+	 * @param value
+	 * @return
+	 */
+	public Department queryDepartmentByProperty(String name,Object value);
+	/**
+	 * 查询所有部门信息
+	 * @return
+	 */
+	public List<Department> queryAllDepartments();
 	
 }

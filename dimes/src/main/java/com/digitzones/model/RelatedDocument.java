@@ -32,6 +32,10 @@ public class RelatedDocument {
 	private Long relatedId;
 	/**存储路径*/
 	private String path;
+	/**上传人id*/
+	private Long uploadUserId;
+	/**上传人姓名*/
+	private String uploadUsername;
 	public String getPath() {
 		return path;
 	}
@@ -88,5 +92,17 @@ public class RelatedDocument {
 	}
 	public void setRelatedId(Long relatedId) {
 		this.relatedId = relatedId;
+	}
+	public Long getUploadUserId() {
+		return uploadUserId;
+	}
+	public void setUploadUserId(Long uploadUserId) {
+		this.uploadUserId = uploadUserId;
+	}
+	public String getUploadUsername() {
+		return uploadUsername;
+	}
+	public void setUploadUsername(String uploadUsername) {
+		this.uploadUsername = uploadUsername;
 	}
 }
