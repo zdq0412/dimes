@@ -17,6 +17,7 @@
     <link type="text/css" href="console/js/topjui/themes/default/topjui.black.css" rel="stylesheet" id="dynamicTheme"/>
     <!-- FontAwesome字体图标 -->
     <link type="text/css" href="console/js/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+      <link type="text/css" href="console/js/static/plugins/layui/css/layui.css" rel="stylesheet"/>
     <!-- jQuery相关引用 -->
     <script type="text/javascript" src="console/js/static/plugins/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="console/js/static/plugins/jquery/jquery.cookie.js"></script>
@@ -26,6 +27,8 @@
     <script type="text/javascript" src="console/js/topjui/js/topjui.core.min.js"></script>
     <!-- TopJUI中文支持 -->
     <script type="text/javascript" src="console/js/topjui/js/locale/topjui.lang.zh_CN.js"></script>
+    <!-- layui框架js -->
+    <script type="text/javascript" src="console/js/static/plugins/layui/layui.js" charset="utf-8"></script>
     <!-- 首页js -->
     <script type="text/javascript" src="console/js/static/public/js/topjui.index.js" charset="utf-8"></script>
     <script type="text/javascript">

@@ -28,6 +28,16 @@ public class RelatedDocument {
 	private Date uploadDate;
 	/**关联的类型，如：部门，参数，生产单元等，参照常量声明部分*/
 	private String relatedType;
+	/**关联对象的ID*/
+	private Long relatedId;
+	/**存储路径*/
+	private String path;
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
@@ -72,5 +82,11 @@ public class RelatedDocument {
 	}
 	public void setUploadDate(Date uploadDate) {
 		this.uploadDate = uploadDate;
+	}
+	public Long getRelatedId() {
+		return relatedId;
+	}
+	public void setRelatedId(Long relatedId) {
+		this.relatedId = relatedId;
 	}
 }

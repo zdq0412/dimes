@@ -4,13 +4,14 @@
 </head>
 <body>
 <div data-toggle="topjui-layout" data-options="fit:true">
-    <div data-options="region:'west',title:'',split:true,border:false,width:'20%',iconCls:'fa fa-sitemap',headerCls:'border_right',bodyCls:'border_right'">
+    <div data-options="region:'west',title:'',split:true,border:false,width:'15%',iconCls:'fa fa-sitemap',headerCls:'border_right',bodyCls:'border_right'">
         <!-- treegrid表格 -->
         <table data-toggle="topjui-treegrid"
                data-options="id:'orgnizationDatagrid',
 			   idField:'id',
 			   treeField:'name',
 			   fitColumns:true,
+			   fit:true,
 			   singleSelect:true,
 			   url:'department/queryTopDepartments.do',
 			   childGrid:{
@@ -22,7 +23,7 @@
             <thead>
             <tr>
                <!--  <th data-options="field:'id',title:'id',checkbox:true"></th> -->
-                <th data-options="field:'name',title:'机构名称'"></th>
+                <th data-options="field:'name',width:'100%',title:'机构名称'"></th>
             </tr>
             </thead>
         </table>
@@ -91,7 +92,7 @@
                     <div title="岗位信息" data-options="id:'tab0',iconCls:'fa fa-th'">
                         <!-- datagrid表格 -->
                         <table data-toggle="topjui-datagrid"
-                               data-options="id:'southTab0',
+                               data-options="id:'position',
                                initCreate: false,
                                fitColumns:true,
 						       url:'position/queryPositionsByDepartmentId.do'">
@@ -132,7 +133,7 @@
                     <div title="相关文档" data-options="id:'tab1',iconCls:'fa fa-th'">
                         <!-- datagrid表格 -->
                         <table data-toggle="topjui-datagrid"
-                               data-options="id:'southTab1',
+                               data-options="id:'relateDoc',
                                initCreate: false,
                                fitColumns:true,
 						       url:remoteHost+'/ucenter/user/getPageSet?type=1'">
@@ -168,7 +169,7 @@
     </div>
 </div>
 
-<!-- 表格工具栏开始 -->
+<!-- 部门表格工具栏开始 -->
 <div id="userDg-toolbar" class="topjui-toolbar"
      data-options="grid:{
            type:'datagrid',
@@ -191,7 +192,6 @@
        data-options="method: 'openDialog',
             extend: '#userDg-toolbar',
             iconCls: 'fa fa-pencil',
-            btnCls: 'topjui-btn-green',
             grid: {
                 type: 'datagrid',
                 id: 'userDg'
@@ -215,21 +215,151 @@
        data-toggle="topjui-menubutton"
        data-options="method:'doAjax',
        extend: '#userDg-toolbar',
-       btnCls:'topjui-btn-brown',
        iconCls:'fa fa-trash',
        url:_ctx + '/json/response/success.json',
        grid: {uncheckedMsg:'请先勾选要删除的数据',param:'uuid:uuid,code:code'}">删除</a>
-    <a href="javascript:void(0)"
+<!--     <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
        data-options="method:'filter',
-       extend: '#userDg-toolbar',
-       btnCls:'topjui-btn-black'">过滤</a>
+       extend: '#userDg-toolbar'
+       ">过滤</a>
     <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
        data-options="method:'search',
-       extend: '#userDg-toolbar',
-       btnCls:'topjui-btn-blue'">查询</a>
+       extend: '#userDg-toolbar'">查询</a> -->
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'search',
+       extend: '#userDg-toolbar'">停用</a>
     </div>
-<!-- 表格工具栏结束 -->
+<!-- 部门表格工具栏结束 -->
+<!-- 职位表格工具栏开始 -->
+<div id="position-toolbar" class="topjui-toolbar"
+     data-options="grid:{
+           type:'datagrid',
+           id:'position'
+       }">
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'openDialog',
+       extend: '#position-toolbar',
+       iconCls: 'fa fa-plus',
+       dialog:{
+           id:'userAddDialog',
+           href:_ctx + '/html/complex/dialog_add.html',
+           buttonsGroup:[
+               {text:'保存',url:_ctx + '/json/response/success.json',iconCls:'fa fa-plus',handler:'ajaxForm',btnCls:'topjui-btn-brown'}
+           ]
+       }">新增</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method: 'openDialog',
+            extend: '#position-toolbar',
+            iconCls: 'fa fa-pencil',
+            grid: {
+                type: 'datagrid',
+                id: 'userDg'
+            },
+            dialog: {
+                width: 950,
+                height: 500,
+                href: _ctx + '/html/complex/user_edit.html?uuid={uuid}',
+                url: _ctx + '/json/product/detail.json?uuid={uuid}',
+                buttonsGroup: [
+                    {
+                        text: '更新',
+                        url: _ctx + '/json/response/success.json',
+                        iconCls: 'fa fa-save',
+                        handler: 'ajaxForm',
+                        btnCls: 'topjui-btn-green'
+                    }
+                ]
+            }">编辑</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'doAjax',
+       extend: '#position-toolbar',
+       iconCls:'fa fa-trash',
+       url:_ctx + '/json/response/success.json',
+       grid: {uncheckedMsg:'请先勾选要删除的数据',param:'uuid:uuid,code:code'}">删除</a>
+<!--     <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'filter',
+       extend: '#userDg-toolbar'
+       ">过滤</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'search',
+       extend: '#userDg-toolbar'">查询</a> -->
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'search',
+       extend: '#position-toolbar'">停用</a>
+    </div>
+<!-- 职位表格工具栏结束 -->
+<!-- 相关文档表格工具栏开始 -->
+<div id="relateDoc-toolbar" class="topjui-toolbar"
+     data-options="grid:{
+           type:'datagrid',
+           id:'relateDoc'
+       }">
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'openDialog',
+       extend: '#relateDoc-toolbar',
+       iconCls: 'fa fa-plus',
+       dialog:{
+           id:'userAddDialog',
+           href:_ctx + '/html/complex/dialog_add.html',
+           buttonsGroup:[
+               {text:'保存',url:_ctx + '/json/response/success.json',iconCls:'fa fa-plus',handler:'ajaxForm',btnCls:'topjui-btn-brown'}
+           ]
+       }">新增</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method: 'openDialog',
+            extend: '#relateDoc-toolbar',
+            iconCls: 'fa fa-pencil',
+            grid: {
+                type: 'datagrid',
+                id: 'userDg'
+            },
+            dialog: {
+                width: 950,
+                height: 500,
+                href: _ctx + '/html/complex/user_edit.html?uuid={uuid}',
+                url: _ctx + '/json/product/detail.json?uuid={uuid}',
+                buttonsGroup: [
+                    {
+                        text: '更新',
+                        url: _ctx + '/json/response/success.json',
+                        iconCls: 'fa fa-save',
+                        handler: 'ajaxForm',
+                        btnCls: 'topjui-btn-green'
+                    }
+                ]
+            }">编辑</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'doAjax',
+       extend: '#relateDoc-toolbar',
+       iconCls:'fa fa-trash',
+       url:_ctx + '/json/response/success.json',
+       grid: {uncheckedMsg:'请先勾选要删除的数据',param:'uuid:uuid,code:code'}">删除</a>
+<!--     <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'filter',
+       extend: '#userDg-toolbar'
+       ">过滤</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'search',
+       extend: '#userDg-toolbar'">查询</a> -->
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'search',
+       extend: '#relateDoc-toolbar'">停用</a>
+    </div>
+<!-- 相关文档表格工具栏结束 -->
 </body>
 </html>
