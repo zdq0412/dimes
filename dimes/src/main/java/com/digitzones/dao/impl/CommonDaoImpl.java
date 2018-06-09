@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.digitzones.dao.ICommonDao;
 import com.digitzones.model.Pager;
 @SuppressWarnings("deprecation")
-@Repository
+@Repository("commonDaoImpl")
 public abstract class CommonDaoImpl<T> implements ICommonDao<T> {
 	private Class<T> clazz; 
 	private HibernateTemplate hibernateTemplate;
@@ -129,7 +129,8 @@ public abstract class CommonDaoImpl<T> implements ICommonDao<T> {
 	}
 	@Override
 	public Long findCount(String hql, Object... values) {
-		return null;
+		String h = "select count(*) " + hql;
+		return (Long) this.hibernateTemplate.find(h, values).get(0);
 	}
 	@SuppressWarnings({"unchecked" })
 	@Override

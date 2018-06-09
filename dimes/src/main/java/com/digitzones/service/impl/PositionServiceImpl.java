@@ -11,7 +11,7 @@ import com.digitzones.model.Pager;
 import com.digitzones.model.Position;
 import com.digitzones.service.IPositionService;
 @Service
-public class PositionServiceImpl implements IPositionService {
+public class PositionServiceImpl  implements IPositionService {
 	private IPositionDao positionDao;
 	@Autowired
 	public void setPositionDao(IPositionDao positionDao) {
@@ -41,5 +41,20 @@ public class PositionServiceImpl implements IPositionService {
 	@Override
 	public Pager<Position> queryObjs(String hql, int pageNo, int pageSize, Object... values) {
 		return positionDao.findByPage(hql, pageNo, pageSize, values);
+	}
+
+	@Override
+	public void updateObj(Position obj) {
+		this.positionDao.update(obj);
+	}
+
+	@Override
+	public Position queryByProperty(String name, String value) {
+		return positionDao.findSingleByProperty(name, value);
+	}
+
+	@Override
+	public Position queryPositionById(Serializable id) {
+		return positionDao.findById(id);
 	}
 }

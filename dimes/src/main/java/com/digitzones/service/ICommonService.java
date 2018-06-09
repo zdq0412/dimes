@@ -17,4 +17,16 @@ public interface ICommonService<T> {
 	 */
 	@SuppressWarnings("rawtypes")
 	public Pager queryObjs(String hql, int pageNo, int pageSize, Object... values);
+	/**
+	 * 更新对象
+	 * @param obj
+	 */
+	public void updateObj(T obj);
+	/**
+	 * 根据属性查询对象
+	 * @param name 属性名称
+	 * @param value 属性值
+	 * @return
+	 */
+	public T queryByProperty(String name,String value);
 }

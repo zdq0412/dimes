@@ -10,19 +10,19 @@
 				<div style="height:30px"></div>
 				<div class="topjui-row">
 					<div class="topjui-col-sm12">
-						<label class="topjui-form-label">部门代码</label>
+						<label class="topjui-form-label">职位代码</label>
 						<div class="topjui-input-block">
 							<input type="text" name="code" data-toggle="topjui-textbox"
-								data-options="required:true" id="deptCode">
+								data-options="required:true" id="positionCode">
 						</div>
 					</div>
 				</div>
 				<div class="topjui-row">
 					<div class="topjui-col-sm12">
-						<label class="topjui-form-label">部门名称</label>
+						<label class="topjui-form-label">职位名称</label>
 						<div class="topjui-input-block">
 							<input type="text" name="name" data-toggle="topjui-textbox"
-								data-options="required:true" id="deptName">
+								data-options="required:true" id="positionName">
 						</div>
 					</div>
 				</div>
@@ -50,9 +50,9 @@
 					<div class="topjui-col-sm12">
 						<label class="topjui-form-label">描述</label>
 						<div class="topjui-input-block">
-							<input type="hidden" id="parentId" name="parent.id" />
+							<input type="hidden" id="parentId" name="department.id" />
 							<input type="text" name="description"
-								data-toggle="topjui-textarea" id="deptNote">
+								data-toggle="topjui-textarea" id="positionNote">
 						</div>
 					</div>
 				</div>

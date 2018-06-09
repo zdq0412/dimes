@@ -11,7 +11,7 @@ import com.digitzones.model.RelatedDocument;
 import com.digitzones.service.IRelatedDocumentService;
 @SuppressWarnings("rawtypes")
 @Service
-public class RelatedDocumentServiceImpl implements IRelatedDocumentService {
+public class RelatedDocumentServiceImpl  implements IRelatedDocumentService {
 	private IRelatedDocumentDao relatedDocumentDao;
 	@Autowired
 	public void setRelatedDocumentDao(IRelatedDocumentDao relatedDocumentDao) {
@@ -32,5 +32,13 @@ public class RelatedDocumentServiceImpl implements IRelatedDocumentService {
 	@Override
 	public void updateRelatedDocument(RelatedDocument relatedDocument) {
 		relatedDocumentDao.update(relatedDocument);
+	}
+	@Override
+	public void updateObj(RelatedDocument obj) {
+		this.relatedDocumentDao.update(obj);
+	}
+	@Override
+	public RelatedDocument queryByProperty(String name, String value) {
+		return relatedDocumentDao.findSingleByProperty(name, value);
 	}
 }

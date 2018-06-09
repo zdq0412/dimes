@@ -11,7 +11,7 @@ import com.digitzones.model.Department;
 import com.digitzones.model.Pager;
 import com.digitzones.service.IDepartmentService;
 @Service
-public class DepartmentServiceImpl implements IDepartmentService {
+public class DepartmentServiceImpl  implements IDepartmentService {
 	private IDepartmentDao departmentDao;
 	@Autowired
 	public void setDepartmentDao(IDepartmentDao departmentDao) {
@@ -52,5 +52,25 @@ public class DepartmentServiceImpl implements IDepartmentService {
 	@Override
 	public List<Department> queryAllDepartments() {
 		return departmentDao.findAll();
+	}
+
+	@Override
+	public void updateObj(Department obj) {
+		this.departmentDao.update(obj);
+	}
+
+	@Override
+	public void deleteDepartment(Serializable id) {
+		departmentDao.deleteById(id);
+	}
+
+	@Override
+	public Long queryCountOfSubDepartment(Serializable pid) {
+		return departmentDao.findCount("from Department d inner join d.parent p where p.id=?0", new Object[] {pid});
+	}
+
+	@Override
+	public Department queryByProperty(String name, String value) {
+		return departmentDao.findSingleByProperty(name, value);
 	}
 }

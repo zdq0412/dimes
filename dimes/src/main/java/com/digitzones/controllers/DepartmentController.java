@@ -36,7 +36,88 @@ public class DepartmentController {
 	public List<Department> queryTopDepartments(){
 		return departmentService.queryTopDepartment();
 	}
-	
+	/**
+	 * 更新部门
+	 * @param department
+	 * @return
+	 */
+	@RequestMapping("/updateDepartment.do")
+	@ResponseBody
+	public ModelMap updateDepartment(Department department) {
+		ModelMap modelMap = new ModelMap();
+		Department d = departmentService.queryDepartmentByProperty("name",department.getName());
+		if(d!=null && !department.getId().equals(d.getId())) {
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("msg", "部门名称已被使用");
+		}else {
+			departmentService.updateObj(department);
+			modelMap.addAttribute("success", true);
+			modelMap.addAttribute("msg", "编辑成功!");
+		}
+		return modelMap;
+	}
+	/**
+	 * 根据id删除部门，如果该部门存在子部门，则不允许删除
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/deleteDepartment.do")
+	@ResponseBody
+	public ModelMap deleteDepartment(String id) {
+		if(id!=null && id.contains("'")) {
+			id = id.replace("'", "");
+		}
+		ModelMap modelMap = new ModelMap();
+		Long count = departmentService.queryCountOfSubDepartment(Long.valueOf(id));
+		if(count>0) {
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("msg", "该部门下存在子部门，不允许删除!");
+			modelMap.addAttribute("message", "该部门下存在子部门，不允许删除!");
+		}else {
+			departmentService.deleteDepartment(Long.valueOf(id));
+			modelMap.addAttribute("success", true);
+			modelMap.addAttribute("statusCode", 200);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("msg", "该部门下存在子部门，不允许删除!");
+			modelMap.addAttribute("message", "成功删除!");
+		}
+		return modelMap;
+	}
+	/**
+	 * 停用该部门
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/disabledDepartment.do")
+	@ResponseBody
+	public ModelMap disabledDepartment(String id) {
+		if(id!=null && id.contains("'")) {
+			id = id.replace("'", "");
+		}
+		ModelMap modelMap = new ModelMap();
+		Department d = departmentService.queryDepartmentById(Long.valueOf(id));
+		d.setDisabled(true);
+		
+		departmentService.updateObj(d);
+		modelMap.addAttribute("statusCode", 200);
+		modelMap.addAttribute("message", "已停用");
+		modelMap.addAttribute("title", "操作提示!");
+		return modelMap;
+	}
+	/**
+	 * 根据id查询部门
+	 * @param department
+	 * @return
+	 */
+	@RequestMapping("/queryDepartmentById.do")
+	@ResponseBody
+	public Department queryDepartmentById(Long id) {
+		Department department = departmentService.queryDepartmentById(id);
+		return department;
+	}
+
 	/**
 	 * 查找所有部门
 	 * @return
@@ -75,7 +156,7 @@ public class DepartmentController {
 		}else {
 			pager = departmentService.queryObjs("from Department d inner join d.parent p  where p.id=?0", page, rows, new Object[] {pid});
 		}
-		
+
 		Pager<DepartmentVO> pagerDeptVO = new Pager<>();
 		model2VO(pager, pagerDeptVO);
 		ModelMap mm = new ModelMap();
@@ -85,7 +166,7 @@ public class DepartmentController {
 		mm.addAttribute("msg", "");*/
 		return mm;
 	}
-	
+
 	private void model2VO(Pager<Object[]> pagerDept,Pager<DepartmentVO> pagerDeptVO) {
 		List<Object[]> depts = pagerDept.getData();
 		List<DepartmentVO> deptVOs = pagerDeptVO.getData();
@@ -93,18 +174,17 @@ public class DepartmentController {
 			DepartmentVO vo = new DepartmentVO();
 			Department son = (Department) obj[0];
 			Department parent = (Department) obj[1];
-			
+
 			vo.setId(son.getId());
 			vo.setName(son.getName());
 			parent.setChildren(null);
 			vo.setParent(parent);
 			vo.setCode(son.getCode());
 			vo.setDisabled(son.getDisabled());
-			
+			vo.setNote(son.getNote());
 			deptVOs.add(vo);
 		}
 	}
-	
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/queryRaletedDocuments.do")
 	@ResponseBody
@@ -139,10 +219,22 @@ public class DepartmentController {
 	@ResponseBody
 	public ModelMap addDepartment(Department department) {
 		ModelMap modelMap = new ModelMap();
-		departmentService.addDepartment(department);
-		modelMap.addAttribute("title","提示信息");
-		modelMap.addAttribute("message", "添加成功!");
-		modelMap.addAttribute("statusCode", 200);
+		//检测部门编码和名称是否重复
+		Department dept4Code = departmentService.queryDepartmentByProperty("code", department.getCode());
+		if(dept4Code!=null) {
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("msg", "部门编码已被使用");
+		}else {
+			Department	dept4Name = departmentService.queryDepartmentByProperty("name",department.getName());
+			if(dept4Name!=null) {
+				modelMap.addAttribute("success", false);
+				modelMap.addAttribute("msg", "部门名称已被使用");
+			}else {
+				departmentService.addDepartment(department);
+				modelMap.addAttribute("success", true);
+				modelMap.addAttribute("msg", "添加成功!");
+			}
+		}
 		return modelMap;
 	}
 } 

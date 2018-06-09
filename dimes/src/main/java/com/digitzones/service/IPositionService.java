@@ -33,4 +33,10 @@ public interface IPositionService extends ICommonService<Position> {
 	 * @return
 	 */
 	public List<Position> queryPositionByDepartmentId(Serializable  deptId);
+	/**
+	 * 根据id查找职位信息
+	 * @param id
+	 * @return
+	 */
+	public Position queryPositionById(Serializable id);
 }

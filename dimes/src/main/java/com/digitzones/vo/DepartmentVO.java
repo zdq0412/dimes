@@ -20,6 +20,13 @@ public class DepartmentVO {
 	private Department parent;
 	private String code;
 	private Boolean disabled;
+	private String note;
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
+	}
 	public Boolean getDisabled() {
 		return disabled;
 	}

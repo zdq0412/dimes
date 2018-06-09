@@ -46,5 +46,16 @@ public interface IDepartmentService extends ICommonService<Department>{
 	 * @return
 	 */
 	public List<Department> queryAllDepartments();
+	/**
+	 * 根据id删除部门
+	 * @param id
+	 */
+	public void deleteDepartment(Serializable id);
+	/**
+	 * 根据父部门id查询子部门数量
+	 * @param pid
+	 * @return
+	 */
+	public Long queryCountOfSubDepartment(Serializable pid);
 	
 }

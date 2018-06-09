@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.model.Department;
 import com.digitzones.model.Pager;
 import com.digitzones.model.Position;
 /**
@@ -22,13 +23,13 @@ public class PositionController {
 	public void setPositionService(IPositionService positionService) {
 		this.positionService = positionService;
 	}
-/*	@RequestMapping("/queryPositionsByDepartmentId.do")
+	/*	@RequestMapping("/queryPositionsByDepartmentId.do")
 	@ResponseBody
 	public List<Position> queryPositionsByDepartmentId(@RequestParam("deptId") Long deptId){
 		List<Position> list = positionService.queryPositionByDepartmentId(deptId);
 		return list;
 	}*/
-	
+
 	/**
 	 * 分页查询职位
 	 * @param pid
@@ -45,5 +46,107 @@ public class PositionController {
 		mm.addAttribute("rows",pager.getData());
 		mm.addAttribute("total", pager.getTotalCount());
 		return mm;
+	}
+
+	/**
+	 * 添加部门
+	 * @param department
+	 * @return
+	 */
+	@RequestMapping("/addPosition.do")
+	@ResponseBody
+	public ModelMap addPosition(Position position) {
+		ModelMap modelMap = new ModelMap();
+		//检测职位编码和名称是否重复
+		Position position4Code = positionService.queryByProperty("code", position.getCode());
+		if(position4Code!=null) {
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("msg", "职位编码已被使用");
+		}else {
+			Position position4Name = positionService.queryByProperty("name", position.getName());
+			if(position4Name!=null) {
+				modelMap.addAttribute("success", false);
+				modelMap.addAttribute("msg", "职位名称已被使用");
+			}else {
+				positionService.addPosition(position);
+				modelMap.addAttribute("success", true);
+				modelMap.addAttribute("msg", "添加成功!");
+			}
+		}
+		return modelMap;
+	}
+
+	/**
+	 * 根据id查询职位
+	 * @param department
+	 * @return
+	 */
+	@RequestMapping("/queryPositionById.do")
+	@ResponseBody
+	public Position queryPositionById(Long id) {
+		Position position = positionService.queryPositionById(id);
+		return position;
+	}
+
+	/**
+	 * 更新职位
+	 * @param position
+	 * @return
+	 */
+	@RequestMapping("/updatePosition.do")
+	@ResponseBody
+	public ModelMap updatePosition(Position position) {
+		ModelMap modelMap = new ModelMap();
+		Position d = positionService.queryByProperty("name", position.getName());
+		if(d!=null && !position.getId().equals(d.getId())) {
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("msg", "职位名称已被使用");
+		}else {
+			positionService.updateObj(position);
+			modelMap.addAttribute("success", true);
+			modelMap.addAttribute("msg", "编辑成功!");
+		}
+		return modelMap;
+	}
+	/**
+	 * 根据id删除职位
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/deletePosition.do")
+	@ResponseBody
+	public ModelMap deletePosition(String id) {
+		if(id!=null && id.contains("'")) {
+			id = id.replace("'", "");
+		}
+		ModelMap modelMap = new ModelMap();
+		positionService.deletePosition(Long.valueOf(id));
+		modelMap.addAttribute("success", true);
+		modelMap.addAttribute("statusCode", 200);
+		modelMap.addAttribute("title", "操作提示");
+		modelMap.addAttribute("msg", "成功删除!");
+		modelMap.addAttribute("message", "成功删除!");
+		return modelMap;
+	}
+	/**
+	 * 停用该职位
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/disabledPosition.do")
+	@ResponseBody
+	public ModelMap disabledPosition(String id) {
+		if(id!=null && id.contains("'")) {
+			id = id.replace("'", "");
+		}
+		ModelMap modelMap = new ModelMap();
+		Position d = positionService.queryPositionById(Long.valueOf(id));
+		d.setDisabled(true);
+
+		positionService.updateObj(d);
+		modelMap.addAttribute("statusCode", 200);
+		modelMap.addAttribute("message", "已停用");
+		modelMap.addAttribute("title", "操作提示!");
+		return modelMap;
 	}
 } 
