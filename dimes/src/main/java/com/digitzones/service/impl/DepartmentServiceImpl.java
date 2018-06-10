@@ -73,4 +73,19 @@ public class DepartmentServiceImpl  implements IDepartmentService {
 	public Department queryByProperty(String name, String value) {
 		return departmentDao.findSingleByProperty(name, value);
 	}
+
+	@Override
+	public Serializable addObj(Department obj) {
+		return departmentDao.save(obj);
+	}
+
+	@Override
+	public Department queryObjById(Long id) {
+		return departmentDao.findById(id);
+	}
+
+	@Override
+	public void deleteObj(Long id) {
+		departmentDao.deleteById(id);
+	}
 }

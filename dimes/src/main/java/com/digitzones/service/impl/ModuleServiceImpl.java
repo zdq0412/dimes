@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.digitzones.dao.IModuleDao;
 import com.digitzones.model.Module;
+import com.digitzones.model.Pager;
 import com.digitzones.service.IModuleService;
 @Service
 public class ModuleServiceImpl implements IModuleService {
@@ -40,5 +41,36 @@ public class ModuleServiceImpl implements IModuleService {
 	@Override
 	public List<Module> querySubModule(Serializable id) {
 		return moduleDao.findByHQL("from Module m where m.parent.id=?0", new Object[] {id});
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Pager queryObjs(String hql, int pageNo, int pageSize, Object... values) {
+		return moduleDao.findByPage(hql, pageNo, pageSize, values);
+	}
+
+	@Override
+	public void updateObj(Module obj) {
+		moduleDao.update(obj);
+	}
+
+	@Override
+	public Module queryByProperty(String name, String value) {
+		return moduleDao.findSingleByProperty(name, value);
+	}
+
+	@Override
+	public Serializable addObj(Module obj) {
+		return moduleDao.save(obj);
+	}
+
+	@Override
+	public Module queryObjById(Long id) {
+		return moduleDao.findById(id);
+	}
+
+	@Override
+	public void deleteObj(Long id) {
+		moduleDao.deleteById(id);
 	}
 }

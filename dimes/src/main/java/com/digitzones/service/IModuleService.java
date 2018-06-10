@@ -8,7 +8,7 @@ import com.digitzones.model.Module;
  * @author zdq
  * 2018年6月6日
  */
-public interface IModuleService {
+public interface IModuleService extends ICommonService<Module> {
 	/**
 	 * 添加一个功能模块
 	 * @param module

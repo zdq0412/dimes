@@ -39,4 +39,11 @@ public interface IPositionService extends ICommonService<Position> {
 	 * @return
 	 */
 	public Position queryPositionById(Serializable id);
+	/**
+	 * 根据hql查找所有岗位
+	 * @param hql
+	 * @param values
+	 * @return
+	 */
+	public List<Position> queryAllByHql(String hql,Object... values);
 }

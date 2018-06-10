@@ -57,4 +57,24 @@ public class PositionServiceImpl  implements IPositionService {
 	public Position queryPositionById(Serializable id) {
 		return positionDao.findById(id);
 	}
+
+	@Override
+	public Serializable addObj(Position obj) {
+		return positionDao.save(obj);
+	}
+
+	@Override
+	public List<Position> queryAllByHql(String hql, Object... values) {
+		return positionDao.findByHQL(hql, values);
+	}
+
+	@Override
+	public Position queryObjById(Long id) {
+		return positionDao.findById(id);
+	}
+
+	@Override
+	public void deleteObj(Long id) {
+		positionDao.deleteById(id);
+	}
 }

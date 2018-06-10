@@ -41,4 +41,16 @@ public class RelatedDocumentServiceImpl  implements IRelatedDocumentService {
 	public RelatedDocument queryByProperty(String name, String value) {
 		return relatedDocumentDao.findSingleByProperty(name, value);
 	}
+	@Override
+	public Serializable addObj(RelatedDocument obj) {
+		return relatedDocumentDao.save(obj);
+	}
+	@Override
+	public RelatedDocument queryObjById(Long id) {
+		return relatedDocumentDao.findById(id);
+	}
+	@Override
+	public void deleteObj(Long id) {
+		relatedDocumentDao.deleteById(id);
+	}
 }

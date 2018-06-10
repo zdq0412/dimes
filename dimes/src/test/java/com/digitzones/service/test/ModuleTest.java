@@ -347,6 +347,12 @@ public class ModuleTest {
 		basicSon42.setName("质量类别");
 		basicSon42.setLeaf(true);
 		moduleService.addModule(basicSon42);
+	}
+	@Test
+	public void testAddEmployeeUrl() {
+		Module module = moduleService.queryByProperty("name","人员资料");
+		module.setUrl("console/jsp/employee.jsp");
 		
+		moduleService.updateModule(module);
 	}
 }
