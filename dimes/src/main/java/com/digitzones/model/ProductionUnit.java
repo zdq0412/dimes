@@ -1,9 +1,14 @@
 package com.digitzones.model;
 
+import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 生产单元实体
@@ -16,8 +21,20 @@ public class ProductionUnit extends CommonModel {
 	private static final long serialVersionUID = 1L;
 	/**父单元*/
 	private ProductionUnit parent;
+	/**子生产单元*/
+	private Set<ProductionUnit> children;
+	@OneToMany(fetch=FetchType.EAGER,mappedBy="parent")
+	public Set<ProductionUnit> getChildren() {
+		return children;
+	}
+
+	public void setChildren(Set<ProductionUnit> children) {
+		this.children = children;
+	}
+
 	@ManyToOne
 	@JoinColumn(name="PARENT_ID")
+	@JsonIgnore
 	public ProductionUnit getParent() {
 		return parent;
 	}

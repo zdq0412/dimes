@@ -355,4 +355,11 @@ public class ModuleTest {
 		
 		moduleService.updateModule(module);
 	}
+	@Test
+	public void testAddProductionUnitUrl() {
+		Module module = moduleService.queryByProperty("name","生产单元");
+		module.setUrl("console/jsp/productionUnit.jsp");
+		
+		moduleService.updateModule(module);
+	}
 }
