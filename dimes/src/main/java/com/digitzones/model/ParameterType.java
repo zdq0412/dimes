@@ -1,8 +1,14 @@
 package com.digitzones.model;
+import java.util.Set;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * 参数类别
  * @author zdq
@@ -13,8 +19,20 @@ import javax.persistence.Table;
 public class ParameterType extends CommonModel {
 	private static final long serialVersionUID = 1L;
 	private ParameterType parent;
+	/**
+	 * 子类别
+	 */
+	private Set<ParameterType> children;
+	@OneToMany(fetch=FetchType.EAGER,mappedBy="parent")
+	public Set<ParameterType> getChildren() {
+		return children;
+	}
+	public void setChildren(Set<ParameterType> children) {
+		this.children = children;
+	}
 	@ManyToOne
 	@JoinColumn(name="PARENT_ID")
+	@JsonIgnore
 	public ParameterType getParent() {
 		return parent;
 	}

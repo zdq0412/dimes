@@ -218,5 +218,4 @@ public class DeviceController {
 		modelMap.addAttribute("message", "成功删除!");
 		return modelMap;
 	}
-	
 } 

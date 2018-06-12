@@ -369,4 +369,11 @@ public class ModuleTest {
 		
 		moduleService.updateModule(module);
 	}
+	@Test
+	public void testAddParameterUrl() {
+		Module module = moduleService.queryByProperty("name", "参数信息");
+		module.setUrl("console/jsp/parameterType.jsp");
+		
+		moduleService.updateModule(module);
+	}
 }
