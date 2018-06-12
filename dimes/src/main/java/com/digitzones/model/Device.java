@@ -9,6 +9,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 /**
  * 设备
  * @author zdq
@@ -27,8 +29,10 @@ public class Device extends CommonModel {
 	/**经销商*/
 	private String trader;
 	/**安装日期*/
+	@DateTimeFormat(pattern = "yyyy-MM-dd") 
 	private Date installDate;
 	/**出厂日期*/
+	@DateTimeFormat(pattern = "yyyy-MM-dd") 
 	private Date outFactoryDate;
 	/**出厂编号*/
 	private String outFactoryCode;
@@ -47,6 +51,14 @@ public class Device extends CommonModel {
 	private DeviceType deviceType;
 	/**生产单元*/
 	private ProductionUnit productionUnit;
+	/**设备图片*/
+	private String photo;
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
 	public String getUnitType() {
 		return unitType;
 	}

@@ -35,7 +35,6 @@ public class ProductionUnitTest {
 		d2.setCode("RESEARCH");
 		productionUnitService.addObj(d2);
 		
-		
 		ProductionUnit d3 = new ProductionUnit();
 		d3.setCode("RESEARCH01");
 		d3.setName("研发部一");

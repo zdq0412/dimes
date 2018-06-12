@@ -7,6 +7,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * 设备站点
  * @author zdq
@@ -42,6 +44,7 @@ public class DeviceSite extends CommonModel {
 	@JoinTable(name="DEVICESITE_PARAMETERS",joinColumns= {
 			@JoinColumn(name="DEVICESITE_ID")
 	},inverseJoinColumns= {@JoinColumn(name="PARAMETER_ID")})
+	@JsonIgnore
 	public Set<Parameters> getParameters() {
 		return parameters;
 	}

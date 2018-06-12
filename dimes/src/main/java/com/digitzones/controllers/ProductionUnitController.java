@@ -8,11 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.digitzones.model.Department;
 import com.digitzones.model.Pager;
 import com.digitzones.model.ProductionUnit;
 import com.digitzones.service.IProductionUnitService;
-import com.digitzones.vo.DepartmentVO;
 import com.digitzones.vo.ProductionUnitVO;
 /**
  * 生产单元管理控制器
@@ -83,89 +81,114 @@ public class ProductionUnitController {
 			productionUnitVOs.add(vo);
 		}
 	}
+	
+	/**
+	 * 添加生产单元
+	 * @param department
+	 * @return
+	 */
+	@RequestMapping("/addProductionUnit.do")
+	@ResponseBody
+	public ModelMap addProductionUnit(ProductionUnit productionUnit) {
+		ModelMap modelMap = new ModelMap();
+		ProductionUnit productionUnit4Code = productionUnitService.queryByProperty("code", productionUnit.getCode());
+		if(productionUnit4Code!=null) {
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("msg", "生产单元编码已被使用");
+		}else {
+			ProductionUnit	productionUnit4Name = productionUnitService.queryByProperty("name",productionUnit.getName());
+			if(productionUnit4Name!=null) {
+				modelMap.addAttribute("success", false);
+				modelMap.addAttribute("msg", "生产单元名称已被使用");
+			}else {
+				productionUnitService.addObj(productionUnit);
+				modelMap.addAttribute("success", true);
+				modelMap.addAttribute("msg", "添加成功!");
+			}
+		}
+		return modelMap;
+	}
+	/**
+	 * 根据id查询生产单元
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/queryProductionUnitById.do")
+	@ResponseBody
+	public ProductionUnit queryProductionUnitById(Long id) {
+		ProductionUnit productionUnit = productionUnitService.queryObjById(id);
+		return productionUnit;
+	}
 	/**
 	 * 更新部门
 	 * @param department
 	 * @return
-	 *//*
-	@RequestMapping("/updateDepartment.do")
+	 */
+	@RequestMapping("/updateProductionUnit.do")
 	@ResponseBody
-	public ModelMap updateDepartment(Department department) {
+	public ModelMap updateProductionUnit(ProductionUnit productionUnit) {
 		ModelMap modelMap = new ModelMap();
-		Department d = departmentService.queryDepartmentByProperty("name",department.getName());
-		if(d!=null && !department.getId().equals(d.getId())) {
+		ProductionUnit pu = productionUnitService.queryByProperty("name", productionUnit.getName());
+		if(pu!=null && !productionUnit.getId().equals(pu.getId())) {
 			modelMap.addAttribute("success", false);
-			modelMap.addAttribute("msg", "部门名称已被使用");
+			modelMap.addAttribute("msg", "生产单元名称已被使用");
 		}else {
-			departmentService.updateObj(department);
+			productionUnitService.updateObj(productionUnit);
 			modelMap.addAttribute("success", true);
 			modelMap.addAttribute("msg", "编辑成功!");
 		}
 		return modelMap;
 	}
-	*//**
+	/**
 	 * 根据id删除部门，如果该部门存在子部门，则不允许删除
 	 * @param id
 	 * @return
-	 *//*
-	@RequestMapping("/deleteDepartment.do")
+	 */
+	@RequestMapping("/deleteProductionUnit.do")
 	@ResponseBody
-	public ModelMap deleteDepartment(String id) {
+	public ModelMap deleteProductionUnit(String id) {
 		if(id!=null && id.contains("'")) {
 			id = id.replace("'", "");
 		}
 		ModelMap modelMap = new ModelMap();
-		Long count = departmentService.queryCountOfSubDepartment(Long.valueOf(id));
+		Long count = productionUnitService.queryCountOfSubProductionUnit(Long.valueOf(id));
 		if(count>0) {
 			modelMap.addAttribute("success", false);
 			modelMap.addAttribute("statusCode", 300);
 			modelMap.addAttribute("title", "操作提示");
-			modelMap.addAttribute("msg", "该部门下存在子部门，不允许删除!");
-			modelMap.addAttribute("message", "该部门下存在子部门，不允许删除!");
+			modelMap.addAttribute("msg", "该生产单元下存在子部门，不允许删除!");
+			modelMap.addAttribute("message", "该生产单元下存在子部门，不允许删除!");
 		}else {
-			departmentService.deleteDepartment(Long.valueOf(id));
+			productionUnitService.deleteObj(Long.valueOf(id));
 			modelMap.addAttribute("success", true);
 			modelMap.addAttribute("statusCode", 200);
 			modelMap.addAttribute("title", "操作提示");
-			modelMap.addAttribute("msg", "该部门下存在子部门，不允许删除!");
 			modelMap.addAttribute("message", "成功删除!");
 		}
 		return modelMap;
 	}
-	*//**
+	/**
 	 * 停用该部门
 	 * @param id
 	 * @return
-	 *//*
-	@RequestMapping("/disabledDepartment.do")
+	 */
+	@RequestMapping("/disabledProductionUnit.do")
 	@ResponseBody
-	public ModelMap disabledDepartment(String id) {
+	public ModelMap disabledProductionUnit(String id) {
 		if(id!=null && id.contains("'")) {
 			id = id.replace("'", "");
 		}
 		ModelMap modelMap = new ModelMap();
-		Department d = departmentService.queryDepartmentById(Long.valueOf(id));
+		ProductionUnit d = productionUnitService.queryObjById(Long.valueOf(id));
 		d.setDisabled(true);
 		
-		departmentService.updateObj(d);
+		productionUnitService.updateObj(d);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("message", "已停用");
 		modelMap.addAttribute("title", "操作提示!");
 		return modelMap;
 	}
-	*//**
-	 * 根据id查询部门
-	 * @param department
-	 * @return
-	 *//*
-	@RequestMapping("/queryDepartmentById.do")
-	@ResponseBody
-	public Department queryDepartmentById(Long id) {
-		Department department = departmentService.queryDepartmentById(id);
-		return department;
-	}
-
-	*//**
+	/**
 	 * 查找所有部门
 	 * @return
 	 *//*
@@ -212,31 +235,5 @@ public class ProductionUnitController {
 			}
 		}
 	}
-	*//**
-	 * 添加部门
-	 * @param department
-	 * @return
-	 *//*
-	@RequestMapping("/addDepartment.do")
-	@ResponseBody
-	public ModelMap addDepartment(Department department) {
-		ModelMap modelMap = new ModelMap();
-		//检测部门编码和名称是否重复
-		Department dept4Code = departmentService.queryDepartmentByProperty("code", department.getCode());
-		if(dept4Code!=null) {
-			modelMap.addAttribute("success", false);
-			modelMap.addAttribute("msg", "部门编码已被使用");
-		}else {
-			Department	dept4Name = departmentService.queryDepartmentByProperty("name",department.getName());
-			if(dept4Name!=null) {
-				modelMap.addAttribute("success", false);
-				modelMap.addAttribute("msg", "部门名称已被使用");
-			}else {
-				departmentService.addDepartment(department);
-				modelMap.addAttribute("success", true);
-				modelMap.addAttribute("msg", "添加成功!");
-			}
-		}
-		return modelMap;
-	}*/
+	*/
 } 

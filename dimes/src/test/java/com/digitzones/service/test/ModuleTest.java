@@ -362,4 +362,11 @@ public class ModuleTest {
 		
 		moduleService.updateModule(module);
 	}
+	@Test
+	public void testAddDeviceUrl() {
+		Module module = moduleService.queryByProperty("name", "设备信息");
+		module.setUrl("console/jsp/device.jsp");
+		
+		moduleService.updateModule(module);
+	}
 }

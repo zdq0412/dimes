@@ -1,5 +1,6 @@
 package com.digitzones.service;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.digitzones.model.ProductionUnit;
@@ -14,4 +15,11 @@ public interface IProductionUnitService extends ICommonService<ProductionUnit>{
 	 * @return
 	 */
 	public List<ProductionUnit> queryTopProductionUnits();
+	
+	/**
+	 * 根据父生产单元id查询子生产单元数量
+	 * @param pid
+	 * @return
+	 */
+	public Long queryCountOfSubProductionUnit(Serializable pid);
 }
