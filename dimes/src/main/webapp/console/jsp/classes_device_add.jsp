@@ -3,7 +3,7 @@
 	<script>
 		$(function(){
 			$('#deviceTable').iDatagrid({
-			    url:'device/queryIdleDevices.do',
+			    url:'classes/queryOtherDevices.do',
 			    columns:[[
 			        {field:'id',title:'id',checkbox:true},
 			        {field:'code',title:'代码',width:100},

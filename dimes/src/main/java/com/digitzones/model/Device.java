@@ -1,15 +1,19 @@
 package com.digitzones.model;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 设备
@@ -53,6 +57,18 @@ public class Device extends CommonModel {
 	private ProductionUnit productionUnit;
 	/**设备图片*/
 	private String photo;
+	/**
+	 * 设备和班次关联类
+	 */
+	private Set<ClassesDeviceMapping> classesDevice;
+	@OneToMany(mappedBy="device",targetEntity=ClassesDeviceMapping.class)
+	@JsonIgnore
+	public Set<ClassesDeviceMapping> getClassesDevice() {
+		return classesDevice;
+	}
+	public void setClassesDevice(Set<ClassesDeviceMapping> classesDevice) {
+		this.classesDevice = classesDevice;
+	}
 	public String getPhoto() {
 		return photo;
 	}
@@ -143,5 +159,4 @@ public class Device extends CommonModel {
 	public void setProductionUnit(ProductionUnit productionUnit) {
 		this.productionUnit = productionUnit;
 	}
-	
 }

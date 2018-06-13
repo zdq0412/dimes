@@ -7,5 +7,4 @@ import com.digitzones.model.Classes;
  * 2018年6月11日
  */
 public interface IClassesService extends ICommonService<Classes> {
-
 }

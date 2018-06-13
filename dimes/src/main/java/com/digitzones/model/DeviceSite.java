@@ -2,6 +2,7 @@ package com.digitzones.model;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -32,7 +33,7 @@ public class DeviceSite extends CommonModel {
 	public void setBarCodeAddress(String barCodeAddress) {
 		this.barCodeAddress = barCodeAddress;
 	}
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="DEVICE_ID")
 	public Device getDevice() {
 		return device;

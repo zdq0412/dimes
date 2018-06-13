@@ -376,4 +376,25 @@ public class ModuleTest {
 		
 		moduleService.updateModule(module);
 	}
+	@Test
+	public void testAddNGReasonUrl() {
+		Module module = moduleService.queryByProperty("name", "不良原因");
+		module.setUrl("console/jsp/ngReasonType.jsp");
+		
+		moduleService.updateModule(module);
+	}
+	@Test
+	public void testAddPressLightUrl() {
+		Module module = moduleService.queryByProperty("name", "故障原因");
+		module.setUrl("console/jsp/pressLightType.jsp");
+		
+		moduleService.updateModule(module);
+	}
+	@Test
+	public void testAddClassestUrl() {
+		Module module = moduleService.queryByProperty("name", "班次定义");
+		module.setUrl("console/jsp/classes.jsp");
+		
+		moduleService.updateModule(module);
+	}
 }

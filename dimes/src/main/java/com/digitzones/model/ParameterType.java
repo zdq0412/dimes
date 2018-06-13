@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,6 +25,7 @@ public class ParameterType extends CommonModel {
 	 */
 	private Set<ParameterType> children;
 	@OneToMany(fetch=FetchType.EAGER,mappedBy="parent")
+	@OrderBy(" ID DESC")
 	public Set<ParameterType> getChildren() {
 		return children;
 	}
