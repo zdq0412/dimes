@@ -1,6 +1,9 @@
 package com.digitzones.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -18,6 +21,16 @@ public class StatusTroubleCode extends CommonModel {
 	private String parameterName;
 	/**条件*/
 	private String conditions;
+	/**工序*/
+	private Processes processes;
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="PROCESS_ID")
+	public Processes getProcesses() {
+		return processes;
+	}
+	public void setProcesses(Processes processes) {
+		this.processes = processes;
+	}
 	public String getParameterCode() {
 		return parameterCode;
 	}

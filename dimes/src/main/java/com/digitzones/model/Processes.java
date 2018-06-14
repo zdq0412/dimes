@@ -1,10 +1,10 @@
 package com.digitzones.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 /**
  * 工序实体
  * @author zdq
@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class Processes extends CommonModel{
 	private static final long serialVersionUID = 1L;
 	private ProcessType processType;
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="PROCESSTYPE_ID")
 	public ProcessType getProcessType() {
 		return processType;

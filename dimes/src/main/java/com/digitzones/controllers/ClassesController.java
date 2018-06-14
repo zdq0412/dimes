@@ -24,6 +24,7 @@ import com.digitzones.service.IClassesDeviceMappingService;
  */
 import com.digitzones.service.IClassesService;
 import com.digitzones.service.IClassesTypeService;
+import com.digitzones.service.IDeviceService;
 import com.digitzones.vo.ClassesVO;
 @Controller
 @RequestMapping("/classes")
@@ -31,8 +32,14 @@ public class ClassesController {
 	private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 	private IClassesService classesService;
 	private IClassesTypeService classesTypeService;
+	private IDeviceService deviceService;
 	
 	private IClassesDeviceMappingService classesDeviceMappingService;
+	
+	@Autowired
+	public void setDeviceService(IDeviceService deviceService) {
+		this.deviceService = deviceService;
+	}
 	@Autowired
 	public void setClassesDeviceMappingService(IClassesDeviceMappingService classesDeviceMappingService) {
 		this.classesDeviceMappingService = classesDeviceMappingService;
@@ -218,7 +225,7 @@ public class ClassesController {
 	@RequestMapping("/queryDevicesByClassesId.do")
 	@ResponseBody
 	public ModelMap queryDevicesByClassesId(Long classesId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
-		String hql = "select ds from DeviceSite ds inner join ds.device d inner join d.classesDevice cd inner join cd.classes c  where c.id=?0";
+		String hql = "select ds from DeviceSite ds left join ds.device d inner join d.classesDevice cd inner join cd.classes c  where c.id=?0";
 		Pager<DeviceSite> pager = classesService.queryObjs(hql, page, rows, new Object[] {classesId});
 		ModelMap modelMap = new ModelMap();
 		modelMap.addAttribute("total", pager.getTotalCount());
@@ -236,9 +243,11 @@ public class ClassesController {
 	@RequestMapping("/queryOtherDevices.do")
 	@ResponseBody
 	public ModelMap queryOtherDevices(Long classesId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
-		String hql = "select d from Device d left join d.classesDevice cd inner join cd.classes c  where c.id!=?0";
-		Pager<Device> pager = classesService.queryObjs(hql, page, rows, new Object[] {classesId});
+		String hql = "select d from Device d where d.id not in (select cdm.device.id from ClassesDeviceMapping cdm"
+				+ " )";
+		Pager<Device> pager = classesService.queryObjs(hql, page, rows, new Object[] {});
 		ModelMap modelMap = new ModelMap();
+		
 		modelMap.addAttribute("total", pager.getTotalCount());
 		modelMap.addAttribute("rows", pager.getData());
 		return modelMap;
@@ -289,13 +298,18 @@ public class ClassesController {
 	 */
 	@RequestMapping("/deleteDeviceFromClasses.do")
 	@ResponseBody
-	public ModelMap deleteDeviceFromClasses(Long deviceSiteId) {
+	public ModelMap deleteDeviceFromClasses(Long classesId,String deviceSiteId) {
+		if(deviceSiteId.contains("'")) {
+			deviceSiteId = deviceSiteId.replace("'", "");
+		}
 		ModelMap modelMap = new ModelMap();
-		classesDeviceMappingService.deleteObj(id);
-		modelMap.addAttribute("message", "删除成功！");
-		modelMap.addAttribute("statusCode", 200);
-		modelMap.addAttribute("title", "操作提示");
-		
+		Device device = deviceService.queryDeviceByDeviceSiteId(Long.valueOf(deviceSiteId));
+		if(device!=null) {
+			classesDeviceMappingService.deleteByClassesIdAndDeviceId(classesId, device.getId());
+			modelMap.addAttribute("message", "删除成功！");
+			modelMap.addAttribute("statusCode", 200);
+			modelMap.addAttribute("title", "操作提示");
+		}
 		return modelMap;
 	}
 } 

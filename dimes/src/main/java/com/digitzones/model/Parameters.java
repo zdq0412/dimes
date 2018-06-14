@@ -14,6 +14,14 @@ public class Parameters extends CommonModel {
 	private static final long serialVersionUID = 1L;
 	private Boolean kfc;
 	private ParameterType parameterType;
+	/**取值规则*/
+	private String rules;
+	public String getRules() {
+		return rules;
+	}
+	public void setRules(String rules) {
+		this.rules = rules;
+	}
 	@ManyToOne
 	@JoinColumn(name="PARAMETERTYPE_ID")
 	public ParameterType getParameterType() {

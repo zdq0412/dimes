@@ -6,12 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.digitzones.dao.IDeviceDao;
+import com.digitzones.dao.IDeviceSiteDao;
 import com.digitzones.model.Device;
 import com.digitzones.model.Pager;
 import com.digitzones.service.IDeviceService;
 @Service
 public class DeviceServiceImpl implements IDeviceService {
 	private IDeviceDao deviceDao;
+	private IDeviceSiteDao deviceSiteDao;
+	@Autowired
+	public void setDeviceSiteDao(IDeviceSiteDao deviceSiteDao) {
+		this.deviceSiteDao = deviceSiteDao;
+	}
+
 	@Autowired
 	public void setDeviceDao(IDeviceDao deviceDao) {
 		this.deviceDao = deviceDao;
@@ -46,6 +53,12 @@ public class DeviceServiceImpl implements IDeviceService {
 	@Override
 	public void deleteObj(Long id) {
 		deviceDao.deleteById(id);
+	}
+
+	@Override
+	public Device queryDeviceByDeviceSiteId(Long deviceSiteId) {
+		
+		return this.deviceSiteDao.findById(deviceSiteId).getDevice();
 	}
 
 }

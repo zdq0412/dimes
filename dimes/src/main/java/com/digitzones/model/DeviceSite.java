@@ -25,8 +25,6 @@ public class DeviceSite extends CommonModel {
 	private Device device;
 	/**站点参数*/
 	private Set<Parameters> parameters;
-	/**工序*/
-	private Processes process;
 	public String getBarCodeAddress() {
 		return barCodeAddress;
 	}
@@ -51,13 +49,5 @@ public class DeviceSite extends CommonModel {
 	}
 	public void setParameters(Set<Parameters> parameters) {
 		this.parameters = parameters;
-	}
-	@ManyToOne
-	@JoinColumn(name="PROCESS_ID")
-	public Processes getProcess() {
-		return process;
-	}
-	public void setProcess(Processes process) {
-		this.process = process;
 	}
 }

@@ -87,7 +87,7 @@
 						<div title="技能信息" data-options="id:'tab0',iconCls:'fa fa-th'">
 							<!-- datagrid表格 -->
 							<table data-toggle="topjui-datagrid"
-								data-options="id:'skillDg',
+								data-options="id:'skill',
                                initCreate: false,
                                fitColumns:true,
 						       url:'position/queryPositionsByDepartmentId.do'">
@@ -304,15 +304,19 @@
 	</div>
 	<!-- 员工表格工具栏结束 -->
 	<!-- 职位表格工具栏开始 -->
-	<div id="position-toolbar" class="topjui-toolbar"
+	<div id="skill-toolbar" class="topjui-toolbar"
 		data-options="grid:{
            type:'datagrid',
-           id:'position'
+           id:'skill'
        }">
 		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
 			data-options="method:'openDialog',
-       extend: '#position-toolbar',
+       extend: '#skill-toolbar',
        iconCls: 'fa fa-plus',
+        parentGrid:{
+		       	type:'datagrid',
+		       	id:'employeeDg'
+		      },
        dialog:{
            id:'positionAddDialog',
             width:600,
@@ -355,7 +359,7 @@
        }">新增</a>
 		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
 			data-options="method: 'openDialog',
-            extend: '#position-toolbar',
+            extend: '#skill-toolbar',
             iconCls: 'fa fa-pencil',
             dialog: {
             	id:'positionEditDialog',
@@ -392,13 +396,13 @@
             }">编辑</a>
 		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
 			data-options="method:'doAjax',
-       extend: '#position-toolbar',
+       extend: '#skill-toolbar',
        iconCls:'fa fa-trash',
        url:'position/deletePosition.do',
        grid: {uncheckedMsg:'请先勾选要删除的数据',id:'position',param:'id:id'}">删除</a>
 		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
 			data-options="method:'doAjax',
-       extend: '#employeeDg-toolbar',
+       extend: '#skill-toolbar',
        iconCls:'fa fa-stop',
        url:'position/disabledPosition.do',
        grid: {uncheckedMsg:'请选择要停用的职位',id:'position',param:'id:id'}">停用</a>

@@ -12,7 +12,7 @@
                 <table  
                 data-toggle="topjui-datagrid"
                        data-options="id:'departmentDg',
-                       url:'classes/queryClasses.do',
+                       url:'processes/queryProcessess.do',
                        singleSelect:true,
                        fitColumns:true,
                        pagination:true,
@@ -20,17 +20,22 @@
                     <thead>
                     <tr>
                         <th data-options="field:'id',title:'id',checkbox:false,width:'80px'"></th>
-                        <th data-options="field:'classType',title:'班次类别',width:'180px',align:'center',formatter:function(value,row,index){
-                            if (row.classType) {
-                                return row.classType.name;
+                        <th data-options="field:'processTypeId',title:'工序类别id',hidden:true,formatter:function(value,row,index){
+                            if (row.processType) {
+                                return row.processType.id;
                             } else {
                                 return '';
                             }
                         }"></th>
-                        <th data-options="field:'code',title:'班次代码',width:'180px',align:'center'"></th>
-                        <th data-options="field:'name',title:'班次名称',sortable:false"></th>
-                        <th data-options="field:'startTime',title:'开始时间',sortable:false"></th>
-                        <th data-options="field:'endTime',title:'结束时间',sortable:false"></th>
+                        <th data-options="field:'processTypeName',title:'工序类别',width:'180px',align:'center',formatter:function(value,row,index){
+                            if (row.processType) {
+                                return row.processType.name;
+                            } else {
+                                return '';
+                            }
+                        }"></th>
+                        <th data-options="field:'code',title:'工序代码',width:'180px',align:'center'"></th>
+                        <th data-options="field:'name',title:'工序名称',sortable:false"></th>
                         <th data-options="field:'note',title:'备注',sortable:false"></th>
                         <th data-options="field:'disabled',title:'停用',sortable:false,
                         formatter:function(value,row,index){
@@ -53,9 +58,9 @@
                      parentGrid:{
                          type:'datagrid',
                          id:'departmentDg',
-                         param:'classesId:id'
+                         param:'processId:id'
                      }">
-                    <div title="设备排班" data-options="id:'tab0',iconCls:'fa fa-th'">
+                    <div title="设备站点" data-options="id:'tab0',iconCls:'fa fa-th'">
                         <!-- datagrid表格 -->
                         <table 
                          data-toggle="topjui-datagrid"
@@ -63,7 +68,7 @@
                                initCreate: false,
                                singleSelect:true,
                                fitColumns:true,
-						       url:'classes/queryDevicesByClassesId.do'">
+						       url:'deviceSite/queryDeviceSitesByProcessId.do'">
                             <thead>
                             <tr>
                                 <th data-options="field:'id',title:'id',checkbox:false"></th>
@@ -93,60 +98,53 @@
                                 }"></th>
                                 <th data-options="field:'code',title:'设备站点代码',sortable:false"></th>
                                 <th data-options="field:'name',title:'设备站点名称',sortable:false"></th>
+                                <th data-options="field:'note',title:'站点说明',sortable:false"></th>
                             </tr>
                             </thead>
                         </table>
                     </div>
-                    <div title="相关文档" data-options="id:'tab1',iconCls:'fa fa-th'">
+                    <div title="工序参数" data-options="id:'tab1',iconCls:'fa fa-th'">
                         <!-- datagrid表格 -->
                         <table data-toggle="topjui-datagrid"
                                data-options="id:'relateDoc',
                                initCreate: false,
                                fitColumns:true,
-						       url:'department/queryRaletedDocuments.do'">
+						       url:'parameter/queryParametersByProcessId.do'">
                             <thead>
                             <tr>
-                                <th data-options="field:'id',title:'id',checkbox:true"></th>
-                                <th data-options="field:'documentName',title:'文档名称',sortable:false"></th>
-                                <th data-options="field:'note',title:'文档说明',sortable:false"></th>
-                                <!-- <th data-options="field:'sex',title:'性别',sortable:false,
-                                formatter:function(value,row,index){
-                                    if (value == '1') {
-                                        return '男';
-                                    } else if (value == '2') {
-                                        return '女';
-                                    } else {
-                                        return '';
-                                    }
-                                }"></th> -->
-                                <th data-options="field:'relatedCode',title:'关联代码',sortable:false"></th>
-                                <th data-options="field:'relatedName',title:'关联名称',sortable:false"></th>
-                                <th data-options="field:'uploadUsername',title:'上传人员',sortable:false"></th>
-                                <th data-options="field:'uploadDate',title:'上传时间',sortable:false,
-                                 formatter:function(value,row,index){
-                                    if (value) {
-                                        var date = new Date(value);
-                                        var month = date.getMonth()+1;
-                                        var monthStr = ((month>=10)?month:('0' + month));
-                                        
-                                        var day = date.getDate();
-                                        var dayStr = ((day>=10)?day:('0'+day));
-                                        
-                                        var hour = date.getHours();
-                                        var hourStr = ((hour>=10)?hour:('0' + hour));
-                                        
-                                        var minute = date.getMinutes();
-                                        var minuteStr = ((minute>=10)?minute:('0' +minute));
-                                        
-                                        var second = date.getSeconds();
-                                        var secondStr = ((second>=10)?second:('0' +second));
-                                        
-                                        var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr  + 
-                                        				' ' + hourStr + ':' + minuteStr + ':' + secondStr;
-                                        return dateStr;
-                                    }else{
-                                    	return '';
-                                    }
+                                <th data-options="field:'id',title:'id',checkbox:false"></th>
+                                <th data-options="field:'code',title:'参数代码',sortable:false"></th>
+                                <th data-options="field:'note',title:'参数名称',sortable:false"></th>
+                                <th data-options="field:'note',title:'取值规则',sortable:false"></th>
+                                <th data-options="field:'note',title:'KPC',sortable:false"></th>
+                                <th data-options="field:'note',title:'备注',sortable:false"></th>
+                                <th data-options="field:'note',title:'停用',sortable:false"></th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div title="状态/故障代码" data-options="id:'tab2',iconCls:'fa fa-th'">
+                        <!-- datagrid表格 -->
+                        <table data-toggle="topjui-datagrid"
+                               data-options="id:'statusTroubleCode',
+                               initCreate: false,
+                               fitColumns:true,
+						       url:'statusTroubleCode/queryStatusTroubleCodesByProcessId.do'">
+                            <thead>
+                            <tr>
+                                <th data-options="field:'id',title:'id',checkbox:false"></th>
+                                <th data-options="field:'code',title:'状态/故障代码',sortable:false"></th>
+                                <th data-options="field:'name',title:'状态/故障名称',sortable:false"></th>
+                                <th data-options="field:'parameterCode',title:'参数代码',sortable:false"></th>
+                                <th data-options="field:'parameterName',title:'参数名称',sortable:false"></th>
+                                <th data-options="field:'conditions',title:'条件',sortable:false"></th>
+                                <th data-options="field:'note',title:'备注',sortable:false"></th>
+                                <th data-options="field:'disabled',title:'停用',sortable:false,formatter:function(value,row,index){
+                                	if(value){
+                                		return 'Y';
+                                	}else{
+                                		return 'N';
+                                	}
                                 }"></th>
                             </tr>
                             </thead>
@@ -173,7 +171,7 @@
            id:'classesAddDialog',
            width:600,
            height:600,
-           href:'console/jsp/classes_add.jsp',
+           href:'console/jsp/processes_add.jsp',
            buttons:[
            	{text:'保存',handler:function(){
            			var code = $('#code').val();
@@ -185,16 +183,14 @@
            			if(name==null || ''===$.trim(name)){
            				return false;
            			}
-           			var classTypeName = $('#classTypeName').val();
-           			if(classTypeName==null || ''===$.trim(classTypeName)){
+           			var processTypeName = $('#processTypeName').val();
+           			if(processTypeName==null || ''===$.trim(processTypeName)){
            				return false;
            			}
-           			$.get('classes/addClasses.do',{
+           			$.get('processes/addProcesses.do',{
            			code:code,
            			name:name,
-           			'classType.name':classTypeName,
-           			startTime:$('#startTime').val(),
-           			endTime:$('#endTime').val(),
+           			'processType.name':processTypeName,
            			note:$('#note').val()
            			},function(data){
            				if(data.success){
@@ -218,8 +214,8 @@
             	id:'classEditDialog',
                 width: 600,
                 height: 400,
-                href: 'console/jsp/classes_edit.jsp',
-                url:'classes/queryClassById.do?id={id}',
+                href: 'console/jsp/processes_edit.jsp',
+                url:'processes/queryProcessesById.do?id={id}',
                  buttons:[
            	{text:'编辑',handler:function(){
            			var code = $('#code').val();
@@ -227,17 +223,15 @@
            			if(name==null || ''===$.trim(name)){
            				return false;
            			}
-           			var classTypeName = $('#classTypeName').val();
-           			if(classTypeName==null || ''===$.trim(classTypeName)){
+           			var processTypeName = $('#processTypeName').val();
+           			if(processTypeName==null || ''===$.trim(processTypeName)){
            				return false;
            			}
-           			$.get('classes/updateClasses.do',{
+           			$.get('processes/updateProcesses.do',{
            			id:$('#departmentDg').iDatagrid('getSelected').id,
            			code:code,
            			name:name,
-           			'classType.name':classTypeName,
-           			startTime:$('#startTime').val(),
-           			endTime:$('#endTime').val(),
+           			'processType.name':processTypeName,
            			note:$('#note').val()
            			},function(data){
            				if(data.success){
@@ -258,15 +252,15 @@
        data-options="method:'doAjax',
        extend: '#departmentDg-toolbar',
        iconCls:'fa fa-trash',
-       url:'classes/deleteClasses.do',
+       url:'processes/deleteProcesses.do',
        grid: {uncheckedMsg:'请先勾选要删除的数据',id:'departmentDg',param:'id:id'}">删除</a>
     <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
        data-options="method:'doAjax',
        extend: '#departmentDg-toolbar',
        iconCls:'fa fa-stop',
-       url:'classes/disabledClasses.do',
-       grid: {uncheckedMsg:'请选择要停用的班次',id:'departmentDg',param:'id:id'}">停用</a>
+       url:'processes/disabledProcesses.do',
+       grid: {uncheckedMsg:'请选择要停用的工序',id:'departmentDg',param:'id:id'}">停用</a>
     </div>
 <!-- 部门表格工具栏结束 -->
 <!-- 职位表格工具栏开始 -->
@@ -280,16 +274,15 @@
        data-options="method:'openDialog',
        extend: '#position-toolbar',
        iconCls: 'fa fa-plus',
-       parentGrid:{
-       	id:'departmentDg',
-       	type:'datagrid',
-       	param:'classesId:id'
-       },
+        parentGrid:{
+               type:'datagrid',
+               id:'departmentDg'
+            },
        dialog:{
            id:'deviceAddDialog',
             width:620,
            height:500,
-           href:'console/jsp/classes_device_add.jsp',
+           href:'console/jsp/processes_deviceSite_add.jsp',
            buttons:[
            	{text:'保存',handler:function(){
            			var ids = $('#deviceTable').iDatagrid('getSelections');
@@ -300,9 +293,9 @@
            			for(var i = 0;i < ids.length;i++){
            				idsArray.push(ids[i].id);
            			}
-           			$.get('classes/addDevice4Classes.do',{
-           				classesId:$('#departmentDg').iDatagrid('getSelected').id,
-           				deviceIds:JSON.stringify(idsArray)
+           			$.get('processes/addDeviceSite4Processes.do',{
+           				processesId:$('#departmentDg').iDatagrid('getSelected').id,
+           				deviceSiteIds:JSON.stringify(idsArray)
            			},function(data){
            				if(data.success){
            					$('#position').iDatagrid('reload');
@@ -323,7 +316,7 @@
        data-options="method:'doAjax',
        extend: '#position-toolbar',
        iconCls:'fa fa-trash',
-       url:'classes/deleteDeviceFromClasses.do?classesId={parent.id}',
+       url:'processes/deleteDeviceSiteFromProcesses.do?processesId={parent.id}',
         parentGrid:{
         type:'datagrid',
         id:'departmentDg'
@@ -341,59 +334,162 @@
        data-toggle="topjui-menubutton"
        data-options="method:'openDialog',
        extend: '#relateDoc-toolbar',
+         parentGrid:{
+               type:'datagrid',
+               id:'departmentDg'
+            },
        iconCls: 'fa fa-plus',
-       dialog:{
-           id:'userAddDialog',
-           href:_ctx + '/html/complex/dialog_add.html',
-           buttonsGroup:[
-               {text:'保存',url:_ctx + '/json/response/success.json',iconCls:'fa fa-plus',handler:'ajaxForm',btnCls:'topjui-btn-brown'}
+              dialog:{
+           id:'parameterAddDialog',
+            width:700,
+           height:500,
+           href:'console/jsp/processes_parameter_add.jsp',
+           buttons:[
+           	{text:'保存',handler:function(){
+           			var ids = $('#parameterTable').iDatagrid('getSelections');
+           		var idsArray = new Array();
+           		if(ids.length<=0){
+           			alert('请选择要添加的设备!');
+           		}else{
+           			for(var i = 0;i < ids.length;i++){
+           				idsArray.push(ids[i].id);
+           			}
+           			$.get('processes/addParameters4Processes.do',{
+           				processesId:$('#departmentDg').iDatagrid('getSelected').id,
+           				parameterIds:JSON.stringify(idsArray)
+           			},function(data){
+           				if(data.success){
+           					$('#relateDoc').iDatagrid('reload');
+           					$('#parameterTable').iDatagrid('reload');
+           				}else{
+           					alert(data.msg);
+           				}
+           			});
+           		}
+           	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
+           	{text:'关闭',handler:function(){
+           		$('#parameterAddDialog').iDialog('close');
+           	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
            ]
        }">新增</a>
-    <a href="javascript:void(0)"
-       data-toggle="topjui-menubutton"
-       data-options="method: 'openDialog',
-            extend: '#relateDoc-toolbar',
-            iconCls: 'fa fa-pencil',
-            grid: {
-                type: 'datagrid',
-                id: 'userDg'
-            },
-            dialog: {
-                width: 950,
-                height: 500,
-                href: _ctx + '/html/complex/user_edit.html?uuid={uuid}',
-                url: _ctx + '/json/product/detail.json?uuid={uuid}',
-                buttonsGroup: [
-                    {
-                        text: '更新',
-                        url: _ctx + '/json/response/success.json',
-                        iconCls: 'fa fa-save',
-                        handler: 'ajaxForm',
-                        btnCls: 'topjui-btn-green'
-                    }
-                ]
-            }">编辑</a>
     <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
        data-options="method:'doAjax',
        extend: '#relateDoc-toolbar',
        iconCls:'fa fa-trash',
-       url:_ctx + '/json/response/success.json',
-       grid: {uncheckedMsg:'请先勾选要删除的数据',param:'uuid:uuid,code:code'}">删除</a>
-<!--     <a href="javascript:void(0)"
-       data-toggle="topjui-menubutton"
-       data-options="method:'filter',
-       extend: '#userDg-toolbar'
-       ">过滤</a>
+       url:'processes/deleteParameterFromProcesses.do?processesId={parent.id}',
+        parentGrid:{
+        type:'datagrid',
+        id:'departmentDg'
+    },
+       grid: {uncheckedMsg:'请先勾选要删除的数据',id:'relateDoc',param:'parametersId:id'}">删除</a>
+</div>
+<!-- 状态故障代码工具栏 -->
+<div id="statusTroubleCode-toolbar" class="topjui-toolbar"
+     data-options="grid:{
+           type:'datagrid',
+           id:'statusTroubleCode'
+       }">
     <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
-       data-options="method:'search',
-       extend: '#userDg-toolbar'">查询</a> -->
+       data-options="method:'openDialog',
+       extend: '#statusTroubleCode-toolbar',
+       iconCls: 'fa fa-plus',
+         parentGrid:{
+               type:'datagrid',
+               id:'departmentDg'
+            },
+           dialog:{
+           id:'parameterAddDialog',
+            width:600,
+           height:500,
+           href:'console/jsp/processes_statusTroubleCode_add.jsp',
+           buttons:[
+           	{text:'保存',handler:function(){
+           			var code = $('#code').val();
+           			if(code==null || ''===$.trim(code)){
+           				return false;
+           			}
+           			
+           			var name = $('#name').val();
+           			if(name==null || ''===$.trim(name)){
+           				return false;
+           			}
+           			$.get('statusTroubleCode/addStatusTroubleCode.do',{
+           			code:code,
+           			name:name,
+           			parameterCode:$('#parameterCode').val(),
+           			parameterName:$('#parameterName').val(),
+           			conditions:$('#conditions').val(),
+           			'processes.id':$('#departmentDg').iDatagrid('getSelected').id,
+           			note:$('#note').val()
+           			},function(data){
+           				if(data.success){
+	           				$('#parameterAddDialog').iDialog('close');
+	           				$('#statusTroubleCode').iDatagrid('reload');
+           				}else{
+           					alert(data.msg);
+           				}
+           			});
+           	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
+           	{text:'关闭',handler:function(){
+           		$('#parameterAddDialog').iDialog('close');
+           	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
+           ]
+       }">新增</a>
+        <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method: 'openDialog',
+            extend: '#statusTroubleCode-toolbar',
+            iconCls: 'fa fa-pencil',
+            dialog: {
+            	id:'classEditDialog',
+                width: 600,
+                height: 400,
+                href: 'console/jsp/processes_statusTroubleCode_edit.jsp',
+                url:'statusTroubleCode/queryStatusTroubleCodeById.do?id={id}',
+                 buttons:[
+           	{text:'编辑',handler:function(){
+           			var code = $('#code').val();
+           			if(code==null || ''===$.trim(code)){
+           				return false;
+           			}
+           			
+           			var name = $('#name').val();
+           			if(name==null || ''===$.trim(name)){
+           				return false;
+           			}
+           			$.get('statusTroubleCode/updateStatusTroubleCode.do',{
+           			id:$('#id').val(),
+           			code:code,
+           			name:name,
+           			parameterCode:$('#parameterCode').val(),
+           			parameterName:$('#parameterName').val(),
+           			conditions:$('#conditions').val(),
+           			'processes.id':$('#departmentDg').iDatagrid('getSelected').id,
+           			note:$('#note').val()
+           			},function(data){
+           				if(data.success){
+	           				$('#classEditDialog').iDialog('close');
+	           				$('#statusTroubleCode').iDatagrid('reload');
+           				}else{
+           					alert(data.msg);
+           				}
+           			});
+           	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
+           	{text:'关闭',handler:function(){
+           		$('#classEditDialog').iDialog('close');
+           	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
+           ]
+            }">编辑</a>
     <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
-       data-options="method:'search',
-       extend: '#relateDoc-toolbar'">停用</a>
-    </div>
+       data-options="method:'doAjax',
+       extend: '#statusTroubleCode-toolbar',
+       iconCls:'fa fa-trash',
+       url:'statusTroubleCode/deleteStatusTroubleCode.do',
+       grid: {uncheckedMsg:'请先勾选要删除的数据',id:'statusTroubleCode',param:'id:id'}">删除</a>
+</div>
 <!-- 相关文档表格工具栏结束 -->
 </body>
 </html>

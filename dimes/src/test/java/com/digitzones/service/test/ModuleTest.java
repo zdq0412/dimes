@@ -397,4 +397,11 @@ public class ModuleTest {
 		
 		moduleService.updateModule(module);
 	}
+	@Test
+	public void testAddProcessestUrl() {
+		Module module = moduleService.queryByProperty("name", "工序信息");
+		module.setUrl("console/jsp/processes.jsp");
+		
+		moduleService.updateModule(module);
+	}
 }

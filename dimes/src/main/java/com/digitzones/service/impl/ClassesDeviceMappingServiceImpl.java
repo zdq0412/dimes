@@ -48,4 +48,8 @@ public class ClassesDeviceMappingServiceImpl implements IClassesDeviceMappingSer
 		classesDeviceMappingDao.deleteById(id);
 	}
 
+	@Override
+	public void deleteByClassesIdAndDeviceId(Long classesId, Long deviceId) {
+		classesDeviceMappingDao.deleteByClassIdAndDeviceId(classesId, deviceId);
+	}
 }

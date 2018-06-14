@@ -197,6 +197,10 @@
        data-options="method:'openDialog',
        extend: '#departmentDg-toolbar',
        iconCls: 'fa fa-plus',
+        parentGrid:{
+               type:'treegrid',
+               id:'parameterTypeTg'
+            },
        dialog:{
            id:'parameterTypeAddDialog',
            width:600,
@@ -307,6 +311,10 @@
        data-options="method:'openDialog',
        extend: '#position-toolbar',
        iconCls: 'fa fa-plus',
+        parentGrid:{
+               type:'datagrid',
+               id:'departmentDg'
+            },
        dialog:{
            id:'parameterAddDialog',
             width:620,

@@ -10,4 +10,13 @@ public class ClassesDeviceMappingDaoImpl extends CommonDaoImpl<ClassesDeviceMapp
 	public ClassesDeviceMappingDaoImpl() {
 		super(ClassesDeviceMapping.class);
 	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void deleteByClassIdAndDeviceId(Long classesId, Long deviceId) {
+		this.getSession().createSQLQuery("delete from CLASSES_DEVICE where classes_id=?0 and device_id=?1")
+		.setParameter(0, classesId)
+		.setParameter(1,deviceId)
+		.executeUpdate();
+	}
 }

@@ -138,4 +138,41 @@ public class ParameterController {
 		modelMap.addAttribute("title", "操作提示!");
 		return modelMap;
 	}
+	/**
+	 * 根据工序id查询参数 信息
+	 * @param processId
+	 * @param rows
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping("/queryParametersByProcessId.do")
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	public ModelMap queryParametersByProcessId(Long processId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
+		ModelMap modelMap = new ModelMap();
+		String hql = "select ds from ProcessesParametersMapping pdm inner join  pdm.parameters ds  inner join pdm.processes p where p.id=?0";
+		Pager<Parameters> pager = parameterService.queryObjs(hql, page, rows, new Object[] {processId});
+		modelMap.addAttribute("total", pager.getTotalCount());
+		modelMap.addAttribute("rows", pager.getData());
+		return modelMap;
+	}
+	/**
+	 * 根据工序id查询非当前工序下的参数信息
+	 * @param processId
+	 * @param rows
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping("/queryOtherParameters.do")
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	public ModelMap queryOtherParameters(Long processId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
+		ModelMap modelMap = new ModelMap();
+		String hql = "select ds from Parameters ds where ds.id not in ("
+				+ "select pdm.parameters.id from ProcessesParametersMapping pdm) or ds.id in (select pdm_.parameters.id from ProcessesParametersMapping pdm_ where pdm_.processes.id!=?0)";
+		Pager<Parameters> pager = parameterService.queryObjs(hql, page, rows, new Object[] {processId});
+		modelMap.addAttribute("total", pager.getTotalCount());
+		modelMap.addAttribute("rows", pager.getData());
+		return modelMap;
+	}
 } 

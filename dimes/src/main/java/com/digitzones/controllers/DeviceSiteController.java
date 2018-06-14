@@ -137,4 +137,41 @@ public class DeviceSiteController {
 		modelMap.addAttribute("message", "成功删除!");
 		return modelMap;
 	}
+	/**
+	 * 根据工序id查询站点 信息
+	 * @param processId
+	 * @param rows
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping("/queryDeviceSitesByProcessId.do")
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	public ModelMap queryDeviceSitesByProcessId(Long processId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
+		ModelMap modelMap = new ModelMap();
+		String hql = "select ds from ProcessDeviceSiteMapping pdm inner join  pdm.deviceSite ds  inner join pdm.processes p where p.id=?0";
+		Pager<DeviceSite> pager = deviceSiteService.queryObjs(hql, page, rows, new Object[] {processId});
+		modelMap.addAttribute("total", pager.getTotalCount());
+		modelMap.addAttribute("rows", pager.getData());
+		return modelMap;
+	}
+	/**
+	 * 根据工序id查询非当前工序下的站点信息
+	 * @param processId
+	 * @param rows
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping("/queryOtherDeviceSites.do")
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	public ModelMap queryOtherDeviceSites(Long processId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
+		ModelMap modelMap = new ModelMap();
+		String hql = "select ds from DeviceSite ds where ds.id not in ("
+				+ "select pdm.deviceSite.id from ProcessDeviceSiteMapping pdm) or ds.id in (select pdm_.deviceSite.id from ProcessDeviceSiteMapping pdm_ where pdm_.processes.id!=?0)";
+		Pager<DeviceSite> pager = deviceSiteService.queryObjs(hql, page, rows, new Object[] {processId});
+		modelMap.addAttribute("total", pager.getTotalCount());
+		modelMap.addAttribute("rows", pager.getData());
+		return modelMap;
+	}
 } 

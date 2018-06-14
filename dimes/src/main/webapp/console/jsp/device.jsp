@@ -221,6 +221,10 @@
 			data-options="method:'openDialog',
        extend: '#deviceDg-toolbar',
        iconCls: 'fa fa-plus',
+        parentGrid:{
+               type:'treegrid',
+               id:'productionUnitTg'
+            },
        dialog:{
            id:'deviceAddDialog',
            width:500,
@@ -337,6 +341,10 @@
 			data-options="method:'openDialog',
        extend: '#deviceSite-toolbar',
        iconCls: 'fa fa-plus',
+        parentGrid:{
+               type:'datagrid',
+               id:'deviceDg'
+            },
        dialog:{
            id:'deviceSiteAddDialog',
             width:600,
