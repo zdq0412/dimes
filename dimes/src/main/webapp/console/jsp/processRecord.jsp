@@ -16,7 +16,7 @@
 			   singleSelect:true,
 			   url:'productionUnit/queryDeviceSiteTree.do',
 			   childGrid:{
-			   	   param:'pid:id',
+			   	   param:'deviceSiteId:id',
                    grid:[
                        {type:'datagrid',id:'departmentDg'},
                    ]
@@ -37,7 +37,7 @@
                 <table  
                 data-toggle="topjui-datagrid"
                        data-options="id:'departmentDg',
-                       url:'department/queryDepartmentsByParentId.do',
+                       url:'processRecord/queryProcessRecordByDeviceSiteId.do',
                        singleSelect:true,
                        fitColumns:true,
                        pagination:true,
@@ -48,34 +48,44 @@
 			           childTab: [{id:'southTabs'}]">
                     <thead>
                     <tr>
-                        <th data-options="field:'id',title:'id',checkbox:false,width:'80px'"></th>
-                        <th data-options="field:'code',title:'部门代码',width:'180px',align:'center'"></th>
-                        <th data-options="field:'name',title:'部门名称',sortable:false"></th>
-                        <th data-options="field:'note',title:'备注',sortable:true"></th>
-                        <th data-options="field:'parentCode',title:'上级部门代码',sortable:true,
-                        formatter:function(value,row,index){
-                            if (row.parent) {
-                                return row.parent.code;
-                            } else {
-                                return '';
-                            }
-                        }"></th>
-                        <th data-options="field:'parentName',title:'上级部门名称',sortable:true, 
-                        formatter:function(value,row,index){
-                            if (row.parent) {
-                                return row.parent.name;
-                            } else {
-                                return '';
-                            }
-                        }"></th>
-                        <th data-options="field:'disabled',title:'停用',sortable:true,
-                        formatter:function(value,row,index){
+                        <th data-options="field:'id',title:'id',checkbox:false,width:'80px',hidden:true"></th>
+                        <th data-options="field:'collectionDate',title:'生产时间',width:'180px',align:'center',formatter:function(value,row,index){
                         	if(value){
-                        		return 'Y';
+                        				var date = new Date(value);
+                                        var month = date.getMonth()+1;
+                                        var monthStr = ((month>=10)?month:('0' + month));
+                                        
+                                        var day = date.getDate();
+                                        var dayStr = ((day>=10)?day:('0'+day));
+                                        	/*
+                                        var hour = date.getHours();
+                                        var hourStr = ((hour>=10)?hour:('0' + hour));
+                                        
+                                        var minute = date.getMinutes();
+                                        var minuteStr = ((minute>=10)?minute:('0' +minute));
+                                        
+                                        var second = date.getSeconds();
+                                        var secondStr = ((second>=10)?second:('0' +second));
+                                        
+                                        var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr  + 
+                                        				' ' + hourStr + ':' + minuteStr + ':' + secondStr; */
+                                        	var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr;			
+                                        return dateStr;
                         	}else{
-                        		return 'N';
+                        		return '';
                         	}
                         }"></th>
+                        <th data-options="field:'serialNo',title:'生产序号',sortable:false"></th>
+                        <th data-options="field:'no',title:'工单单号',sortable:true"></th>
+                        <th data-options="field:'workPieceCode',title:'工件代码',sortable:true"></th>
+                        <th data-options="field:'workPieceName',title:'工件名称',sortable:true"></th>
+                        <th data-options="field:'unitType',title:'规格型号',sortable:true"></th>
+                        <th data-options="field:'graphNumber',title:'图号',sortable:true"></th>
+                        <th data-options="field:'version',title:'版本号',sortable:true"></th>
+                        <th data-options="field:'processCode',title:'工序代码',sortable:true"></th>
+                        <th data-options="field:'processName',title:'工序名称',sortable:true"></th>
+                        <th data-options="field:'batchNumber',title:'批号',sortable:true"></th>
+                        <th data-options="field:'stoveNumber',title:'炉号',sortable:true"></th>
                     </tr>
                     </thead>
                 </table>
@@ -90,46 +100,53 @@
                      parentGrid:{
                          type:'datagrid',
                          id:'departmentDg',
-                         param:'id:id'
+                         param:'processRecordId:id'
                      }">
-                    <div title="岗位信息" data-options="id:'tab0',iconCls:'fa fa-th'">
+                    <div title="设备参数" data-options="id:'tab0',iconCls:'fa fa-th'">
                         <!-- datagrid表格 -->
                         <table 
                          data-toggle="topjui-datagrid"
                                data-options="id:'position',
                                initCreate: false,
                                fitColumns:true,
-						       url:'position/queryPositionsByDepartmentId.do'">
+						       url:'processParameterRecord/queryProcessParameterRecordByProcessRecordId.do'">
                             <thead>
                             <tr>
-                                <th data-options="field:'id',title:'id',checkbox:true"></th>
-                                <th data-options="field:'code',title:'岗位代码',sortable:true"></th>
-                                <th data-options="field:'name',title:'岗位名称',sortable:true"></th>
-                                <th data-options="field:'note',title:'备注',sortable:true"></th>
-                                <th data-options="field:'deptCode',title:'部门代码',sortable:true,
-                                formatter:function(value,row,index){
-                                    if (row.department) {
-                                        return row.department.code;
-                                    }else {
-                                        return '';
-                                    }
-                                }"></th>
-                                <th data-options="field:'deptName',title:'部门名称',sortable:true,
-                                formatter:function(value,row,index){
-                                    if (row.department) {
-                                        return row.department.name;
-                                    }else {
-                                        return '';
-                                    }
-                                }"></th>
-                                <th data-options="field:'disabled',title:'停用',sortable:true,
-		                        formatter:function(value,row,index){
-		                        	if(value){
-		                        		return 'Y';
-		                        	}else{
-		                        		return 'N';
-		                        	}
-                        		}"></th>
+                                <th data-options="field:'id',title:'id',checkbox:false,hidden:true"></th>
+                                <th data-options="field:'parameterCode',title:'参数代码',sortable:false"></th>
+                                <th data-options="field:'parameterName',title:'参数名称',sortable:false"></th>
+                                <th data-options="field:'upLine',title:'控制线UL',sortable:false"></th>
+                                <th data-options="field:'lowLine',title:'控制线LL',sortable:false"></th>
+                                <th data-options="field:'standardValue',title:'标准值',sortable:false"></th>
+                                <th data-options="field:'currentDate',title:'时间',sortable:false,formatter:function(value,row,index){
+                        	if(value){
+                        				var date = new Date(value);
+                                        var month = date.getMonth()+1;
+                                        var monthStr = ((month>=10)?month:('0' + month));
+                                        
+                                        var day = date.getDate();
+                                        var dayStr = ((day>=10)?day:('0'+day));
+                                        	/*
+                                        var hour = date.getHours();
+                                        var hourStr = ((hour>=10)?hour:('0' + hour));
+                                        
+                                        var minute = date.getMinutes();
+                                        var minuteStr = ((minute>=10)?minute:('0' +minute));
+                                        
+                                        var second = date.getSeconds();
+                                        var secondStr = ((second>=10)?second:('0' +second));
+                                        
+                                        var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr  + 
+                                        				' ' + hourStr + ':' + minuteStr + ':' + secondStr; */
+                                        	var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr;			
+                                        return dateStr;
+                        	}else{
+                        		return '';
+                        	}
+                        }"></th>
+                                <th data-options="field:'parameterValue',title:'参数值',sortable:false"></th>
+                                <th data-options="field:'status',title:'状态',sortable:false"></th>
+                                <th data-options="field:'statusCode',title:'状态/故障代码',sortable:false"></th>
                             </tr>
                             </thead>
                         </table>
@@ -208,43 +225,43 @@
        iconCls: 'fa fa-plus',
        parentGrid:{
        	type:'treegrid',
-       	id:'departmentTg'
+       	id:'departmentTg',
+       	param:'deviceSiteId:id'
        },
        dialog:{
            id:'departmentAddDialog',
            width:600,
-           height:400,
-           href:'console/jsp/department_add.jsp',
+           height:700,
+           href:'console/jsp/processRecord_add.jsp',
            buttons:[
            	{text:'保存',handler:function(){
-           		if($('#departmentTg').iTreegrid('getSelected')){
-           			var deptCode = $('#deptCode').val();
-           			if(deptCode==null || ''===$.trim(deptCode)){
+           			var serialNo = $('#serialNo').val();
+           			if(serialNo==null || ''===$.trim(serialNo)){
            				return false;
            			}
            			
-           			var deptName = $('#deptName').val();
-           			if(deptName==null || ''===$.trim(deptName)){
-           				return false;
-           			}
-           			$.get('department/addDepartment.do',{
-           			code:deptCode,
-           			name:deptName,
-           			'parent.id':$('#departmentTg').iTreegrid('getSelected').id,
-           			note:$('#deptNote').val()
+           			$.get('processRecord/addProcessRecord.do',{
+           			collectionDate:$('#collectionDate').val(),
+           			serialNo:$('#serialNo').val(),
+           			no:$('#no').text(),
+           			workPieceCode:$('#workPieceCode').val(),
+           			workPieceName:$('#workPieceName').val(),
+           			unitType:$('#unitType').val(),
+           			graphNumber:$('#graphNumber').val(),
+           			version:$('#version').val(),
+           			processCode:$('#processCode').val(),
+           			processName:$('#processName').val(),
+           			batchNumber:$('#batchNumber').val(),
+           			'deviceSiteId':$('#departmentTg').iTreegrid('getSelected').id,
+           			stoveNumber:$('#stoveNumber').val()
            			},function(data){
            				if(data.success){
 	           				$('#departmentAddDialog').iDialog('close');
 	           				$('#departmentDg').iDatagrid('reload');
-	           				$('#departmentTg').iTreegrid('reload');
            				}else{
            					alert(data.msg);
            				}
            			});
-           		}else{
-           			alert('请选择父部门');
-           			$('#departmentAddDialog').iDialog('close');
-           		}
            	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
            	{text:'关闭',handler:function(){
            		$('#departmentAddDialog').iDialog('close');
@@ -255,38 +272,46 @@
        data-options="method: 'openDialog',
             extend: '#departmentDg-toolbar',
             iconCls: 'fa fa-pencil',
+             parentGrid:{
+       	type:'treegrid',
+       	id:'departmentTg',
+       	param:'deviceSiteId:id'
+       },
             dialog: {
             	id:'departmentEditDialog',
                 width: 600,
-                height: 400,
-                href: 'console/jsp/department_edit.jsp',
-                url:'department/queryDepartmentById.do?id={id}',
+                height: 700,
+                href: 'console/jsp/processRecord_edit.jsp',
+                url:'processRecord/queryProcessRecordById.do?id={id}',
                  buttons:[
            	{text:'编辑',handler:function(){
-           		if($('#departmentDg').iDatagrid('getSelected')){
-           			var deptCode = $('#deptCode_edit').val();
-           			var deptName = $('#deptName_edit').val();
-           			if(deptName==null || ''===$.trim(deptName)){
+           		var serialNo = $('#serialNo').val();
+           			if(serialNo==null || ''===$.trim(serialNo)){
            				return false;
            			}
-           			$.get('department/updateDepartment.do',{
+           			$.get('processRecord/updateProcessRecord.do',{
            			id:$('#departmentDg').iDatagrid('getSelected').id,
-           			code:deptCode,
-           			name:deptName,
-           			'parent.id':$('#parentId_edit').val(),
-           			note:$('#deptNote_edit').val()
+           			collectionDate:$('#collectionDate').val(),
+           			serialNo:$('#serialNo').val(),
+           			no:$('#no').text(),
+           			workPieceCode:$('#workPieceCode').val(),
+           			workPieceName:$('#workPieceName').val(),
+           			unitType:$('#unitType').val(),
+           			graphNumber:$('#graphNumber').val(),
+           			version:$('#version').val(),
+           			processCode:$('#processCode').val(),
+           			processName:$('#processName').val(),
+           			batchNumber:$('#batchNumber').val(),
+           			'deviceSiteId':$('#departmentTg').iTreegrid('getSelected').id,
+           			stoveNumber:$('#stoveNumber').val()
            			},function(data){
            				if(data.success){
 	           				$('#departmentEditDialog').iDialog('close');
 	           				$('#departmentDg').iDatagrid('reload');
-	           				$('#departmentTg').iTreegrid('reload');
            				}else{
            					alert(data.msg);
            				}
            			});
-           		}else{
-           			alert('请选择要编辑的记录!');
-           		}
            	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
            	{text:'关闭',handler:function(){
            		$('#departmentEditDialog').iDialog('close');
@@ -298,24 +323,8 @@
        data-options="method:'doAjax',
        extend: '#departmentDg-toolbar',
        iconCls:'fa fa-trash',
-       url:'department/deleteDepartment.do',
+       url:'processRecord/deleteProcessRecord.do',
        grid: {uncheckedMsg:'请先勾选要删除的数据',id:'departmentDg',param:'id:id'}">删除</a>
-<!--     <a href="javascript:void(0)"
-       data-toggle="topjui-menubutton"
-       data-options="method:'filter',
-       extend: '#userDg-toolbar'
-       ">过滤</a>
-    <a href="javascript:void(0)"
-       data-toggle="topjui-menubutton"
-       data-options="method:'search',
-       extend: '#userDg-toolbar'">查询</a> -->
-    <a href="javascript:void(0)"
-       data-toggle="topjui-menubutton"
-       data-options="method:'doAjax',
-       extend: '#departmentDg-toolbar',
-       iconCls:'fa fa-stop',
-       url:'department/disabledDepartment.do',
-       grid: {uncheckedMsg:'请选择要停用的部门',id:'departmentDg',param:'id:id'}">停用</a>
     </div>
 <!-- 部门表格工具栏结束 -->
 <!-- 职位表格工具栏开始 -->
@@ -329,32 +338,33 @@
        data-options="method:'openDialog',
        extend: '#position-toolbar',
        iconCls: 'fa fa-plus',
-       parentGrid:{
-       	type:'datagrid',
-       	id:'departmentDg'
+        parentGrid:{
+       	type:'treegrid',
+       	id:'departmentTg',
+       	param:'workPieceCode:workPieceCode,processCode:processCode'
        },
        dialog:{
            id:'positionAddDialog',
             width:600,
-           height:400,
-           href:'console/jsp/position_add.jsp',
+           height:600,
+           href:'console/jsp/processParameterRecord_add.jsp',
            buttons:[
            	{text:'保存',handler:function(){
-           		if($('#departmentDg').iDatagrid('getSelected')){
-           			var positionCode = $('#positionCode').val();
-           			if(positionCode==null || ''===$.trim(positionCode)){
+           			/*var parameterCode = $('#parameterCode').val();
+           			if(parameterCode==null || ''===$.trim(parameterCode)){
            				return false;
-           			}
-           			
-           			var positionName = $('#positionName').val();
-           			if(positionName==null || ''===$.trim(positionName)){
-           				return false;
-           			}
-           			$.get('position/addPosition.do',{
-           			code:positionCode,
-           			name:positionName,
-           			'department.id':$('#departmentDg').iDatagrid('getSelected').id,
-           			note:$('#positionNote').val()
+           			}*/
+           			$.get('processParameterRecord/addProcessParameterRecord.do',{
+           			'processRecord.id':$('#departmentDg').iDatagrid('getSelected').id,
+           			parameterCode:$('#parameterCode').val(),
+           			parameterName:$('#parameterName').val(),
+           			upLine:$('#upLine').val(),
+           			lowLine:$('#lowLine').val(),
+           			standardValue:$('#standardValue').val(),
+           			currentDate:$('#currentDate').val(),
+           			parameterValue:$('#parameterValue').val(),
+           			status:$('#status').val(),
+           			statusCode:$('#statusCode').val()
            			},function(data){
            				if(data.success){
 	           				$('#positionAddDialog').iDialog('close');
@@ -363,10 +373,6 @@
            					alert(data.msg);
            				}
            			});
-           		}else{
-           			alert('请选择部门');
-           			$('#positionAddDialog').iDialog('close');
-           		}
            	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
            	{text:'关闭',handler:function(){
            		$('#positionAddDialog').iDialog('close');
@@ -378,25 +384,31 @@
        data-options="method: 'openDialog',
             extend: '#position-toolbar',
             iconCls: 'fa fa-pencil',
+             parentGrid:{
+       	type:'treegrid',
+       	id:'departmentTg',
+       	param:'workPieceCode:workPieceCode,processCode:processCode'
+       },
             dialog: {
             	id:'positionEditDialog',
                 width: 600,
-                height: 400,
-                href: 'console/jsp/position_edit.jsp',
-                url:'position/queryPositionById.do?id={id}',
+                height: 700,
+                href: 'console/jsp/processParameterRecord_edit.jsp',
+                url:'processParameterRecord/queryProcessParameterRecordById.do?id={id}',
                  buttons:[
            	{text:'编辑',handler:function(){
-           			var positionCode = $('#positionCode_edit').val();
-           			var positionName = $('#positionName_edit').val();
-           			if(positionName==null || ''===$.trim(positionName)){
-           				return false;
-           			}
-           			$.get('position/updatePosition.do',{
+           			$.get('processParameterRecord/updateProcessParameterRecord.do',{
            			id:$('#position').iDatagrid('getSelected').id,
-           			code:positionCode,
-           			name:positionName,
-           			'department.id':$('#departmentDg').iDatagrid('getSelected').id,
-           			note:$('#positionNote_edit').val()
+           			'processRecord.id':$('#departmentDg').iDatagrid('getSelected').id,
+           			parameterCode:$('#parameterCode').val(),
+           			parameterName:$('#parameterName').val(),
+           			upLine:$('#upLine').val(),
+           			lowLine:$('#lowLine').val(),
+           			standardValue:$('#standardValue').val(),
+           			currentDate:$('#currentDate').val(),
+           			parameterValue:$('#parameterValue').val(),
+           			status:$('#status').val(),
+           			statusCode:$('#statusCode').val()
            			},function(data){
            				if(data.success){
 	           				$('#positionEditDialog').iDialog('close');
@@ -416,15 +428,8 @@
        data-options="method:'doAjax',
        extend: '#position-toolbar',
        iconCls:'fa fa-trash',
-       url:'position/deletePosition.do',
+       url:'processParameterRecord/deleteProcessParameterRecord.do',
        grid: {uncheckedMsg:'请先勾选要删除的数据',id:'position',param:'id:id'}">删除</a>
-    <a href="javascript:void(0)"
-       data-toggle="topjui-menubutton"
-      data-options="method:'doAjax',
-       extend: '#departmentDg-toolbar',
-       iconCls:'fa fa-stop',
-       url:'position/disabledPosition.do',
-       grid: {uncheckedMsg:'请选择要停用的职位',id:'position',param:'id:id'}">停用</a>
     </div>
 <!-- 职位表格工具栏结束 -->
 <!-- 相关文档表格工具栏开始 -->

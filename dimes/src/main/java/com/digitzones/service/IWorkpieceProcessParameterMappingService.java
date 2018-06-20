@@ -1,5 +1,7 @@
 package com.digitzones.service;
 
+import java.util.List;
+
 import com.digitzones.model.Pager;
 import com.digitzones.model.WorkpieceProcessParameterMapping;
 /**
@@ -16,4 +18,11 @@ public interface IWorkpieceProcessParameterMappingService extends ICommonService
 	 * @return
 	 */
 	public Pager<WorkpieceProcessParameterMapping> queryWorkpieceProcessParameterMappingByWorkpieceId(Long workpieceId,Integer rows,Integer page);
+	/**
+	 * 根据工件编码和工序编码查找'工件工序参数关联对象'
+	 * @param workpieceCode
+	 * @param processCode
+	 * @return
+	 */
+	public List<WorkpieceProcessParameterMapping> queryByWorkpieceCodeAndProcessCode(String workpieceCode,String processCode);
 }

@@ -1,5 +1,6 @@
 package com.digitzones.model;
 import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,10 +21,14 @@ public class PressLightRecord {
 	private Long id;
 	/**按灯日期*/
 	private Date pressLightTime;
-	/**按灯类别名称*/
+	/**按灯类别名称,故障大类*/
 	private String pressLightTypeName;
 	/**按灯类别代码*/
 	private String pressLightTypeCode;
+	/**按灯分类别名称,原因分类*/
+	private String smallPressLightTypeName;
+	/**按灯分类别代码*/
+	private String smallpressLightTypeCode;
 	/**是否停机*/
 	private Boolean halt;
 	/**按灯人员id*/
@@ -42,7 +47,7 @@ public class PressLightRecord {
 	private Long recoverUserId;
 	/**恢复人员名称*/
 	private String recoverUserName;
-	/**故障原因*/
+	/**故障原因,原因小类*/
 	private String reason;
 	/**恢复方法*/
 	private String recoverMethod;
@@ -53,14 +58,43 @@ public class PressLightRecord {
 	/**确认时间*/
 	private Date confirmTime;
 	/**按灯的设备*/
-	private Device device;
-	@ManyToOne
-	@JoinColumn(name="DEVICE_ID")
-	public Device getDevice() {
-		return device;
+	private DeviceSite deviceSite;
+	/**删除标识*/
+	private Boolean deleted = false;
+	/**是否恢复*/
+	private Boolean recovered;
+	
+	public Boolean getRecovered() {
+		return recovered;
 	}
-	public void setDevice(Device device) {
-		this.device = device;
+	public void setRecovered(Boolean recovered) {
+		this.recovered = recovered;
+	}
+	public String getSmallPressLightTypeName() {
+		return smallPressLightTypeName;
+	}
+	public void setSmallPressLightTypeName(String smallPressLightTypeName) {
+		this.smallPressLightTypeName = smallPressLightTypeName;
+	}
+	public String getSmallpressLightTypeCode() {
+		return smallpressLightTypeCode;
+	}
+	public void setSmallpressLightTypeCode(String smallpressLightTypeCode) {
+		this.smallpressLightTypeCode = smallpressLightTypeCode;
+	}
+	public Boolean getDeleted() {
+		return deleted;
+	}
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+	@ManyToOne
+	@JoinColumn(name="DEVICESITE_ID")
+	public DeviceSite getDeviceSite() {
+		return deviceSite;
+	}
+	public void setDeviceSite(DeviceSite deviceSite) {
+		this.deviceSite = deviceSite;
 	}
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

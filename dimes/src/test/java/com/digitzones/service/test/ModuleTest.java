@@ -4,17 +4,60 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.digitzones.model.Department;
 /**
  * 功能模块测试类
  * @author zdq
  * 2018年6月6日
  */
 import com.digitzones.model.Module;
+import com.digitzones.model.NGReasonType;
+import com.digitzones.model.ParameterType;
+import com.digitzones.model.PressLightType;
+import com.digitzones.model.ProductionUnit;
+import com.digitzones.model.WorkpieceType;
+import com.digitzones.service.IDepartmentService;
 import com.digitzones.service.IModuleService;
+import com.digitzones.service.INGReasonTypeService;
+import com.digitzones.service.IParameterTypeService;
+import com.digitzones.service.IPressLightTypeService;
+import com.digitzones.service.IProductionUnitService;
+import com.digitzones.service.IWorkpieceTypeService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations= {"classpath*:springContext-*.xml"})
 public class ModuleTest {
 	private IModuleService moduleService ;
+	private IDepartmentService departmentService;
+	private IProductionUnitService productionUnitService;
+	private INGReasonTypeService ngReasonTypeService;
+	private IParameterTypeService parameterTypeService;
+	private IPressLightTypeService  pressLightTypeService;
+	private IWorkpieceTypeService workpieceTypeService;
+	@Autowired
+	public void setWorkpieceTypeService(IWorkpieceTypeService workpieceTypeService) {
+		this.workpieceTypeService = workpieceTypeService;
+	}
+	@Autowired
+	public void setPressLightTypeService(IPressLightTypeService pressLightTypeService) {
+		this.pressLightTypeService = pressLightTypeService;
+	}
+	@Autowired
+	public void setParameterTypeService(IParameterTypeService parameterTypeService) {
+		this.parameterTypeService = parameterTypeService;
+	}
+	@Autowired
+	public void setNgReasonTypeService(INGReasonTypeService ngReasonTypeService) {
+		this.ngReasonTypeService = ngReasonTypeService;
+	}
+	@Autowired
+	public void setProductionUnitService(IProductionUnitService productionUnitService) {
+		this.productionUnitService = productionUnitService;
+	}
+	@Autowired
+	public void setDepartmentService(IDepartmentService departmentService) {
+		this.departmentService = departmentService;
+	}
 	@Autowired
 	public void setModuleService(IModuleService moduleService) {
 		this.moduleService = moduleService;
@@ -171,6 +214,20 @@ public class ModuleTest {
 		parent3.setIcon("fa fa-book");
 		moduleService.addModule(parent3);
 		
+
+		Module m = new Module();
+		m.setName("设备执行");
+		m.setParent(parent3);
+		m.setLeaf(false);
+		moduleService.addModule(m);
+		
+		Module child = new Module();
+		child.setName("设备执行");
+		child.setParent(m);
+		child.setLeaf(true);
+		child.setUrl("console/jsp/processRecord.jsp");
+		moduleService.addModule(child);
+		
 		Module son5 = new Module();
 		son5.setParent(parent3);
 		son5.setName("不合格品");
@@ -180,8 +237,19 @@ public class ModuleTest {
 		Module son6 = new Module();
 		son6.setParent(parent3);
 		son6.setName("按灯管理");
-		son6.setLeaf(true);
+		son6.setLeaf(false);
 		moduleService.addModule(son6);
+		
+		
+		Module son66 = new Module();
+		son66.setParent(son6);
+		son66.setDisabled(false);
+		son66.setName("按灯管理");
+		son66.setLeaf(true);
+		son66.setUrl("console/jsp/pressLightRecord.jsp");
+		
+		moduleService.addModule(son66);
+		
 		
 		Module son7 = new Module();
 		son7.setParent(parent3);
@@ -252,6 +320,7 @@ public class ModuleTest {
 		basicSon12.setParent(basicSon1);
 		basicSon12.setName("生产单元");
 		basicSon12.setLeaf(true);
+		basicSon12.setUrl("console/jsp/productionUnit.jsp");
 		moduleService.addModule(basicSon12);
 		
 		Module basicSon130 = new Module();
@@ -264,6 +333,7 @@ public class ModuleTest {
 		basicSon13.setParent(basicSon1);
 		basicSon13.setName("人员资料");
 		basicSon13.setLeaf(true);
+		basicSon13.setUrl("console/jsp/employee.jsp");
 		moduleService.addModule(basicSon13);	
 
 		
@@ -271,6 +341,7 @@ public class ModuleTest {
 		basicSon14.setParent(basicSon1);
 		basicSon14.setName("班次定义");
 		basicSon14.setLeaf(true);
+		basicSon14.setUrl("console/jsp/classes.jsp");
 		moduleService.addModule(basicSon14);
 		
 		Module basicSon2 = new Module();
@@ -282,6 +353,7 @@ public class ModuleTest {
 		basicSon21.setParent(basicSon2);
 		basicSon21.setName("设备信息");
 		basicSon21.setLeaf(true);
+		basicSon21.setUrl("console/jsp/device.jsp");
 		moduleService.addModule(basicSon21);
 		
 		Module basicSon22 = new Module();
@@ -300,6 +372,7 @@ public class ModuleTest {
 		basicSon24.setParent(basicSon2);
 		basicSon24.setName("故障原因");
 		basicSon24.setLeaf(true);
+		basicSon24.setUrl("console/jsp/pressLightType.jsp");
 		moduleService.addModule(basicSon24);
 		
 		
@@ -321,24 +394,28 @@ public class ModuleTest {
 		basicSon31.setParent(basicSon3);
 		basicSon31.setName("参数信息");
 		basicSon31.setLeaf(true);
+		basicSon31.setUrl("console/jsp/parameterType.jsp");
 		moduleService.addModule(basicSon31);
 		
 		Module basicSon32 = new Module();
 		basicSon32.setParent(basicSon3);
 		basicSon32.setName("工序信息");
 		basicSon32.setLeaf(true);
+		basicSon32.setUrl("console/jsp/processes.jsp");
 		moduleService.addModule(basicSon32);
 		
 		Module basicSon33 = new Module();
 		basicSon33.setParent(basicSon3);
 		basicSon33.setName("工件信息");
 		basicSon33.setLeaf(true);
+		basicSon33.setUrl("console/jsp/workpiece.jsp");
 		moduleService.addModule(basicSon33);
 		
 		Module basicSon34 = new Module();
 		basicSon34.setParent(basicSon3);
 		basicSon34.setName("不良原因");
 		basicSon34.setLeaf(true);
+		basicSon34.setUrl("console/jsp/ngReasonType.jsp");
 		moduleService.addModule(basicSon34);
 		
 		Module basicSon4 = new Module();
@@ -364,119 +441,80 @@ public class ModuleTest {
 		
 		moduleService.addModule(sysSetParent);
 		
+		Module sysSetChild = new Module();
+		sysSetChild.setName("系统设置");
+		sysSetChild.setParent(sysSetParent);
+		moduleService.addModule(sysSetChild);
+		
+		
 		Module user = new Module();
 		user.setName("用户管理");
-		user.setParent(sysSetParent);
-		
+		user.setParent(sysSetChild);
+		user.setUrl("console/jsp/user.jsp");
+		user.setLeaf(true);
+		user.setDisabled(false);
 		moduleService.addModule(user);
 		
 		Module role = new Module();
 		role.setName("角色管理");
-		role.setParent(sysSetParent);
-		
+		role.setParent(sysSetChild);
+		role.setUrl("console/jsp/role.jsp");
+		role.setLeaf(true);
+		role.setDisabled(false);
 		moduleService.addModule(role);
 		
 		Module power = new Module();
 		power.setName("权限管理");
-		power.setParent(sysSetParent);
-		
+		power.setParent(sysSetChild);
+		power.setUrl("console/jsp/power.jsp");
+		power.setLeaf(true);
+		power.setDisabled(false);
 		moduleService.addModule(power);
-		
-		
-		
-	}
-	@Test
-	public void testAddEmployeeUrl() {
-		Module module = moduleService.queryByProperty("name","人员资料");
-		module.setUrl("console/jsp/employee.jsp");
-		
-		moduleService.updateModule(module);
-	}
-	@Test
-	public void testAddProductionUnitUrl() {
-		Module module = moduleService.queryByProperty("name","生产单元");
-		module.setUrl("console/jsp/productionUnit.jsp");
-		
-		moduleService.updateModule(module);
-	}
-	@Test
-	public void testAddDeviceUrl() {
-		Module module = moduleService.queryByProperty("name", "设备信息");
-		module.setUrl("console/jsp/device.jsp");
-		
-		moduleService.updateModule(module);
-	}
-	@Test
-	public void testAddParameterUrl() {
-		Module module = moduleService.queryByProperty("name", "参数信息");
-		module.setUrl("console/jsp/parameterType.jsp");
-		
-		moduleService.updateModule(module);
-	}
-	@Test
-	public void testAddNGReasonUrl() {
-		Module module = moduleService.queryByProperty("name", "不良原因");
-		module.setUrl("console/jsp/ngReasonType.jsp");
-		
-		moduleService.updateModule(module);
-	}
-	@Test
-	public void testAddPressLightUrl() {
-		Module module = moduleService.queryByProperty("name", "故障原因");
-		module.setUrl("console/jsp/pressLightType.jsp");
-		
-		moduleService.updateModule(module);
-	}
-	@Test
-	public void testAddClassestUrl() {
-		Module module = moduleService.queryByProperty("name", "班次定义");
-		module.setUrl("console/jsp/classes.jsp");
-		
-		moduleService.updateModule(module);
-	}
-	@Test
-	public void testAddProcessessUrl() {
-		Module module = moduleService.queryByProperty("name", "工序信息");
-		module.setUrl("console/jsp/processes.jsp");
-		
-		moduleService.updateModule(module);
-	}
-	@Test
-	public void testAddUserUrl() {
-		Module module = moduleService.queryByProperty("name", "用户管理");
-		
-		Module child = new Module();
-		child.setName("用户管理");
-		child.setParent(module);
-		child.setUrl("console/jsp/user.jsp");
-		child.setLeaf(true);
-		child.setDisabled(false);
-		moduleService.addModule(child);
 	}
 	
 	@Test
-	public void testAddWorkpieceTypeUrl() {
-		Module module = moduleService.queryByProperty("name", "工件信息");
-		module.setUrl("console/jsp/workpiece.jsp");
+	public void init() {
+		//新增一个根部门
+		Department d0 = new Department();
+		d0.setName("嘉兴迪筑工业技术有限公司");
+		d0.setCode("ORG");
+		departmentService.addDepartment(d0);
 		
-		moduleService.updateModule(module);
-	}
-	@Test
-	public void testAddDeviceExecuteUrl() {
-		Module module = moduleService.queryByProperty("name", "执行数据");
+		//新增一个根生产单元
+		ProductionUnit rootProductionUnit = new ProductionUnit();
+		rootProductionUnit.setName("嘉兴迪筑工业技术有限公司");
+		rootProductionUnit.setCode("ROOTPRODUCTIONUNIT");
 		
-		Module m = new Module();
-		m.setName("设备执行");
-		m.setParent(module);
-		m.setLeaf(false);
-		moduleService.addModule(m);
+		productionUnitService.addObj(rootProductionUnit);
 		
-		Module child = new Module();
-		child.setName("设备执行");
-		child.setParent(m);
-		child.setLeaf(true);
-		child.setUrl("console/jsp/deviceRecord.jsp");
+		//新增一个根生产单元
+		ProductionUnit notCategories = new ProductionUnit();
+		notCategories.setName("未分类");
+		notCategories.setCode("NOTCATEGORIES");
+		productionUnitService.addObj(notCategories);
+		//不良原因类型
+		NGReasonType ngReasonType = new NGReasonType();
+		ngReasonType.setCode("NGREASONTYPE");
+		ngReasonType.setName("不良原因类型");
 		
-		moduleService.addModule(child);
+		ngReasonTypeService.addObj(ngReasonType);
+		//参数类型
+		ParameterType parent = new ParameterType();
+		parent.setCode("TOPTYPE");
+		parent.setName("参数类型");
+		
+		parameterTypeService.addObj(parent);
+		//故障或按灯类型
+		PressLightType plt = new PressLightType();
+		plt.setCode("TOPTYPE");
+		plt.setName("故障类型");
+		
+		pressLightTypeService.addObj(plt);
+		//工件类型
+		WorkpieceType workpieceType = new WorkpieceType();
+		workpieceType.setCode("PARENT_TYPE");
+		workpieceType.setName("工件类别");
+		
+		workpieceTypeService.addObj(workpieceType);
 	}
 }

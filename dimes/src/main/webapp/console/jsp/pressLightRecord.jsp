@@ -16,7 +16,7 @@
 			   singleSelect:true,
 			   url:'productionUnit/queryDeviceSiteTree.do',
 			   childGrid:{
-			   	   param:'pid:id',
+			   	   param:'deviceSiteId:id',
                    grid:[
                        {type:'datagrid',id:'departmentDg'},
                    ]
@@ -37,7 +37,7 @@
                 <table  
                 data-toggle="topjui-datagrid"
                        data-options="id:'departmentDg',
-                       url:'department/queryDepartmentsByParentId.do',
+                       url:'pressLightRecord/queryPressLightRecordByDeviceSiteId.do',
                        singleSelect:true,
                        fitColumns:true,
                        pagination:true,
@@ -48,34 +48,102 @@
 			           childTab: [{id:'southTabs'}]">
                     <thead>
                     <tr>
-                        <th data-options="field:'id',title:'id',checkbox:false,width:'80px'"></th>
-                        <th data-options="field:'code',title:'部门代码',width:'180px',align:'center'"></th>
-                        <th data-options="field:'name',title:'部门名称',sortable:false"></th>
-                        <th data-options="field:'note',title:'备注',sortable:true"></th>
-                        <th data-options="field:'parentCode',title:'上级部门代码',sortable:true,
-                        formatter:function(value,row,index){
-                            if (row.parent) {
-                                return row.parent.code;
-                            } else {
-                                return '';
-                            }
+                        <th data-options="field:'id',title:'id',checkbox:false,width:'80px',hidden:true"></th>
+                        <th data-options="field:'pressLightTime',title:'按灯时间',width:'180px',align:'center',formatter:function(value,row,index){
+                        	if(value){
+                        				var date = new Date(value);
+                                        var month = date.getMonth()+1;
+                                        var monthStr = ((month>=10)?month:('0' + month));
+                                        
+                                        var day = date.getDate();
+                                        var dayStr = ((day>=10)?day:('0'+day));
+                                        var hour = date.getHours();
+                                        var hourStr = ((hour>=10)?hour:('0' + hour));
+                                        
+                                        var minute = date.getMinutes();
+                                        var minuteStr = ((minute>=10)?minute:('0' +minute));
+                                        
+                                        var second = date.getSeconds();
+                                        var secondStr = ((second>=10)?second:('0' +second));
+                                        
+                                        var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr  + 
+                                        				' ' + hourStr + ':' + minuteStr + ':' + secondStr; 
+                                        return dateStr;
+                        	}else{
+                        		return '';
+                        	}
                         }"></th>
-                        <th data-options="field:'parentName',title:'上级部门名称',sortable:true, 
-                        formatter:function(value,row,index){
-                            if (row.parent) {
-                                return row.parent.name;
-                            } else {
-                                return '';
-                            }
-                        }"></th>
-                        <th data-options="field:'disabled',title:'停用',sortable:true,
-                        formatter:function(value,row,index){
+                        <th data-options="field:'pressLightTypeName',title:'故障大类',sortable:false"></th>
+                        <th data-options="field:'smallPressLightTypeName',title:'原因分类',sortable:false"></th>
+                        <th data-options="field:'halt',title:'是否停机',sortable:false,formatter:function(value,row,index){
                         	if(value){
                         		return 'Y';
                         	}else{
                         		return 'N';
                         	}
                         }"></th>
+                        <th data-options="field:'pressLightUserName',title:'按灯人员',sortable:false"></th>
+                        <th data-options="field:'lightOutUserName',title:'熄灯人员',sortable:false"></th>
+                        <th data-options="field:'lightOutTime',title:'熄灯时间',sortable:false,formatter:function(value,row,index){
+                        	if(value){
+                        				var date = new Date(value);
+                                        var month = date.getMonth()+1;
+                                        var monthStr = ((month>=10)?month:('0' + month));
+                                        
+                                        var day = date.getDate();
+                                        var dayStr = ((day>=10)?day:('0'+day));
+                                        var hour = date.getHours();
+                                        var hourStr = ((hour>=10)?hour:('0' + hour));
+                                        
+                                        var minute = date.getMinutes();
+                                        var minuteStr = ((minute>=10)?minute:('0' +minute));
+                                        
+                                        var second = date.getSeconds();
+                                        var secondStr = ((second>=10)?second:('0' +second));
+                                        
+                                        var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr  + 
+                                        				' ' + hourStr + ':' + minuteStr + ':' + secondStr; 
+                                        return dateStr;
+                        	}else{
+                        		return '';
+                        	}
+                        }"></th>
+                        <th data-options="field:'recovered',title:'是否恢复',sortable:false,formatter:function(value,row,index){
+                        	if(value){
+                        		return 'Y';
+                        	}else{
+                        		return 'N';
+                        	}
+                        }"></th>
+                        <th data-options="field:'recoverUserName',title:'恢复人员',sortable:false"></th>
+                        <th data-options="field:'recoverTime',title:'恢复时间',sortable:false"></th>
+                        <th data-options="field:'confirmUserName',title:'确认人员',sortable:false"></th>
+                        <th data-options="field:'confirmTime',title:'确认时间',sortable:false,formatter:function(value,row,index){
+                        	if(value){
+                        				var date = new Date(value);
+                                        var month = date.getMonth()+1;
+                                        var monthStr = ((month>=10)?month:('0' + month));
+                                        
+                                        var day = date.getDate();
+                                        var dayStr = ((day>=10)?day:('0'+day));
+                                        var hour = date.getHours();
+                                        var hourStr = ((hour>=10)?hour:('0' + hour));
+                                        
+                                        var minute = date.getMinutes();
+                                        var minuteStr = ((minute>=10)?minute:('0' +minute));
+                                        
+                                        var second = date.getSeconds();
+                                        var secondStr = ((second>=10)?second:('0' +second));
+                                        
+                                        var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr  + 
+                                        				' ' + hourStr + ':' + minuteStr + ':' + secondStr; 
+                                        return dateStr;
+                        	}else{
+                        		return '';
+                        	}
+                        }"></th>
+                        <th data-options="field:'reason',title:'原因小类',sortable:false"></th>
+                        <th data-options="field:'recoverMethod',title:'恢复方法',sortable:false"></th>
                     </tr>
                     </thead>
                 </table>
@@ -208,30 +276,22 @@
        iconCls: 'fa fa-plus',
        parentGrid:{
        	type:'treegrid',
-       	id:'departmentTg'
+       	id:'departmentTg',
+       	params:'deviceSiteId:id'
        },
        dialog:{
            id:'departmentAddDialog',
            width:600,
            height:400,
-           href:'console/jsp/department_add.jsp',
+           href:'console/jsp/pressLightRecord_add.jsp',
            buttons:[
            	{text:'保存',handler:function(){
-           		if($('#departmentTg').iTreegrid('getSelected')){
-           			var deptCode = $('#deptCode').val();
-           			if(deptCode==null || ''===$.trim(deptCode)){
-           				return false;
-           			}
-           			
-           			var deptName = $('#deptName').val();
-           			if(deptName==null || ''===$.trim(deptName)){
-           				return false;
-           			}
-           			$.get('department/addDepartment.do',{
-           			code:deptCode,
-           			name:deptName,
-           			'parent.id':$('#departmentTg').iTreegrid('getSelected').id,
-           			note:$('#deptNote').val()
+           			$.get('pressLightRecord/addPressLightRecord.do',{
+           			pressLightTypeName:$('#pressLightTypeName').val(),
+           			smallPressLightTypeName:$('#smallPressLightTypeName').val(),
+           			reason:$('#reason').val(),
+           			halt:$('input[name=halt]:checked').val(),
+           			'deviceSite.id':$('#departmentTg').iTreegrid('getSelected').id,
            			},function(data){
            				if(data.success){
 	           				$('#departmentAddDialog').iDialog('close');
@@ -241,10 +301,6 @@
            					alert(data.msg);
            				}
            			});
-           		}else{
-           			alert('请选择父部门');
-           			$('#departmentAddDialog').iDialog('close');
-           		}
            	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
            	{text:'关闭',handler:function(){
            		$('#departmentAddDialog').iDialog('close');

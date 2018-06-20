@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,11 @@ public class ParameterServiceImpl implements IParameterService {
 	@Override
 	public void deleteObj(Long id) {
 		parameterDao.deleteById(id);
+	}
+
+	@Override
+	public List<Parameters> queryAllParameters() {
+		return parameterDao.findAll();
 	}
 
 }

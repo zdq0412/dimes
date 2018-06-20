@@ -29,6 +29,8 @@ public class WorkSheetDetail {
 	private String deviceCode;
 	/**设备名称*/
 	private String deviceName;
+	/**站点id*/
+	private Long deviceSiteId;
 	/**站点代码*/
 	private String deviceSiteCode;
 	/**站点名称*/
@@ -64,6 +66,13 @@ public class WorkSheetDetail {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public Long getDeviceSiteId() {
+		return deviceSiteId;
+	}
+	public void setDeviceSiteId(Long deviceSiteId) {
+		this.deviceSiteId = deviceSiteId;
 	}
 	public String getProcessCode() {
 		return processCode;

@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,5 +80,12 @@ public class WorkpieceProcessParameterMappingServiceImpl implements IWorkpiecePr
 			}
 		}*/
 		return this.queryObjs("from WorkpieceProcessParameterMapping wpdsm where wpdsm.workpieceProcess.workpiece.id=?0", page, rows, new Object[] {workpieceId});
+	}
+
+	@Override
+	public List<WorkpieceProcessParameterMapping> queryByWorkpieceCodeAndProcessCode(String workpieceCode,
+			String processCode) {
+		String hql = "from WorkpieceProcessParameterMapping wppm where wppm.workpieceProcess.workpiece.code=?0 and wppm.workpieceProcess.process.code=?1";
+		return workpieceProcessParameterMappingDao.findByHQL(hql,new Object[] {workpieceCode,processCode});
 	}
 }
