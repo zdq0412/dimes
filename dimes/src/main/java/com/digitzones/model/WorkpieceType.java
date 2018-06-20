@@ -8,6 +8,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * 工件类别
  * @author zdq
@@ -32,6 +34,7 @@ public class WorkpieceType extends CommonModel {
 	}
 	@ManyToOne
 	@JoinColumn(name="PARENT_ID")
+	@JsonIgnore
 	public WorkpieceType getParent() {
 		return parent;
 	}

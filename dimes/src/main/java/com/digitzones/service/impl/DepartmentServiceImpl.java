@@ -66,7 +66,7 @@ public class DepartmentServiceImpl  implements IDepartmentService {
 
 	@Override
 	public Long queryCountOfSubDepartment(Serializable pid) {
-		return departmentDao.findCount("from Department d inner join d.parent p where p.id=?0", new Object[] {pid});
+		return departmentDao.findCount("from Department d inner join d.parent p where p.id=?0 ", new Object[] {pid});
 	}
 
 	@Override

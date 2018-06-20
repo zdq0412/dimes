@@ -25,6 +25,8 @@ public class WorkpieceProcessParameterMapping {
 	private Float upLine;
 	/**下线*/
 	private Float lowLine;
+	/**标准值*/
+	private Float standardValue;
 	/**工件工序关联实体*/
 	private WorkpieceProcessMapping workpieceProcess;
 	/**参数*/
@@ -76,5 +78,11 @@ public class WorkpieceProcessParameterMapping {
 	}
 	public void setParameter(Parameters parameter) {
 		this.parameter = parameter;
+	}
+	public Float getStandardValue() {
+		return standardValue;
+	}
+	public void setStandardValue(Float standardValue) {
+		this.standardValue = standardValue;
 	}
 }

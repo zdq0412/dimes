@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,4 +62,8 @@ public class DeviceServiceImpl implements IDeviceService {
 		return this.deviceSiteDao.findById(deviceSiteId).getDevice();
 	}
 
+	@Override
+	public List<Device> queryDevicesByProductionUnitId(Long productionUnitId) {
+		return this.deviceDao.findByHQL("from Device d where d.productionUnit.id=?0", new Object[] {productionUnitId});
+	}
 }

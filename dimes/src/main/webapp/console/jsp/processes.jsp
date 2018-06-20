@@ -112,13 +112,19 @@
 						       url:'parameter/queryParametersByProcessId.do'">
                             <thead>
                             <tr>
-                                <th data-options="field:'id',title:'id',checkbox:false"></th>
+                                <th data-options="field:'id',title:'id',checkbox:false,hidden:true"></th>
                                 <th data-options="field:'code',title:'参数代码',sortable:false"></th>
-                                <th data-options="field:'note',title:'参数名称',sortable:false"></th>
-                                <th data-options="field:'note',title:'取值规则',sortable:false"></th>
-                                <th data-options="field:'note',title:'KPC',sortable:false"></th>
+                                <th data-options="field:'name',title:'参数名称',sortable:false"></th>
+                                <th data-options="field:'rules',title:'取值规则',sortable:false"></th>
+                                <th data-options="field:'kfc',title:'KPC',sortable:false"></th>
                                 <th data-options="field:'note',title:'备注',sortable:false"></th>
-                                <th data-options="field:'note',title:'停用',sortable:false"></th>
+                                <th data-options="field:'disabled',title:'停用',sortable:false,formatter:function(value,row,index){
+                                	if(value){
+                                		return 'Y';
+                                	}else{
+                                		return 'N';
+                                	}
+                                }"></th>
                             </tr>
                             </thead>
                         </table>

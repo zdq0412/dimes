@@ -91,7 +91,7 @@ public abstract class CommonDaoImpl<T> implements ICommonDao<T> {
 	@Override
 	public Pager<T> findByPage(String hql, int pageNo, int pageSize, Object... values) {
 		// Count查询
-		String countQueryString = " select count (*) " + removeSelect(hql);
+		String countQueryString = " select count (*) " + removeSelect(removeOrderBy(hql));
 		List countlist = getHibernateTemplate().find(countQueryString, values);
 		long totalCount = (Long) countlist.get(0);
 
@@ -109,10 +109,20 @@ public abstract class CommonDaoImpl<T> implements ICommonDao<T> {
 	 * @param hql
 	 * @return
 	 */
-	private static String removeSelect(String hql) {
+	private  String removeSelect(String hql) {
 		int beginPos = hql.toLowerCase().indexOf("from");
 		return hql.substring(beginPos);
 	}
+	
+	private String removeOrderBy(String hql) {
+		if(hql.toLowerCase().contains("order")) {
+			int endPos = hql.toLowerCase().indexOf("order");
+			return hql.substring(0, endPos);
+		}else {
+			return hql;
+		}
+	}
+	
 	/**
 	 * 创建查询语句
 	 * @param hql

@@ -38,7 +38,8 @@ public class ModuleTest {
 		parent2.setName("数字中心");
 		parent2.setIcon("fa fa-bar-chart-o");
 		moduleService.addModule(parent2);
-	/*-------------------------------工厂级------------------------------------------*/
+		
+		
 		Module son2 = new Module();
 		son2.setParent(parent2);
 		son2.setName("工厂级");
@@ -116,7 +117,7 @@ public class ModuleTest {
 		son212.setName("质量日历");
 		son212.setLeaf(true);
 		moduleService.addModule(son212);
-	/*-------------------------------产线级------------------------------------------*/
+		
 		Module son3 = new Module();
 		son3.setParent(parent2);
 		son3.setName("产线级");
@@ -305,8 +306,17 @@ public class ModuleTest {
 		Module basicSon3 = new Module();
 		basicSon3.setParent(parent4);
 		basicSon3.setName("物料信息");
-		moduleService.addModule(basicSon3);
+		moduleService.addModule(basicSon3); 
 		
+		
+		Module workpieceType = new Module();
+		workpieceType.setName("工件类别");
+		workpieceType.setUrl("console/jsp/workpieceType.jsp");
+		workpieceType.setLeaf(true);
+		workpieceType.setParent(basicSon3);
+		
+		moduleService.addModule(workpieceType);
+
 		Module basicSon31 = new Module();
 		basicSon31.setParent(basicSon3);
 		basicSon31.setName("参数信息");
@@ -347,6 +357,33 @@ public class ModuleTest {
 		basicSon42.setName("质量类别");
 		basicSon42.setLeaf(true);
 		moduleService.addModule(basicSon42);
+		
+		Module sysSetParent = new Module();
+		sysSetParent.setName("系统设置");
+		sysSetParent.setIcon("fa fa-cog");
+		
+		moduleService.addModule(sysSetParent);
+		
+		Module user = new Module();
+		user.setName("用户管理");
+		user.setParent(sysSetParent);
+		
+		moduleService.addModule(user);
+		
+		Module role = new Module();
+		role.setName("角色管理");
+		role.setParent(sysSetParent);
+		
+		moduleService.addModule(role);
+		
+		Module power = new Module();
+		power.setName("权限管理");
+		power.setParent(sysSetParent);
+		
+		moduleService.addModule(power);
+		
+		
+		
 	}
 	@Test
 	public void testAddEmployeeUrl() {
@@ -398,10 +435,48 @@ public class ModuleTest {
 		moduleService.updateModule(module);
 	}
 	@Test
-	public void testAddProcessestUrl() {
+	public void testAddProcessessUrl() {
 		Module module = moduleService.queryByProperty("name", "工序信息");
 		module.setUrl("console/jsp/processes.jsp");
 		
 		moduleService.updateModule(module);
+	}
+	@Test
+	public void testAddUserUrl() {
+		Module module = moduleService.queryByProperty("name", "用户管理");
+		
+		Module child = new Module();
+		child.setName("用户管理");
+		child.setParent(module);
+		child.setUrl("console/jsp/user.jsp");
+		child.setLeaf(true);
+		child.setDisabled(false);
+		moduleService.addModule(child);
+	}
+	
+	@Test
+	public void testAddWorkpieceTypeUrl() {
+		Module module = moduleService.queryByProperty("name", "工件信息");
+		module.setUrl("console/jsp/workpiece.jsp");
+		
+		moduleService.updateModule(module);
+	}
+	@Test
+	public void testAddDeviceExecuteUrl() {
+		Module module = moduleService.queryByProperty("name", "执行数据");
+		
+		Module m = new Module();
+		m.setName("设备执行");
+		m.setParent(module);
+		m.setLeaf(false);
+		moduleService.addModule(m);
+		
+		Module child = new Module();
+		child.setName("设备执行");
+		child.setParent(m);
+		child.setLeaf(true);
+		child.setUrl("console/jsp/deviceRecord.jsp");
+		
+		moduleService.addModule(child);
 	}
 }

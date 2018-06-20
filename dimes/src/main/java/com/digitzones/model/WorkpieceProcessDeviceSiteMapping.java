@@ -1,5 +1,6 @@
 package com.digitzones.model;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,7 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="WORKPIECEPROCESS_DEVICESITE")
-public class WorkpieceProcessDeviceSite {
+public class WorkpieceProcessDeviceSiteMapping {
 	private Long id;
 	/**加工节拍*/
 	private Float processingBeat;
@@ -35,7 +36,7 @@ public class WorkpieceProcessDeviceSite {
 	public void setProcessingBeat(Float processingBeat) {
 		this.processingBeat = processingBeat;
 	}
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="WORKPIECEPROCESS_ID")
 	public WorkpieceProcessMapping getWorkpieceProcess() {
 		return workpieceProcess;
@@ -43,7 +44,7 @@ public class WorkpieceProcessDeviceSite {
 	public void setWorkpieceProcess(WorkpieceProcessMapping workpieceProcess) {
 		this.workpieceProcess = workpieceProcess;
 	}
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="DEVICESITE_ID")
 	public DeviceSite getDeviceSite() {
 		return deviceSite;

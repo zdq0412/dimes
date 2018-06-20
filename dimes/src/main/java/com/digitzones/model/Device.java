@@ -4,9 +4,11 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -53,6 +55,8 @@ public class Device extends CommonModel {
 	private String parameterValueType;
 	/**设备类别*/
 	private DeviceType deviceType;
+	/**设备站点*/
+	private Set<DeviceSite> deviceSites;
 	/**生产单元*/
 	private ProductionUnit productionUnit;
 	/**设备图片*/
@@ -68,6 +72,15 @@ public class Device extends CommonModel {
 	}
 	public void setClassesDevice(Set<ClassesDeviceMapping> classesDevice) {
 		this.classesDevice = classesDevice;
+	}
+	@OneToMany(mappedBy="device",fetch=FetchType.EAGER)
+	@OrderBy("ID DESC")
+	@JsonIgnore
+	public Set<DeviceSite> getDeviceSites() {
+		return deviceSites;
+	}
+	public void setDeviceSites(Set<DeviceSite> deviceSites) {
+		this.deviceSites = deviceSites;
 	}
 	public String getPhoto() {
 		return photo;

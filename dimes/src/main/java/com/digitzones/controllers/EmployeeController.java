@@ -98,7 +98,7 @@ public class EmployeeController {
 	}
 	/**
 	 * 根据员工id查询员工信息
-	 * @param employee 员工对象
+	 * @param id 员工对象id
 	 * @return
 	 */
 	@RequestMapping("/queryEmployeeById.do")
@@ -106,6 +106,15 @@ public class EmployeeController {
 	public Employee queryEmployeeById(Long id) {
 		Employee e = employeeService.queryObjById(id);
 		return e;
+	}
+	/**
+	 * 查询所有员工对象
+	 * @return
+	 */
+	@RequestMapping("/queryAllEmployees.do")
+	@ResponseBody
+	public List<Employee> queryAllEmployees() {
+		return employeeService.queryAllEmployees();
 	}
 	/**
 	 * 更新员工信息
@@ -162,4 +171,6 @@ public class EmployeeController {
 		modelMap.addAttribute("title", "操作提示!");
 		return modelMap;
 	}
+	
+	
 }

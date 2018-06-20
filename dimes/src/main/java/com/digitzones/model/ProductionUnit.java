@@ -1,6 +1,8 @@
 package com.digitzones.model;
 
+import java.util.List;
 import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -24,6 +26,19 @@ public class ProductionUnit extends CommonModel {
 	private ProductionUnit parent;
 	/**子生产单元*/
 	private Set<ProductionUnit> children;
+	/**设备*/
+	private List<Device> devices;
+	@OneToMany(mappedBy="productionUnit",fetch=FetchType.EAGER)
+	@OrderBy("ID DESC")
+	@JsonIgnore
+	public List<Device> getDevices() {
+		return devices;
+	}
+
+	public void setDevices(List<Device> devices) {
+		this.devices = devices;
+	}
+
 	@OneToMany(fetch=FetchType.EAGER,mappedBy="parent")
 	@OrderBy("ID DESC")
 	public Set<ProductionUnit> getChildren() {

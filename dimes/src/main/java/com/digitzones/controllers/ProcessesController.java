@@ -3,6 +3,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.digitzones.model.DeviceSite;
@@ -132,6 +133,42 @@ public class ProcessesController {
 	public ModelMap queryProcessess(Integer rows,Integer page){
 		String hql = "from Processes p";
 		Pager<Processes> pager = processesService.queryObjs(hql, page, rows, new Object[] {});
+		ModelMap modelMap = new ModelMap();
+		modelMap.addAttribute("total", pager.getTotalCount());
+		modelMap.addAttribute("rows", pager.getData());
+		return  modelMap;
+	}
+	
+	
+	/**
+	 * 根据工件id查询非当前工件下的工序信息
+	 * @param workpieceId
+	 * @param rows
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping("/queryOtherProcesses.do")
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	public ModelMap queryOtherProcesses(Long workpieceId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
+		ModelMap modelMap = new ModelMap();
+		String hql = "select ds from Processes ds where ds.id not in ("
+				+ "select pdm.process.id from WorkpieceProcessMapping pdm) or ds.id in (select pdm_.process.id from WorkpieceProcessMapping pdm_ where pdm_.workpiece.id!=?0)";
+		Pager<Processes> pager = processesService.queryObjs(hql, page, rows, new Object[] {workpieceId});
+		modelMap.addAttribute("total", pager.getTotalCount());
+		modelMap.addAttribute("rows", pager.getData());
+		return modelMap;
+	}
+	/**
+	 * 根据工件id查找工序
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/queryProcessessByWorkpieceId.do")
+	@ResponseBody
+	public ModelMap queryProcessessByWorkpieceId(Long workpieceId,Integer rows,Integer page){
+		String hql = "select p from WorkpieceProcessMapping wpm inner join wpm.process p where wpm.workpiece.id=?0  order by p.code asc";
+		Pager<Processes> pager = processesService.queryObjs(hql, page, rows, new Object[] {workpieceId});
 		ModelMap modelMap = new ModelMap();
 		modelMap.addAttribute("total", pager.getTotalCount());
 		modelMap.addAttribute("rows", pager.getData());
@@ -302,4 +339,6 @@ public class ProcessesController {
 		modelMap.addAttribute("title", "操作提示");
 		return modelMap;
 	}
+	
+	
 } 

@@ -2,6 +2,7 @@ package com.digitzones.model;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * 用户
  * @author zdq
@@ -31,7 +34,7 @@ public class User {
 	/**备注*/
 	private String note;
 	/**是否停用*/
-	private Boolean disable;
+	private Boolean disable = false;
 	/**创建用户id*/
 	private Long createUserId;
 	/**创建用户名称*/
@@ -54,7 +57,7 @@ public class User {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="EMPLOYEE_ID")
 	public Employee getEmployee() {
 		return employee;
@@ -128,6 +131,7 @@ public class User {
 	@JoinTable(name="USER_ROLE",
 	joinColumns= {@JoinColumn(name="USER_ID")},
 	inverseJoinColumns= {@JoinColumn(name="ROLE_ID")})
+	@JsonIgnore
 	public Set<Role> getRoles() {
 		return roles;
 	}

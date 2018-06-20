@@ -1,6 +1,6 @@
 package com.digitzones.constants;
 /**
- * 常亮定义
+ * 常量定义
  * @author zdq
  * 2018年6月8日
  */

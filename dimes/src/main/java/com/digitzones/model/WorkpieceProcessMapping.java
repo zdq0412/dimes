@@ -1,6 +1,7 @@
 package com.digitzones.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,7 +38,7 @@ public class WorkpieceProcessMapping {
 	public void setWorkpiece(Workpiece workpiece) {
 		this.workpiece = workpiece;
 	}
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="PROCESS_ID")
 	public Processes getProcess() {
 		return process;

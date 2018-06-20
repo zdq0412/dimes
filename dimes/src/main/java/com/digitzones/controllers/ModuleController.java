@@ -39,7 +39,8 @@ public class ModuleController {
 	@RequestMapping("/querySubModule.do")
 	@ResponseBody
 	public List<ModuleVO> querySubModule(@RequestParam("pid")Long pid){
-		return model2Vo(moduleService.querySubModule(pid));
+		List<Module> list = moduleService.querySubModule(pid);
+		return model2Vo(list);
 	}
 	/**
 	 * model转换为vo

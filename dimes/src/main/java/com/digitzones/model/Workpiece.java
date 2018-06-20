@@ -18,7 +18,7 @@ public class Workpiece extends CommonModel {
 	/**版本号*/
 	private String version;
 	/**图号*/
-	private String raphNumber;
+	private String graphNumber;
 	/**客户图号*/
 	private String customerGraphNumber;
 	/**计量单位*/
@@ -38,11 +38,11 @@ public class Workpiece extends CommonModel {
 		this.version = version;
 	}
 	
-	public String getRaphNumber() {
-		return raphNumber;
+	public String getGraphNumber() {
+		return graphNumber;
 	}
-	public void setRaphNumber(String raphNumber) {
-		this.raphNumber = raphNumber;
+	public void setGraphNumber(String graphNumber) {
+		this.graphNumber = graphNumber;
 	}
 	public String getCustomerGraphNumber() {
 		return customerGraphNumber;

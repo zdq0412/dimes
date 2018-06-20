@@ -1,5 +1,8 @@
 package com.digitzones.controllers;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,9 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.model.Device;
+import com.digitzones.model.DeviceSite;
 import com.digitzones.model.Pager;
 import com.digitzones.model.ProductionUnit;
+import com.digitzones.service.IDeviceService;
 import com.digitzones.service.IProductionUnitService;
+import com.digitzones.vo.Node;
 import com.digitzones.vo.ProductionUnitVO;
 /**
  * 生产单元管理控制器
@@ -21,6 +28,11 @@ import com.digitzones.vo.ProductionUnitVO;
 @RequestMapping("/productionUnit")
 public class ProductionUnitController {
 	private IProductionUnitService productionUnitService;
+	private IDeviceService deviceService;
+	@Autowired
+	public void setDeviceService(IDeviceService deviceService) {
+		this.deviceService = deviceService;
+	}
 	@Autowired
 	public void setProductionUnitService(IProductionUnitService productionUnitService) {
 		this.productionUnitService = productionUnitService;
@@ -34,7 +46,57 @@ public class ProductionUnitController {
 	public List<ProductionUnit> queryTopProductionUnits(){
 		return productionUnitService.queryTopProductionUnits();
 	}
-	
+	/**
+	 * 查找设备站点树，结构为生产单元-->设备-->设备站点
+	 * @return
+	 */
+	@RequestMapping("/queryDeviceSiteTree.do")
+	@ResponseBody
+	public List<Node> queryDeviceSiteTree() {
+		//查找生产单元树形结构
+		List<ProductionUnit> pus = productionUnitService.queryTopProductionUnits();
+		List<Node> nodes = new ArrayList<>();
+		objList2NodeList(nodes, pus);
+		return nodes;
+	}
+	/**
+	 * 构建树形结构，结构为：生产单元-->设备-->设备站点
+	 * @param nodes
+	 * @param pus
+	 */
+	private void objList2NodeList(List<Node> nodes,Collection<ProductionUnit> pus) {
+		for(ProductionUnit pu : pus) {
+			Node node = new Node();
+			node.setId(pu.getId());
+			node.setName(pu.getName());
+			nodes.add(node);
+			List<Node> nodeList = new ArrayList<Node>();
+			node.setChildren(nodeList);
+			if(pu.getChildren()!=null &&pu.getChildren().size()>0) {
+				objList2NodeList(nodeList, pu.getChildren());
+			}else {
+				//根据生产单元id查询设备
+				List<Device> devices = deviceService.queryDevicesByProductionUnitId(pu.getId());
+				for(Device d : devices) {
+					Node no = new Node();
+					no.setId(d.getId());
+					no.setName(d.getName());
+					nodeList.add(no);
+					
+					
+					List<Node> dsList = new ArrayList<>();
+					no.setChildren(dsList);
+					Set<DeviceSite> deviceSites = d.getDeviceSites();
+					for(DeviceSite ds : deviceSites) {
+						Node n = new Node();
+						n.setId(ds.getId());
+						n.setName(ds.getName());
+						dsList.add(n);
+					}
+				}
+			}
+		}
+	}
 	/**
 	 * 分页查询生产单元
 	 * @param pid
@@ -81,7 +143,7 @@ public class ProductionUnitController {
 			productionUnitVOs.add(vo);
 		}
 	}
-	
+
 	/**
 	 * 添加生产单元
 	 * @param department
@@ -181,7 +243,7 @@ public class ProductionUnitController {
 		ModelMap modelMap = new ModelMap();
 		ProductionUnit d = productionUnitService.queryObjById(Long.valueOf(id));
 		d.setDisabled(true);
-		
+
 		productionUnitService.updateObj(d);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("message", "已停用");

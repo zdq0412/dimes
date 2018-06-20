@@ -369,8 +369,6 @@ $(function(){
 		
 		// 绑定横向导航菜单点击事件
 		 $(".systemName").on("click", function (e) {
-		        //generateMenu(e.currentTarget.dataset.menuid, e.target.textContent); //IE9及以下不兼容data-menuid属性
-		        //generateMenu(e.target.getAttribute('data-menuid'), e.target.textContent);
 		        generateMenu($(this).attr("id"), $(this).attr("title"));
 		        $(".systemName").removeClass("selected");
 		        $(this).addClass("selected");
@@ -412,7 +410,15 @@ function generateMenu(menuId, systemName) {
 	                        iconCls: e.iconCls
 	                    });
                     }else{
-                    	$('#RightAccordion').iAccordion('add',{title:e.text,collapsible:false});
+                    	$('#RightAccordion').iAccordion('add',{
+                    		title:e.text,
+                    		fit:false,
+                    		collapsible:false,
+                   		    content: "<ul id='tree" + e.id + "' ></ul>",
+	                        border: false,
+ 	                        selected: false,
+ 	                        iconCls: e.iconCls
+                    		});
                     }
                     //$.parser.parse();
                     $.get(url,{"pid":e.id}, function (data) {// 循环创建树的项

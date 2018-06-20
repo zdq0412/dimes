@@ -7,5 +7,4 @@ import com.digitzones.model.Processes;
  * 2018年6月14日
  */
 public interface IProcessesDao extends ICommonDao<Processes> {
-
 }
