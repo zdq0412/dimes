@@ -20,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class PressLightType extends CommonModel {
 	private static final long serialVersionUID = 1L;
 	private PressLightType parent;
+	/**类别等级*/
+	private Integer level = 0;
 	/**
 	 * 子类别
 	 */
@@ -29,14 +31,20 @@ public class PressLightType extends CommonModel {
 	public Set<PressLightType> getChildren() {
 		return children;
 	}
-	public void setChildren(Set<PressLightType> children) {
-		this.children = children;
+	public Integer getLevel() {
+		return level;
 	}
 	@ManyToOne
 	@JoinColumn(name="PARENT_ID")
 	@JsonIgnore
 	public PressLightType getParent() {
 		return parent;
+	}
+	public void setChildren(Set<PressLightType> children) {
+		this.children = children;
+	}
+	public void setLevel(Integer level) {
+		this.level = level;
 	}
 	public void setParent(PressLightType parent) {
 		this.parent = parent;

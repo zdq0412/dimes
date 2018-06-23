@@ -69,24 +69,126 @@ public class PressLightRecordController {
 		return modelMap;
 	}
 	/**
-	 * 根据id删除加工记录
+	 * 根据id查询按灯记录
 	 * @param id
 	 * @return
 	 */
-	/*@RequestMapping("/deleteProcessRecord.do")
+	@RequestMapping("/queryPressLightRecordById.do")
 	@ResponseBody
-	public ModelMap deleteProcessRecord(String id) {
+	public PressLightRecord queryPressLightRecordById(Long id) {
+		PressLightRecord plr = pressLightRecordService.queryObjById(id);
+		return plr;
+	}
+	
+	
+	
+	/**
+	 * 编辑按灯记录
+	 * @param pressLightRecord
+	 * @return
+	 */
+	@RequestMapping("/updatePressLightRecord.do")
+	@ResponseBody
+	public ModelMap updatePressLightRecord(PressLightRecord pressLightRecord) {
+		ModelMap modelMap = new ModelMap();
+		
+		PressLightRecord plr = pressLightRecordService.queryObjById(pressLightRecord.getId());
+		plr.setHalt(pressLightRecord.getHalt());
+		plr.setReason(pressLightRecord.getReason());
+		plr.setRecoverMethod(pressLightRecord.getRecoverMethod());
+		plr.setSmallPressLightTypeName(pressLightRecord.getSmallPressLightTypeName());
+		plr.setPressLightTypeName(pressLightRecord.getPressLightTypeName());
+		
+		pressLightRecordService.updateObj(plr);
+		modelMap.addAttribute("success", true);
+		modelMap.addAttribute("msg", "添加成功!");
+		return modelMap;
+	}
+	/**
+	 * 恢复
+	 * @param pressLightRecord
+	 * @return
+	 */
+	@RequestMapping("/recoverPressLightRecord.do")
+	@ResponseBody
+	public ModelMap recoverPressLightRecord(String id) {
+		ModelMap modelMap = new ModelMap();
+		if(id!=null && id.contains("'")) {
+			id = id.replace("'", "");
+		}
+		PressLightRecord plr = pressLightRecordService.queryObjById(Long.valueOf(id));
+		plr.setRecovered(true);
+		plr.setRecoverTime(new Date());
+		pressLightRecordService.updateObj(plr);
+		modelMap.addAttribute("statusCode", 200);
+		modelMap.addAttribute("success", true);
+		modelMap.addAttribute("title", "提示");
+		modelMap.addAttribute("message", "操作成功!");
+		return modelMap;
+	}
+	/**
+	 * 确认
+	 * @param pressLightRecord
+	 * @return
+	 */
+	@RequestMapping("/confirmPressLightRecord.do")
+	@ResponseBody
+	public ModelMap confirmPressLightRecord(String id) {
+		ModelMap modelMap = new ModelMap();
+		if(id!=null && id.contains("'")) {
+			id = id.replace("'", "");
+		}
+		PressLightRecord plr = pressLightRecordService.queryObjById(Long.valueOf(id));
+		plr.setConfirmTime(new Date());
+		pressLightRecordService.updateObj(plr);
+		modelMap.addAttribute("statusCode", 200);
+		modelMap.addAttribute("success", true);
+		modelMap.addAttribute("title", "提示");
+		modelMap.addAttribute("message", "操作成功!");
+		return modelMap;
+	}
+	/**
+	 * 确认
+	 * @param pressLightRecord
+	 * @return
+	 */
+	@RequestMapping("/lightOutPressLightRecord.do")
+	@ResponseBody
+	public ModelMap lightOutPressLightRecord(String id) {
+		ModelMap modelMap = new ModelMap();
+		if(id!=null && id.contains("'")) {
+			id = id.replace("'", "");
+		}
+		PressLightRecord plr = pressLightRecordService.queryObjById(Long.valueOf(id));
+		plr.setLightOutTime(new Date());
+		pressLightRecordService.updateObj(plr);
+		modelMap.addAttribute("statusCode", 200);
+		modelMap.addAttribute("success", true);
+		modelMap.addAttribute("title", "提示");
+		modelMap.addAttribute("message", "操作成功!");
+		return modelMap;
+	}
+	
+	
+	/**
+	 * 根据id删除按灯记录
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/deletePressLightRecord.do")
+	@ResponseBody
+	public ModelMap deletePressLightRecord(String id) {
 		if(id!=null && id.contains("'")) {
 			id = id.replace("'", "");
 		}
 		ModelMap modelMap = new ModelMap();
-		ProcessRecord pr = processRecordService.queryObjById(Long.valueOf(id));
+		PressLightRecord pr = pressLightRecordService.queryObjById(Long.valueOf(id));
 		pr.setDeleted(true);
-		processRecordService.updateObj(pr);
+		pressLightRecordService.updateObj(pr);
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("title", "操作提示");
 		modelMap.addAttribute("message", "成功删除!");
 		return modelMap;
-	}*/
+	}
 } 

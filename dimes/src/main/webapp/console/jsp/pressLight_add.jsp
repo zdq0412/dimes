@@ -56,10 +56,10 @@
 					</div>
 					<div class="topjui-row">
 						<div class="topjui-col-sm12">
-							<label class="topjui-form-label">是否损时</label>
+							<label class="topjui-form-label">计划停机</label>
 							<div>
-								<input name="lostTime" value="true" checked="checked"
-									type="radio"> 是 <input name="lostTime" value="false" 	type="radio">否
+								<input name="planHalt" value="true" 
+									type="radio"> 是 <input name="planHalt" value="false" checked="checked"	type="radio">否
 							</div>
 						</div>
 					</div>

@@ -39,8 +39,7 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">状态</label>
 							<div class="topjui-input-block">
-								<input type="text" name="name" data-toggle="topjui-textbox"
-									id="deviceStatus">
+									<input type="text" name="name" id="deviceStatus" data-toggle="topjui-combobox"  data-options="valueField:'value',textField:'text',data: [{text:'运行', value: '0'},{text: '待机',value: '1'},{text: '停机',value: '2'}]">
 							</div>
 						</div>
 					</div>

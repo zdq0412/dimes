@@ -16,7 +16,7 @@
 			   singleSelect:true,
 			   url:'pressLightType/queryTopPressLightTypes.do',
 			   childGrid:{
-			   	   param:'pid:id',
+			   	   param:'pid:id,level:level',
                    grid:[
                        {type:'datagrid',id:'departmentDg'},
                    ]
@@ -113,7 +113,7 @@
                                 		return 'N';
                                 	}
                                 }"></th>
-                                <th data-options="field:'lostTime',title:'是否损时',sortable:false,formatter:function(value,rows,index){
+                                <th data-options="field:'planHalt',title:'计划停机',sortable:false,formatter:function(value,rows,index){
                                 	if(value){
                                 		return 'Y';
                                 	}else{
@@ -199,7 +199,8 @@
        iconCls: 'fa fa-plus',
         parentGrid:{
                type:'treegrid',
-               id:'parameterTypeTg'
+               id:'parameterTypeTg',
+               params:'level:level'
             },
        dialog:{
            id:'parameterTypeAddDialog',
@@ -220,6 +221,7 @@
            			$.get('pressLightType/addPressLightType.do',{
            			code:code,
            			name:name,
+           			level:$('#level').val(),
            			'parent.id':$('#parameterTypeTg').iTreegrid('getSelected').id,
            			note:$('#note').val()
            			},function(data){
@@ -336,7 +338,7 @@
            			reason:reason,
            			description:$('#description').val(),
            			halt:$('input[name=halt]:checked').val(),
-           			lostTime:$('input[name=lostTime]:checked').val(),
+           			planHalt:$('input[name=planHalt]:checked').val(),
            			'pressLightType.id':$('#departmentDg').iDatagrid('getSelected').id,
            			note:$('#note').val()
            			},function(data){
@@ -377,7 +379,7 @@
            			reason:reason,
            			description:$('#description').val(),
            			halt:$('input[name=halt]:checked').val(),
-           			lostTime:$('input[name=lostTime]:checked').val(),
+           			planHalt:$('input[name=planHalt]:checked').val(),
            			'pressLightType.id':$('#departmentDg').iDatagrid('getSelected').id,
            			note:$('#note').val()
            			},function(data){

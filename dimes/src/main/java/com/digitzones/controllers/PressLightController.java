@@ -1,4 +1,6 @@
 package com.digitzones.controllers;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -24,6 +26,18 @@ public class PressLightController {
 		this.pressLightService = pressLightService;
 	}
 
+	/**
+	 * 根据类别id查询按灯原因
+	 * @param typeId
+	 * @return
+	 */
+	@RequestMapping("/queryAllPressLightByTypeId.do")
+	@ResponseBody
+	public List<PressLight> queryAllPressLightByTypeId(Long typeId){
+		List<PressLight> list = pressLightService.queryAllPressLightByTypeId(typeId);
+		return list;
+	}
+	
 	/**
 	 * 分页查询按灯信息
 	 * @param pid

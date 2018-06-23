@@ -9,4 +9,10 @@ public class DeviceSiteDaoImpl extends CommonDaoImpl<DeviceSite> implements IDev
 	public DeviceSiteDaoImpl() {
 		super(DeviceSite.class);
 	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Long queryCountOfDeviceSite() {
+		return (Long) this.getHibernateTemplate().find("select count(*) from DeviceSite ds where ds.device.productionUnit!=null",new Object[] {}).get(0);
+	}
 }

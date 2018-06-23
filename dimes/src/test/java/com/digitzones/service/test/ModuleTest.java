@@ -104,6 +104,7 @@ public class ModuleTest {
 		Module son23 = new Module();
 		son23.setParent(son2);
 		son23.setName("故障时间");
+		son23.setUrl("console/jsp/breakdownTime.jsp");
 		son23.setLeaf(true);
 		moduleService.addModule(son23);
 		
@@ -111,12 +112,14 @@ public class ModuleTest {
 		son24.setParent(son2);
 		son24.setName("故障停机分类");
 		son24.setLeaf(true);
+		son24.setUrl("console/jsp/breakdownHalt.jsp");
 		moduleService.addModule(son24);
 		
 		Module son25 = new Module();
 		son25.setParent(son2);
 		son25.setName("运行状态");
 		son25.setLeaf(true);
+		son25.setUrl("console/jsp/runningStatus.jsp");
 		moduleService.addModule(son25);
 		
 		Module son26 = new Module();
@@ -216,7 +219,7 @@ public class ModuleTest {
 		
 
 		Module m = new Module();
-		m.setName("设备执行");
+		m.setName("执行数据");
 		m.setParent(parent3);
 		m.setLeaf(false);
 		moduleService.addModule(m);
@@ -229,20 +232,14 @@ public class ModuleTest {
 		moduleService.addModule(child);
 		
 		Module son5 = new Module();
-		son5.setParent(parent3);
+		son5.setParent(m);
 		son5.setName("不合格品");
 		son5.setLeaf(true);
 		moduleService.addModule(son5);
 		
-		Module son6 = new Module();
-		son6.setParent(parent3);
-		son6.setName("按灯管理");
-		son6.setLeaf(false);
-		moduleService.addModule(son6);
-		
 		
 		Module son66 = new Module();
-		son66.setParent(son6);
+		son66.setParent(m);
 		son66.setDisabled(false);
 		son66.setName("按灯管理");
 		son66.setLeaf(true);
@@ -252,19 +249,20 @@ public class ModuleTest {
 		
 		
 		Module son7 = new Module();
-		son7.setParent(parent3);
+		son7.setParent(m);
 		son7.setName("损时记录");
 		son7.setLeaf(true);
+		son7.setUrl("console/jsp/lostTimeRecord.jsp");
 		moduleService.addModule(son7);
 		
 		Module son8 = new Module();
-		son8.setParent(parent3);
+		son8.setParent(m);
 		son8.setName("装备关联");
 		son8.setLeaf(true);
 		moduleService.addModule(son8);
 		
 		Module son9 = new Module();
-		son9.setParent(parent3);
+		son9.setParent(m);
 		son9.setName("量具关联");
 		son9.setLeaf(true);
 		moduleService.addModule(son9);

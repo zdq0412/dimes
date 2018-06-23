@@ -48,4 +48,9 @@ public class DeviceSiteServiceImpl implements IDeviceSiteService {
 		deviceSiteDao.deleteById(id);
 	}
 
+	@Override
+	public Long queryCountOfDeviceSite() {
+		return deviceSiteDao.queryCountOfDeviceSite();
+	}
+
 }

@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,10 @@ public class PressLightServiceImpl implements IPressLightService {
 	@Override
 	public void deleteObj(Long id) {
 		pressLightDao.deleteById(id);
+	}
+
+	@Override
+	public List<PressLight> queryAllPressLightByTypeId(Long typeId) {
+		return pressLightDao.findByHQL("from PressLight pl where pl.pressLightType.id=?0", new Object[] {typeId});
 	}
 }

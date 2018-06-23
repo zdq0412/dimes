@@ -116,7 +116,30 @@
                         	}
                         }"></th>
                         <th data-options="field:'recoverUserName',title:'恢复人员',sortable:false"></th>
-                        <th data-options="field:'recoverTime',title:'恢复时间',sortable:false"></th>
+                        <th data-options="field:'recoverTime',title:'恢复时间',sortable:false,formatter:function(value,row,index){
+                        	if(value){
+                        				var date = new Date(value);
+                                        var month = date.getMonth()+1;
+                                        var monthStr = ((month>=10)?month:('0' + month));
+                                        
+                                        var day = date.getDate();
+                                        var dayStr = ((day>=10)?day:('0'+day));
+                                        var hour = date.getHours();
+                                        var hourStr = ((hour>=10)?hour:('0' + hour));
+                                        
+                                        var minute = date.getMinutes();
+                                        var minuteStr = ((minute>=10)?minute:('0' +minute));
+                                        
+                                        var second = date.getSeconds();
+                                        var secondStr = ((second>=10)?second:('0' +second));
+                                        
+                                        var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr  + 
+                                        				' ' + hourStr + ':' + minuteStr + ':' + secondStr; 
+                                        return dateStr;
+                        	}else{
+                        		return '';
+                        	}
+                        }"></th>
                         <th data-options="field:'confirmUserName',title:'确认人员',sortable:false"></th>
                         <th data-options="field:'confirmTime',title:'确认时间',sortable:false,formatter:function(value,row,index){
                         	if(value){
@@ -160,8 +183,8 @@
                          id:'departmentDg',
                          param:'id:id'
                      }">
-                    <div title="岗位信息" data-options="id:'tab0',iconCls:'fa fa-th'">
-                        <!-- datagrid表格 -->
+                   <!--  <div title="岗位信息" data-options="id:'tab0',iconCls:'fa fa-th'">
+                        datagrid表格
                         <table 
                          data-toggle="topjui-datagrid"
                                data-options="id:'position',
@@ -201,7 +224,7 @@
                             </tr>
                             </thead>
                         </table>
-                    </div>
+                    </div> -->
                     <div title="相关文档" data-options="id:'tab1',iconCls:'fa fa-th'">
                         <!-- datagrid表格 -->
                         <table data-toggle="topjui-datagrid"
@@ -292,11 +315,11 @@
            			reason:$('#reason').val(),
            			halt:$('input[name=halt]:checked').val(),
            			'deviceSite.id':$('#departmentTg').iTreegrid('getSelected').id,
+           			recoverMethod:$('#recoverMethod').val()
            			},function(data){
            				if(data.success){
 	           				$('#departmentAddDialog').iDialog('close');
 	           				$('#departmentDg').iDatagrid('reload');
-	           				$('#departmentTg').iTreegrid('reload');
            				}else{
            					alert(data.msg);
            				}
@@ -315,63 +338,62 @@
             	id:'departmentEditDialog',
                 width: 600,
                 height: 400,
-                href: 'console/jsp/department_edit.jsp',
-                url:'department/queryDepartmentById.do?id={id}',
+                href: 'console/jsp/pressLightRecord_edit.jsp',
+                url:'pressLightRecord/queryPressLightRecordById.do?id={id}',
                  buttons:[
            	{text:'编辑',handler:function(){
-           		if($('#departmentDg').iDatagrid('getSelected')){
-           			var deptCode = $('#deptCode_edit').val();
-           			var deptName = $('#deptName_edit').val();
-           			if(deptName==null || ''===$.trim(deptName)){
-           				return false;
-           			}
-           			$.get('department/updateDepartment.do',{
+           		$.get('pressLightRecord/updatePressLightRecord.do',{
+           			pressLightTypeName:$('#pressLightTypeName').val(),
+           			smallPressLightTypeName:$('#smallPressLightTypeName').val(),
+           			reason:$('#reason').val(),
+           			halt:$('input[name=halt]:checked').val(),
+           			'deviceSite.id':$('#departmentTg').iTreegrid('getSelected').id,
+           			recoverMethod:$('#recoverMethod').val(),
            			id:$('#departmentDg').iDatagrid('getSelected').id,
-           			code:deptCode,
-           			name:deptName,
-           			'parent.id':$('#parentId_edit').val(),
-           			note:$('#deptNote_edit').val()
+           			recoverMethod:$('#recoverMethod').val()
            			},function(data){
            				if(data.success){
 	           				$('#departmentEditDialog').iDialog('close');
 	           				$('#departmentDg').iDatagrid('reload');
-	           				$('#departmentTg').iTreegrid('reload');
            				}else{
            					alert(data.msg);
            				}
            			});
-           		}else{
-           			alert('请选择要编辑的记录!');
-           		}
            	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
            	{text:'关闭',handler:function(){
            		$('#departmentEditDialog').iDialog('close');
            	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
            ]
             }">编辑</a>
+   
     <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
        data-options="method:'doAjax',
        extend: '#departmentDg-toolbar',
        iconCls:'fa fa-trash',
-       url:'department/deleteDepartment.do',
+       url:'pressLightRecord/deletePressLightRecord.do',
        grid: {uncheckedMsg:'请先勾选要删除的数据',id:'departmentDg',param:'id:id'}">删除</a>
-<!--     <a href="javascript:void(0)"
+        <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
-       data-options="method:'filter',
-       extend: '#userDg-toolbar'
-       ">过滤</a>
-    <a href="javascript:void(0)"
-       data-toggle="topjui-menubutton"
-       data-options="method:'search',
-       extend: '#userDg-toolbar'">查询</a> -->
+       data-options="method:'doAjax',
+       extend: '#departmentDg-toolbar',
+       iconCls:'fa fa-reply-all',
+       url:'pressLightRecord/recoverPressLightRecord.do',
+       grid: {uncheckedMsg:'请先勾选要操作的数据',id:'departmentDg',param:'id:id'}">恢复</a>
     <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
        data-options="method:'doAjax',
        extend: '#departmentDg-toolbar',
-       iconCls:'fa fa-stop',
-       url:'department/disabledDepartment.do',
-       grid: {uncheckedMsg:'请选择要停用的部门',id:'departmentDg',param:'id:id'}">停用</a>
+       iconCls:'fa fa-lightbulb-o',
+       url:'pressLightRecord/lightOutPressLightRecord.do',
+       grid: {uncheckedMsg:'请先勾选要操作的数据',id:'departmentDg',param:'id:id'}">熄灯</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'doAjax',
+       extend: '#departmentDg-toolbar',
+       iconCls:'fa fa-check',
+       url:'pressLightRecord/confirmPressLightRecord.do',
+       grid: {uncheckedMsg:'请先勾选要操作的数据',id:'departmentDg',param:'id:id'}">确认</a>
     </div>
 <!-- 部门表格工具栏结束 -->
 <!-- 职位表格工具栏开始 -->

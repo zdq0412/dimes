@@ -16,7 +16,7 @@
 			   singleSelect:true,
 			   url:'productionUnit/queryDeviceSiteTree.do',
 			   childGrid:{
-			   	   param:'pid:id',
+			   	   param:'deviceSiteId:id',
                    grid:[
                        {type:'datagrid',id:'departmentDg'},
                    ]
@@ -37,7 +37,7 @@
                 <table  
                 data-toggle="topjui-datagrid"
                        data-options="id:'departmentDg',
-                       url:'department/queryDepartmentsByParentId.do',
+                       url:'lostTimeRecord/queryLostTimeRecordByDeviceSiteId.do',
                        singleSelect:true,
                        fitColumns:true,
                        pagination:true,
@@ -48,34 +48,85 @@
 			           childTab: [{id:'southTabs'}]">
                     <thead>
                     <tr>
-                        <th data-options="field:'id',title:'id',checkbox:false,width:'80px'"></th>
-                        <th data-options="field:'code',title:'部门代码',width:'180px',align:'center'"></th>
-                        <th data-options="field:'name',title:'部门名称',sortable:false"></th>
-                        <th data-options="field:'note',title:'备注',sortable:true"></th>
-                        <th data-options="field:'parentCode',title:'上级部门代码',sortable:true,
-                        formatter:function(value,row,index){
-                            if (row.parent) {
-                                return row.parent.code;
-                            } else {
-                                return '';
-                            }
-                        }"></th>
-                        <th data-options="field:'parentName',title:'上级部门名称',sortable:true, 
-                        formatter:function(value,row,index){
-                            if (row.parent) {
-                                return row.parent.name;
-                            } else {
-                                return '';
-                            }
-                        }"></th>
-                        <th data-options="field:'disabled',title:'停用',sortable:true,
-                        formatter:function(value,row,index){
+                        <th data-options="field:'id',title:'id',checkbox:false,width:'80px',hidden:true"></th>
+                        <th data-options="field:'beginTime',title:'开始时间',width:'180px',align:'center',formatter:function(value,row,index){
                         	if(value){
-                        		return 'Y';
+                        				var date = new Date(value);
+                                        var month = date.getMonth()+1;
+                                        var monthStr = ((month>=10)?month:('0' + month));
+                                        
+                                        var day = date.getDate();
+                                        var dayStr = ((day>=10)?day:('0'+day));
+                                        var hour = date.getHours();
+                                        var hourStr = ((hour>=10)?hour:('0' + hour));
+                                        
+                                        var minute = date.getMinutes();
+                                        var minuteStr = ((minute>=10)?minute:('0' +minute));
+                                        
+                                        var second = date.getSeconds();
+                                        var secondStr = ((second>=10)?second:('0' +second));
+                                        
+                                        var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr  + 
+                                        				' ' + hourStr + ':' + minuteStr + ':' + secondStr; 
+                                        return dateStr;
                         	}else{
-                        		return 'N';
+                        		return '';
                         	}
                         }"></th>
+                        <th data-options="field:'endTime',title:'结束时间',width:'180px',align:'center',formatter:function(value,row,index){
+                        	if(value){
+                        				var date = new Date(value);
+                                        var month = date.getMonth()+1;
+                                        var monthStr = ((month>=10)?month:('0' + month));
+                                        
+                                        var day = date.getDate();
+                                        var dayStr = ((day>=10)?day:('0'+day));
+                                        var hour = date.getHours();
+                                        var hourStr = ((hour>=10)?hour:('0' + hour));
+                                        
+                                        var minute = date.getMinutes();
+                                        var minuteStr = ((minute>=10)?minute:('0' +minute));
+                                        
+                                        var second = date.getSeconds();
+                                        var secondStr = ((second>=10)?second:('0' +second));
+                                        
+                                        var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr  + 
+                                        				' ' + hourStr + ':' + minuteStr + ':' + secondStr; 
+                                        return dateStr;
+                        	}else{
+                        		return '';
+                        	}
+                        }"></th>
+                        <th data-options="field:'sumOfLostTime',title:'损时合计(分钟)',sortable:false"></th>
+                        <th data-options="field:'recordUserName',title:'记录人',sortable:false"></th>
+                        <th data-options="field:'confirmUserName',title:'确认人',sortable:false"></th>
+                        <th data-options="field:'confirmTime',title:'确认时间',sortable:false,formatter:function(value,row,index){
+                        	if(value){
+                        				var date = new Date(value);
+                                        var month = date.getMonth()+1;
+                                        var monthStr = ((month>=10)?month:('0' + month));
+                                        
+                                        var day = date.getDate();
+                                        var dayStr = ((day>=10)?day:('0'+day));
+                                        var hour = date.getHours();
+                                        var hourStr = ((hour>=10)?hour:('0' + hour));
+                                        
+                                        var minute = date.getMinutes();
+                                        var minuteStr = ((minute>=10)?minute:('0' +minute));
+                                        
+                                        var second = date.getSeconds();
+                                        var secondStr = ((second>=10)?second:('0' +second));
+                                        
+                                        var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr  + 
+                                        				' ' + hourStr + ':' + minuteStr + ':' + secondStr; 
+                                        return dateStr;
+                        	}else{
+                        		return '';
+                        	}
+                        }"></th>
+                        <th data-options="field:'lostTimeTypeName',title:'损时类型',sortable:false"></th>
+                        <th data-options="field:'reason',title:'原因分类',sortable:false"></th>
+                        <th data-options="field:'description',title:'详细描述',sortable:false"></th>
                     </tr>
                     </thead>
                 </table>
@@ -92,8 +143,8 @@
                          id:'departmentDg',
                          param:'id:id'
                      }">
-                    <div title="岗位信息" data-options="id:'tab0',iconCls:'fa fa-th'">
-                        <!-- datagrid表格 -->
+                   <!--  <div title="岗位信息" data-options="id:'tab0',iconCls:'fa fa-th'">
+                        datagrid表格
                         <table 
                          data-toggle="topjui-datagrid"
                                data-options="id:'position',
@@ -133,7 +184,7 @@
                             </tr>
                             </thead>
                         </table>
-                    </div>
+                    </div> -->
                     <div title="相关文档" data-options="id:'tab1',iconCls:'fa fa-th'">
                         <!-- datagrid表格 -->
                         <table data-toggle="topjui-datagrid"
@@ -213,38 +264,26 @@
        dialog:{
            id:'departmentAddDialog',
            width:600,
-           height:400,
-           href:'console/jsp/department_add.jsp',
+           height:500,
+           href:'console/jsp/lostTimeRecord_add.jsp',
            buttons:[
            	{text:'保存',handler:function(){
-           		if($('#departmentTg').iTreegrid('getSelected')){
-           			var deptCode = $('#deptCode').val();
-           			if(deptCode==null || ''===$.trim(deptCode)){
-           				return false;
-           			}
-           			
-           			var deptName = $('#deptName').val();
-           			if(deptName==null || ''===$.trim(deptName)){
-           				return false;
-           			}
-           			$.get('department/addDepartment.do',{
-           			code:deptCode,
-           			name:deptName,
-           			'parent.id':$('#departmentTg').iTreegrid('getSelected').id,
-           			note:$('#deptNote').val()
+           			$.get('lostTimeRecord/addLostTimeRecord.do',{
+           			beginTime:$('#beginTime').val(),
+           			endTime:$('#endTime').val(),
+           			reason:$('#reason').val(),
+           			planHalt:$('input[name=planHalt]:checked').val(),
+           			lostTimeTypeName:$('#lostTimeTypeName').val(),
+           			'deviceSite.id':$('#departmentTg').iTreegrid('getSelected').id,
+           			description:$('#description').val()
            			},function(data){
            				if(data.success){
 	           				$('#departmentAddDialog').iDialog('close');
 	           				$('#departmentDg').iDatagrid('reload');
-	           				$('#departmentTg').iTreegrid('reload');
            				}else{
            					alert(data.msg);
            				}
            			});
-           		}else{
-           			alert('请选择父部门');
-           			$('#departmentAddDialog').iDialog('close');
-           		}
            	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
            	{text:'关闭',handler:function(){
            		$('#departmentAddDialog').iDialog('close');
@@ -258,64 +297,49 @@
             dialog: {
             	id:'departmentEditDialog',
                 width: 600,
-                height: 400,
-                href: 'console/jsp/department_edit.jsp',
-                url:'department/queryDepartmentById.do?id={id}',
+                height: 500,
+                href: 'console/jsp/lostTimeRecord_edit.jsp',
+                url:'lostTimeRecord/queryLostTimeRecordById.do?id={id}',
                  buttons:[
            	{text:'编辑',handler:function(){
-           		if($('#departmentDg').iDatagrid('getSelected')){
-           			var deptCode = $('#deptCode_edit').val();
-           			var deptName = $('#deptName_edit').val();
-           			if(deptName==null || ''===$.trim(deptName)){
-           				return false;
-           			}
-           			$.get('department/updateDepartment.do',{
+           		$.get('lostTimeRecord/updateLostTimeRecord.do',{
            			id:$('#departmentDg').iDatagrid('getSelected').id,
-           			code:deptCode,
-           			name:deptName,
-           			'parent.id':$('#parentId_edit').val(),
-           			note:$('#deptNote_edit').val()
+           			beginTime:$('#beginTime').val(),
+           			endTime:$('#endTime').val(),
+           			reason:$('#reason').val(),
+           			planHalt:$('input[name=planHalt]:checked').val(),
+           			lostTimeTypeName:$('#lostTimeTypeName').val(),
+           			'deviceSite.id':$('#departmentTg').iTreegrid('getSelected').id,
+           			description:$('#description').val()
            			},function(data){
            				if(data.success){
 	           				$('#departmentEditDialog').iDialog('close');
 	           				$('#departmentDg').iDatagrid('reload');
-	           				$('#departmentTg').iTreegrid('reload');
            				}else{
            					alert(data.msg);
            				}
            			});
-           		}else{
-           			alert('请选择要编辑的记录!');
-           		}
            	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
            	{text:'关闭',handler:function(){
            		$('#departmentEditDialog').iDialog('close');
            	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
            ]
             }">编辑</a>
+   
     <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
        data-options="method:'doAjax',
        extend: '#departmentDg-toolbar',
        iconCls:'fa fa-trash',
-       url:'department/deleteDepartment.do',
+       url:'lostTimeRecord/deleteLostTimeRecord.do',
        grid: {uncheckedMsg:'请先勾选要删除的数据',id:'departmentDg',param:'id:id'}">删除</a>
-<!--     <a href="javascript:void(0)"
-       data-toggle="topjui-menubutton"
-       data-options="method:'filter',
-       extend: '#userDg-toolbar'
-       ">过滤</a>
-    <a href="javascript:void(0)"
-       data-toggle="topjui-menubutton"
-       data-options="method:'search',
-       extend: '#userDg-toolbar'">查询</a> -->
     <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
        data-options="method:'doAjax',
        extend: '#departmentDg-toolbar',
-       iconCls:'fa fa-stop',
-       url:'department/disabledDepartment.do',
-       grid: {uncheckedMsg:'请选择要停用的部门',id:'departmentDg',param:'id:id'}">停用</a>
+       iconCls:'fa fa-check',
+       url:'lostTimeRecord/confirmLostTimeRecord.do',
+       grid: {uncheckedMsg:'请先勾选要操作的数据',id:'departmentDg',param:'id:id'}">确认</a>
     </div>
 <!-- 部门表格工具栏结束 -->
 <!-- 职位表格工具栏开始 -->

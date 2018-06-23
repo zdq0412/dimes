@@ -55,7 +55,18 @@
 									data-options="field:'code',title:'设备代码',width:'180px',align:'center'"></th>
 								<th data-options="field:'name',title:'设备名称',sortable:false"></th>
 								<th data-options="field:'unitType',title:'规格型号',sortable:false"></th>
-								<th data-options="field:'status',title:'设备状态',sortable:false"></th>
+								<th
+									data-options="field:'status',title:'设备状态',sortable:false,formatter:function(value,row,index){
+									if(value){
+										switch(value){
+											case '0':return '运行';
+											case '1':return '待机';
+											case '2':return '停机';
+										}
+									}else{
+										return '';
+									}
+								}"></th>
 								<th
 									data-options="field:'manufacturer',title:'出产厂家',sortable:false"></th>
 								<th data-options="field:'trader',title:'经销商',sortable:false"></th>
@@ -132,6 +143,18 @@
 										<th data-options="field:'name',title:'站点名称',sortable:false"></th>
 										<th
 											data-options="field:'barCodeAddress',title:'条码读头地址',sortable:false"></th>
+										<th
+											data-options="field:'status',title:'状态',sortable:false,formatter:function(value,row,index){
+											if(value){
+										switch(value){
+											case '0':return '运行';
+											case '1':return '待机';
+											case '2':return '停机';
+										}
+									}else{
+										return '';
+									}
+										}"></th>
 										<th data-options="field:'note',title:'备注',sortable:false"></th>
 										<th
 											data-options="field:'disabled',title:'停用',sortable:false,formatter:function(value,rows,index){
@@ -364,6 +387,7 @@
            			$.get('deviceSite/addDeviceSite.do',{
            			code:code,
            			name:name,
+           			status:$('#status').val(),
            			'device.id':$('#deviceDg').iDatagrid('getSelected').id,
            			note:$('#note').val(),
            			barCodeAddress:$('#barCodeAddress').val()
@@ -402,6 +426,7 @@
 		           			id:$('#deviceSite').iDatagrid('getSelected').id,
 		           			code:code,
 		           			name:name,
+		           			status:$('#status').val(),
 		           			'device.id':$('#deviceDg').iDatagrid('getSelected').id,
 		           			'barCodeAddress':$('#barCodeAddress').val(),
 		           			note:$('#note').val()

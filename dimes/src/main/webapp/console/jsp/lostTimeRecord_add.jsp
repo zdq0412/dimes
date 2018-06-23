@@ -9,32 +9,34 @@
 					<div style="height: 30px"></div>
 					<div class="topjui-row">
 						<div class="topjui-col-sm12">
-							<label class="topjui-form-label">故障大类</label>
+							<label class="topjui-form-label">开始时间</label>
 							<div class="topjui-input-block">
-								<input id="pressLightTypeName" data-toggle="topjui-combobox"
-									name="pressLightTypeName"
-									data-options="valueField:'name',textField:'name',
-								url:'pressLightType/queryFirstLevelType.do', 
-								onSelect: function(rec){
-					            var url = 'pressLightType/queryAllPressLightTypesByParentId.do?pid='+rec.id;
-					            $('#smallPressLightTypeName').iCombobox('reload', url);
-				      		  }">
-								<input type="hidden" name="deviceSiteId">
+								<input name="beginTime" data-toggle="topjui-datetimebox" data-options="required:true,width:200,showSeconds:true"
+								id="beginTime">
 							</div>
 						</div>
 					</div>
 					<div class="topjui-row">
 						<div class="topjui-col-sm12">
-							<label class="topjui-form-label">原因分类</label>
+							<label class="topjui-form-label">结束时间</label>
 							<div class="topjui-input-block">
-								<input id="smallPressLightTypeName"
-									data-toggle="topjui-combobox" name="smallPressLightTypeName"
+								<input name="endTime" data-toggle="topjui-datetimebox" data-options="required:true,width:200,showSeconds:true"
+								id="endTime">
+							</div>
+						</div>
+					</div>
+					<div class="topjui-row">
+						<div class="topjui-col-sm12">
+							<label class="topjui-form-label">损时类型</label>
+							<div class="topjui-input-block">
+								<input id="lostTimeTypeName" data-toggle="topjui-combobox"
+									name="lostTimeTypeName"
 									data-options="valueField:'name',textField:'name',
+								url:'pressLightType/queryFirstLevelType.do', 
 								onSelect: function(rec){
 					            var url = 'pressLight/queryAllPressLightByTypeId.do?typeId='+rec.id;
 					            $('#reason').iCombobox('reload', url);
 				      		  }">
-								<input type="hidden" name="deviceSiteId">
 							</div>
 						</div>
 					</div>
@@ -44,10 +46,11 @@
 							<div class="topjui-input-block">
 								<input id="reason" data-toggle="topjui-combobox" name="reason"
 									data-options="valueField:'reason',textField:'reason',onSelect:function(rec){
-										if(rec.halt){
-											$('#halt').attr('checked','checked');
+										$('#description').val(rec.description);
+										if(rec.planHalt){
+											$('#planHaltYes').attr('checked','checked');
 										}else{
-											$('#notHalt').attr('checked','checked');
+											$('#planHaltNo').attr('checked','checked');
 										}
 									}">
 								<input type="hidden" name="deviceSiteId">
@@ -56,22 +59,20 @@
 					</div>
 					<div class="topjui-row">
 						<div class="topjui-col-sm12">
-							<label class="topjui-form-label">是否停机</label>
-							<div class="topjui-input-block">
-								<input type="radio" name="halt" data-toggle="topjui-radio"
-									data-options="required:false" id="halt" value='true'>是
-								<input type="radio" name="halt" data-toggle="topjui-radio"
-									data-options="required:false" id="notHalt" value='false'>否
+							<label class="topjui-form-label">计划停机</label>
+							<div>
+								<input name="planHalt" value="true"  id="planHaltYes"
+									type="radio"> 是 <input name="planHalt" value="false" checked="checked"	type="radio" id="planHaltNo">否
 							</div>
 						</div>
 					</div>
 					<div class="topjui-row">
 					<div class="topjui-col-sm12">
-						<label class="topjui-form-label">恢复方法</label>
+						<label class="topjui-form-label">详细描述</label>
 						<div class="topjui-input-block">
 							<!-- <input type="textarea" name="recoverMethod"
 								data-toggle="topjui-textarea" id="recoverMethod"> -->
-								<textarea rows="5" cols="60" id="recoverMethod" name="recoverMethod"></textarea>
+								<textarea rows="5" cols="60" id="description" name="description"></textarea>
 						</div>
 					</div>
 				</div>

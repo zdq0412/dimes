@@ -58,4 +58,14 @@ public class PressLightTypeServiceImpl implements IPressLightTypeService {
 	public List<PressLightType> queryTopPressLightType() {
 		return  pressLightTypeDao.findByHQL("from PressLightType p where p.parent is null", new Object[] {});
 	}
+
+	@Override
+	public List<PressLightType> queryFirstLevelType() {
+		return pressLightTypeDao.findByHQL("from PressLightType p where p.level=?0", new Object[] {1});
+	}
+
+	@Override
+	public List<PressLightType> queryAllPressLightTypesByParentId(Long pid) {
+		return pressLightTypeDao.findByHQL("from PressLightType p where p.parent.id=?0", new Object[] {pid});
+	}
 }

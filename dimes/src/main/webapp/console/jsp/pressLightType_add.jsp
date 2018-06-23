@@ -14,6 +14,7 @@
 						<div class="topjui-input-block">
 							<input type="text" name="code" data-toggle="topjui-textbox"
 								data-options="required:true" id="code">
+								<input type="hidden" name="level" />
 						</div>
 					</div>
 				</div>

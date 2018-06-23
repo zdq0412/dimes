@@ -1,28 +1,16 @@
-package com.digitzones.model;
-import java.util.Date;
+package com.digitzones.vo;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import com.digitzones.model.DeviceSite;
 
-import org.springframework.format.annotation.DateTimeFormat;
 /**
- * 损时记录管理
+ * 损时
  * @author zdq
- * 2018年6月4日
+ * 2018年6月21日
  */
-@Entity
-@Table(name="LOSTTIMERECORD")
-public class LostTimeRecord {
+public class LostTimeRecordVO {
 	private Long id;
 	/**损时日期*/
-	private Date lostTimeTime;
+	private String lostTimeTime;
 	/**损时类别名称 : 同按灯类别*/
 	private String lostTimeTypeName;
 	/**损时类别代码 : 同按灯类别代码*/
@@ -42,15 +30,13 @@ public class LostTimeRecord {
 	/**恢复方法*/
 	private String recoverMethod;
 	/**确认时间*/
-	private Date confirmTime;
+	private String confirmTime;
 	/**损时开始时间*/
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date beginTime;
+	private String beginTime;
 	/**损时结束时间*/
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date endTime;
+	private String endTime;
 	/**合计,结束时间-开始时间，单位为分钟*/
-	private Double sumOfLostTime;
+	private Long sumOfLostTime;
 	/**详细描述*/
 	private String description;
 	/**损时的站点*/
@@ -61,39 +47,16 @@ public class LostTimeRecord {
 	private  String classesName;
 	/**删除标识*/
 	private Boolean deleted = false;
-	/**计划 停机*/
-	private Boolean planHalt;
-	public Boolean getPlanHalt() {
-		return planHalt;
-	}
-	public void setPlanHalt(Boolean planHalt) {
-		this.planHalt = planHalt;
-	}
-	public LostTimeRecord() {}
-	public LostTimeRecord(String lostTimeTypeName,Double sumOfLostTime) {
-		this.lostTimeTypeName = lostTimeTypeName;
-		this.sumOfLostTime = sumOfLostTime;
-	}
-	
-	public Boolean getDeleted() {
-		return deleted;
-	}
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
-	}
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date getLostTimeTime() {
+	public String getLostTimeTime() {
 		return lostTimeTime;
 	}
-	public void setLostTimeTime(Date lostTimeTime) {
+	public void setLostTimeTime(String lostTimeTime) {
 		this.lostTimeTime = lostTimeTime;
 	}
 	public String getLostTimeTypeName() {
@@ -150,31 +113,28 @@ public class LostTimeRecord {
 	public void setRecoverMethod(String recoverMethod) {
 		this.recoverMethod = recoverMethod;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date getConfirmTime() {
+	public String getConfirmTime() {
 		return confirmTime;
 	}
-	public void setConfirmTime(Date confirmTime) {
+	public void setConfirmTime(String confirmTime) {
 		this.confirmTime = confirmTime;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date getBeginTime() {
+	public String getBeginTime() {
 		return beginTime;
 	}
-	public void setBeginTime(Date beginTime) {
+	public void setBeginTime(String beginTime) {
 		this.beginTime = beginTime;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date getEndTime() {
+	public String getEndTime() {
 		return endTime;
 	}
-	public void setEndTime(Date endTime) {
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
-	public Double getSumOfLostTime() {
+	public Long getSumOfLostTime() {
 		return sumOfLostTime;
 	}
-	public void setSumOfLostTime(Double sumOfLostTime) {
+	public void setSumOfLostTime(Long sumOfLostTime) {
 		this.sumOfLostTime = sumOfLostTime;
 	}
 	public String getDescription() {
@@ -183,8 +143,6 @@ public class LostTimeRecord {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	@ManyToOne
-	@JoinColumn(name="DEVICESITE_ID")
 	public DeviceSite getDeviceSite() {
 		return deviceSite;
 	}
@@ -203,4 +161,11 @@ public class LostTimeRecord {
 	public void setClassesName(String classesName) {
 		this.classesName = classesName;
 	}
+	public Boolean getDeleted() {
+		return deleted;
+	}
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+	
 }

@@ -33,8 +33,8 @@ public class PressLight implements Serializable {
 	private String note;
 	/**是否停用*/
 	private Boolean disabled;
-	/**是否损时*/
-	private Boolean lostTime;
+	/**是否为计划停机*/
+	private Boolean planHalt;
 	/**按灯类别*/
 	private PressLightType pressLightType;
 	@Id
@@ -81,11 +81,12 @@ public class PressLight implements Serializable {
 	public void setDisabled(Boolean disabled) {
 		this.disabled = disabled;
 	}
-	public Boolean getLostTime() {
-		return lostTime;
+	
+	public Boolean getPlanHalt() {
+		return planHalt;
 	}
-	public void setLostTime(Boolean lostTime) {
-		this.lostTime = lostTime;
+	public void setPlanHalt(Boolean planHalt) {
+		this.planHalt = planHalt;
 	}
 	@ManyToOne
 	@JoinColumn(name="PRESSLIGHTTYPE_ID")

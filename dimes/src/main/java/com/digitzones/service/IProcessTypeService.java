@@ -7,5 +7,5 @@ import com.digitzones.model.ProcessType;
  * 2018年6月14日
  */
 public interface IProcessTypeService extends ICommonService<ProcessType> {
-
+	
 }

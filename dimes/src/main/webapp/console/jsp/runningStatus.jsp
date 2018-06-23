@@ -37,3 +37,31 @@
     <script type="text/javascript">
     	var contextPath = "<%=basePath%>";
     </script>
+</head>
+<body>
+	<div id="main" style="width:1920px;height:1080px;background-color:#6495ED;">
+		<div style="height:20px;width:100%;"></div>
+		<div id="title" style="width:100%;height:5%; border-bottom: solid 1px gray">
+				<span style="font-size:3em;margin-left:30px;line-height:90%;font-weight: bold;">嘉兴迪筑集团数字化车间监控系统</span>
+		</div>
+		<div id="body" style="width:100%;height:90%;padding-left: 20px;">
+			<div id="left" style="width:19%;height:100%;float:left;">
+				<div style="height:3%;width:95%;margin:0 auto;font-size:18px;">实时数据</div>
+				<div style="height:57%;width:95%;margin:0 auto;border:solid 1px gray"></div>
+				<div style="height:3%;width:95%;margin:0 auto;font-size:18px;">报警信息</div>
+				<div style="height:37%;width:95%;margin:0 auto;border:solid 1px gray"></div>
+			</div>
+			<div id="center" style="width:60%;height:100%;float:left">
+				<div style="height:3%;width:95%;margin:0 auto;font-size:18px;">车间布局图</div>
+				<div style="height:97%;width:95%;margin:0 auto;border:solid 1px gray"></div>
+			</div>
+			<div id="right" style="width:19%;height:100%;float:left">
+				<div style="height:3%;width:95%;margin:0 auto;font-size:18px;">实时占比饼图</div>
+				<div style="height:57%;width:95%;margin:0 auto;border:solid 1px gray"></div>
+				<div style="height:3%;width:95%;margin:0 auto;font-size:18px;">状态比例TOP图</div>
+				<div style="height:37%;width:95%;margin:0 auto;border:solid 1px gray"></div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -35,6 +35,15 @@ public class PressLightTypeController {
 		return pressLightTypeService.queryTopPressLightType();
 	}
 	/**
+	 * 查找第一级按灯类型，即level=1
+	 * @return
+	 */
+	@RequestMapping("/queryFirstLevelType.do")
+	@ResponseBody
+	public List<PressLightType> queryFirstLevelType(){
+		return pressLightTypeService.queryFirstLevelType();
+	}
+	/**
 	 * 分页查询按灯类型
 	 * @param pid
 	 * @param rows
@@ -59,6 +68,18 @@ public class PressLightTypeController {
 		mm.addAttribute("code", "0");
 		mm.addAttribute("msg", "");
 		return mm;
+	}
+	/**
+	 *根据父类别id查询子类别
+	 * @param pid
+	 * @param rows
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping("/queryAllPressLightTypesByParentId.do")
+	@ResponseBody
+	public List<PressLightType> queryAllPressLightTypesByParentId(@RequestParam(value="pid",required=false)Long pid) {
+		return pressLightTypeService.queryAllPressLightTypesByParentId(pid);
 	}
 
 	private void model2VO(Pager<Object[]> pagerParameterType,Pager<PressLightTypeVO> parameterTypeVO) {
@@ -98,6 +119,8 @@ public class PressLightTypeController {
 				modelMap.addAttribute("success", false);
 				modelMap.addAttribute("msg", "按灯类别名称已被使用");
 			}else {
+				PressLightType plt = pressLightTypeService.queryObjById(PressLightType.getParent().getId());
+				PressLightType.setLevel(plt.getLevel()+1);
 				pressLightTypeService.addObj(PressLightType);
 				modelMap.addAttribute("success", true);
 				modelMap.addAttribute("msg", "添加成功!");
