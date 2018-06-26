@@ -168,6 +168,61 @@
 								</thead>
 							</table>
 						</div>
+						<div title="设备参数" data-options="id:'tab2',iconCls:'fa fa-th'">
+							<!-- datagrid表格 -->
+							<table data-toggle="topjui-datagrid"
+								data-options="id:'parameter',
+                               initCreate: false,
+                               fitColumns:true,
+                               singleSelect:true,
+						       url:'parameter/queryDeviceSiteParameterByDeviceId.do'">
+								<thead>
+									<tr>
+										<th data-options="field:'id',title:'id',checkbox:false"></th>
+										<th
+											data-options="field:'deviceSiteCode',title:'站点代码',sortable:false,formatter:function(value,row,index){
+											if(row.deviceSite){
+												return row.deviceSite.code;
+											}else{
+												return '';
+											}
+										}"></th>
+										<th
+											data-options="field:'deviceSiteName',title:'站点名称',sortable:false,formatter:function(value,row,index){
+											if(row.deviceSite){
+												return row.deviceSite.name;
+											}else{
+												return '';
+											}
+										}"></th>
+										<th
+											data-options="field:'parameterCode',title:'参数代码',sortable:false,formatter:function(value,row,index){
+											if(row.parameter){
+												return row.parameter.code;
+											}else{
+												return '';
+											}
+										}"></th>
+										<th
+											data-options="field:'parameterName',title:'参数名称',sortable:false,formatter:function(value,row,index){
+											if(row.parameter){
+												return row.parameter.name;
+											}else{
+												return '';
+											}
+										}"></th>
+										<th
+											data-options="field:'upLine',title:'控制线UL',width:50,sortable:false"></th>
+										<th
+											data-options="field:'lowLine',title:'控制线LL',width:50,sortable:false"></th>
+										<th
+											data-options="field:'standardValue',title:'标准值',width:50,sortable:false"></th>
+										<th
+											data-options="field:'parameterNote',title:'备注',width:50,sortable:false"></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
 						<div title="相关文档" data-options="id:'tab1',iconCls:'fa fa-th'">
 							<!-- datagrid表格 -->
 							<table data-toggle="topjui-datagrid"
@@ -277,6 +332,7 @@
            			outFactoryCode:$('#outFactoryCode').val(),
            			installPosition:$('#installPosition').val(),
            			goalOee:$('#goalOee').val(),
+           			photo:$('#photo').val(),
            			parameterValueType:$('#parameterValueType').val(),
            			bottleneck:$('input[name=bottleneck]:checked').val()
            			},function(data){
@@ -317,13 +373,14 @@
            			unitType:$('#unitType').val(),
            			status:$('#deviceStatus').val(),
            			manufacturer:$('#manufacturer').val(),
-           			'productionUnit.id':$('#productionUnitTg').iTreegrid('getSelected').id,
+           			'productionUnit.id':$('#deviceDg').iDatagrid('getSelected').productionUnit.id,
            			trader:$('#trader').val(),
            			installDate:$('#installDate').val(),
            			outFactoryDate:$('#outFactoryDate').val(),
            			outFactoryCode:$('#outFactoryCode').val(),
            			installPosition:$('#installPosition').val(),
            			goalOee:$('#goalOee').val(),
+           			photo:$('#photo').val(),
            			parameterValueType:$('#parameterValueType').val(),
            			bottleneck:$('input[name=bottleneck]:checked').val()
            			},function(data){
@@ -461,64 +518,99 @@
 	</div>
 	<!-- 设备表格工具栏结束 -->
 	<!-- 相关文档表格工具栏开始 -->
-	<div id="relateDoc-toolbar" class="topjui-toolbar"
+	<div id="parameter-toolbar" class="topjui-toolbar"
 		data-options="grid:{
            type:'datagrid',
-           id:'relateDoc'
+           id:'parameter'
        }">
 		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
 			data-options="method:'openDialog',
-       extend: '#relateDoc-toolbar',
+       extend: '#parameter-toolbar',
        iconCls: 'fa fa-plus',
+       parentGrid:{
+       	type:'datagrid',
+       	id:'deviceDg',
+       	param:'parentDeviceId:id'
+       },
        dialog:{
-           id:'userAddDialog',
-           href:_ctx + '/html/complex/dialog_add.html',
-           buttonsGroup:[
-               {text:'保存',url:_ctx + '/json/response/success.json',iconCls:'fa fa-plus',handler:'ajaxForm',btnCls:'topjui-btn-brown'}
+           id:'parameterAddDialog',
+           href:'console/jsp/device_parameter_add.jsp',
+           buttons:[
+           	{text:'保存',handler:function(){
+           			var deviceSiteId = $('#deviceId').val();
+           			if(!deviceSiteId){
+           				return false;
+           			}
+           			$.get('parameter/addDeviceSiteParameter.do',{
+           			'deviceSite.id':deviceSiteId,
+           			'parameter.id':$('#parameterId').val(),
+           			upLine:$('#upLine').val(),
+           			lowLine:$('#lowLine').val(),
+           			standardValue:$('#standardValue').val(),
+           			note:$('#note').val(),
+           			trueValue:$('#trueValue').val()
+           			},function(data){
+           				if(data.success){
+	           				$('#parameterAddDialog').iDialog('close');
+	           				$('#parameter').iDatagrid('reload');
+           				}else{
+           					alert(data.msg);
+           				}
+           			});
+           	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
+           	{text:'关闭',handler:function(){
+           		$('#parameterAddDialog').iDialog('close');
+           	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
            ]
        }">新增</a>
 		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
 			data-options="method: 'openDialog',
-            extend: '#relateDoc-toolbar',
+            extend: '#parameter-toolbar',
             iconCls: 'fa fa-pencil',
-            grid: {
-                type: 'datagrid',
-                id: 'userDg'
-            },
+             parentGrid:{
+		       	type:'datagrid',
+		       	id:'deviceDg',
+		       	param:'parentDeviceId:id'
+		       },
             dialog: {
-                width: 950,
-                height: 500,
-                href: _ctx + '/html/complex/user_edit.html?uuid={uuid}',
-                url: _ctx + '/json/product/detail.json?uuid={uuid}',
-                buttonsGroup: [
-                    {
-                        text: '更新',
-                        url: _ctx + '/json/response/success.json',
-                        iconCls: 'fa fa-save',
-                        handler: 'ajaxForm',
-                        btnCls: 'topjui-btn-green'
-                    }
-                ]
+                	id:'parameterEditDialog',
+                	    width: 600,
+                		height: 700,
+		           href:'console/jsp/device_parameter_edit.jsp',
+		           url:'parameter/queryDeviceSiteParameterById.do?id={id}',
+                 buttons:[
+           	{text:'编辑',handler:function(){
+           			var deviceSiteId = $('#deviceId').val();
+           			if(!deviceSiteId){
+           				return false;
+           			}
+           			$.get('parameter/updateDeviceSiteParameter.do',{
+           			id:$('#parameter').iDatagrid('getSelected').id,
+           			upLine:$('#upLine').val(),
+           			lowLine:$('#lowLine').val(),
+           			standardValue:$('#standardValue').val(),
+           			note:$('#note').val(),
+           			trueValue:$('#trueValue').val()
+           			},function(data){
+           				if(data.success){
+	           				$('#parameterEditDialog').iDialog('close');
+	           				$('#parameter').iDatagrid('reload');
+           				}else{
+           					alert(data.msg);
+           				}
+           			});
+           	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
+           	{text:'关闭',handler:function(){
+           		$('#parameterEditDialog').iDialog('close');
+           	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
+           ]
             }">编辑</a>
 		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
 			data-options="method:'doAjax',
-       extend: '#relateDoc-toolbar',
+       extend: '#parameter-toolbar',
        iconCls:'fa fa-trash',
-       url:_ctx + '/json/response/success.json',
-       grid: {uncheckedMsg:'请先勾选要删除的数据',param:'uuid:uuid,code:code'}">删除</a>
-		<!--     <a href="javascript:void(0)"
-       data-toggle="topjui-menubutton"
-       data-options="method:'filter',
-       extend: '#userDg-toolbar'
-       ">过滤</a>
-    <a href="javascript:void(0)"
-       data-toggle="topjui-menubutton"
-       data-options="method:'search',
-       extend: '#userDg-toolbar'">查询</a> -->
-		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
-			data-options="method:'search',
-       extend: '#relateDoc-toolbar'">停用</a>
+       url:'parameter/deleteDeviceSiteParameterById.do',
+       grid: {uncheckedMsg:'请先勾选要删除的数据',param:'id:id'}">删除</a>
 	</div>
-	<!-- 相关文档表格工具栏结束 -->
 </body>
 </html>

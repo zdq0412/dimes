@@ -58,4 +58,9 @@ public class ParameterTypeServiceImpl implements IParameterTypeService {
 	public Long queryCountOfSubParameterType(Serializable pid) {
 		return parameterTypeDao.findCount("from ParameterType d inner join d.parent p where p.id=?0", new Object[] {pid});
 	}
+
+	@Override
+	public Long queryCountOfParameter(Serializable typeId) {
+		return  parameterTypeDao.findCount("from Parameters d inner join d.parameterType p where p.id=?0", new Object[] {typeId});
+	}
 }

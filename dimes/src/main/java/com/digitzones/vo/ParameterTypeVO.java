@@ -12,6 +12,13 @@ public class ParameterTypeVO {
 	private String code;
 	private Boolean disabled;
 	private String note;
+	private String baseCode;
+	public String getBaseCode() {
+		return baseCode;
+	}
+	public void setBaseCode(String baseCode) {
+		this.baseCode = baseCode;
+	}
 	public Long getId() {
 		return id;
 	}

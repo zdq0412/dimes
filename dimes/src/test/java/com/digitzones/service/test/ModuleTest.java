@@ -499,11 +499,16 @@ public class ModuleTest {
 		
 		ngReasonTypeService.addObj(ngReasonType);
 		//参数类型
-		ParameterType parent = new ParameterType();
-		parent.setCode("TOPTYPE");
-		parent.setName("参数类型");
+		ParameterType parent1 = new ParameterType();
+		parent1.setCode("ART");
+		parent1.setName("工艺参数");
 		
-		parameterTypeService.addObj(parent);
+		parameterTypeService.addObj(parent1);
+		ParameterType parent2 = new ParameterType();
+		parent2.setCode("DEVICE");
+		parent2.setName("设备参数");
+		
+		parameterTypeService.addObj(parent2);
 		//故障或按灯类型
 		PressLightType plt = new PressLightType();
 		plt.setCode("TOPTYPE");

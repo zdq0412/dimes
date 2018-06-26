@@ -21,4 +21,10 @@ public interface IParameterTypeService extends ICommonService<ParameterType> {
 	 * @return
 	 */
 	public Long queryCountOfSubParameterType(Serializable pid);
+	/**
+	 * 根据类型id查询参数数量
+	 * @param typeId
+	 * @return
+	 */
+	public Long queryCountOfParameter(Serializable typeId);
 }

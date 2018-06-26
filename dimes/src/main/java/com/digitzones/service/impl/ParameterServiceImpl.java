@@ -54,4 +54,13 @@ public class ParameterServiceImpl implements IParameterService {
 		return parameterDao.findAll();
 	}
 
+	@Override
+	public List<Parameters> queryOtherParametersByDeviceId(Long deviceId) {
+		String hql = "from Parameters p where p.id not in ("
+				+ "select dspm.parameter.id from DeviceSiteParameterMapping dspm ) or p.id in ("
+				+ "select dspm.parameter.id from DeviceSiteParameterMapping dspm where dspm.deviceSite.device.id!=?0"
+				+ ")";
+		return this.parameterDao.findByHQL(hql, new Object[] {deviceId});
+	}
+
 }

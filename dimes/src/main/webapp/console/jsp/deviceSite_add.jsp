@@ -40,7 +40,7 @@
 							<label class="topjui-form-label">参数页面中显示</label>
 							<div class="topjui-input-block">
 								<input type="checkbox" name="show" value="true"
-									data-toggle="topjui-textbox" id="show">
+									id="show">
 							</div>
 						</div>
 					</div>

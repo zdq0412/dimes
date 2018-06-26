@@ -20,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ParameterType extends CommonModel {
 	private static final long serialVersionUID = 1L;
 	private ParameterType parent;
+	/**记录是工艺参数还是设备参数*/
+	private String baseCode;
 	/**
 	 * 子类别
 	 */
@@ -40,5 +42,11 @@ public class ParameterType extends CommonModel {
 	}
 	public void setParent(ParameterType parent) {
 		this.parent = parent;
+	}
+	public String getBaseCode() {
+		return baseCode;
+	}
+	public void setBaseCode(String baseCode) {
+		this.baseCode = baseCode;
 	}
 }

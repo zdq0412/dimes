@@ -1,4 +1,5 @@
 package com.digitzones.controllers;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -87,6 +88,12 @@ public class DeviceSiteController {
 		mm.addAttribute("msg", "");
 		return mm;
 	}
+	@RequestMapping("/queryAllDeviceSitesByDeviceId.do")
+	@ResponseBody
+	public List<DeviceSite> queryAllDeviceSitesByDeviceId(@RequestParam(value="deviceId",required=false)Long deviceId) {
+		List<DeviceSite> list = deviceSiteService.queryAllDeviceSitesByDeviceId(deviceId);
+		return list; 
+	}
 
 	/**
 	 * 为设备添加设备站点
@@ -108,7 +115,7 @@ public class DeviceSiteController {
 		}
 		return modelMap;
 	}
-	
+
 	/**
 	 * 根据id查询设备
 	 * @param id
@@ -134,7 +141,7 @@ public class DeviceSiteController {
 		modelMap.addAttribute("msg", "编辑成功!");
 		return modelMap;
 	}
-	
+
 	/**
 	 * 停用该设备站点
 	 * @param id
@@ -239,35 +246,68 @@ public class DeviceSiteController {
 	@RequestMapping("/queryDeviceSite4ParameterStatusShow.do")
 	@ResponseBody
 	public ModelMap queryDeviceSite4ParameterStatusShow() {
+		 DecimalFormat format = new DecimalFormat("#.00");
+		
 		ModelMap modelMap = new ModelMap();
 		List<DeviceSite> deviceSites = deviceSiteService.queryDeviceSitesByShow(true);
-		List<Double> oees = new ArrayList<>();
+		List<String> oees = new ArrayList<>();
 		//良品率
-		List<Double> rtys = new ArrayList<>();
+		List<String> rtys = new ArrayList<>();
 		//根据设备站点查询加工信息
 		for(DeviceSite ds : deviceSites) {
 			//根据设备站点id查询当天的加工数量
-			Long count = processRecordService.queryCurrentDayCountByDeviceSiteId(ds.getId());
+			long count = processRecordService.queryCurrentDayCountByDeviceSiteId(ds.getId());
 			//根据设备站点id查询当前非NG数量
-			Long notNgCount = processRecordService.queryCountByDeviceSiteIdAndNotNg(ds.getId());
-			rtys.add(notNgCount*1.0/count*100);
+			long notNgCount = processRecordService.queryCountByDeviceSiteIdAndNotNg(ds.getId());
+			if(count == 0) {
+				rtys.add("100");
+			}else {
+				rtys.add(format.format(notNgCount*1.0/count*100));
+			}
 			//查询加工信息中的工序，工件，设备站点id,NG数量
 			List<Long[]> idList = processRecordService.queryCountByDeviceSiteIdAndStatus(ds.getId(), Constant.ProcessRecord.NG);
-			for(Long[] ids : idList) {
-				Classes c = classesService.queryObjById(ids[3]);
-				//根据工序,工件，设备站点查找标准节拍
-				WorkpieceProcessDeviceSiteMapping wpdsm = workpieceProcessDeviceSiteMappingService.queryByWorkPieceIdAndProcessIdAndDeviceSiteId(ids[0], ids[1], ids[2]);
-				Float processingBeat = wpdsm.getProcessingBeat();
-				//oee公式:（总加工时间-损时时间-NG件数*标准节拍）/总加工时间 
-				//总加工时间，公式：当前时间-班次的开始时间-损时时间-计划停机时间
-				Date now = new Date();
-				//查询损时时间(包括计划停机时间)
-				Double lostTime = lostTimeRecordService.queryLostTimeByTime(c.getStartTime(), now); 
+			//查询当前班次
+			Classes c = classesService.queryCurrentClasses();
+			Date now = new Date();
+			//查询损时时间(包括计划停机时间)
+			double lostTime = lostTimeRecordService.queryLostTimeByTime(c,ds.getId()); 
+			if(idList!=null && idList.size()>0) {
+				for(Long[] ids : idList) {
+					//根据工序,工件，设备站点查找标准节拍
+					WorkpieceProcessDeviceSiteMapping wpdsm = workpieceProcessDeviceSiteMappingService.queryByWorkPieceIdAndProcessIdAndDeviceSiteId(ids[0], ids[1], ids[2]);
+					float processingBeat = wpdsm.getProcessingBeat();
+					//oee公式:（总加工时间-损时时间-NG件数*标准节拍）/总加工时间 
+					//总加工时间，公式：当前时间-班次的开始时间-损时时间-计划停机时间
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(now);
+					int totalMinutes = calendar.get(Calendar.HOUR)*60 + calendar.get(Calendar.MINUTE);
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(c.getStartTime());
+					int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
+					double oee = 0;
+					if(totalMinutes>classesBeginMinutes) {
+						oee = (totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/totalMinutes;
+						//
+					}else {
+						oee = (24+totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/totalMinutes;
+					}
+					oees.add(format.format(oee*100));
+				}
+			}else {
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(now);
 				int totalMinutes = calendar.get(Calendar.HOUR)*60 + calendar.get(Calendar.MINUTE);
-				double oee = (totalMinutes-lostTime-ids[4]*processingBeat)/totalMinutes;
-				oees.add(oee*100);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(c.getStartTime());
+				int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
+				double oee = 0;
+				if(totalMinutes>classesBeginMinutes) {
+					oee = (totalMinutes-lostTime-classesBeginMinutes)/totalMinutes;
+					//
+				}else {
+					oee = (24+totalMinutes-lostTime-classesBeginMinutes)/totalMinutes;
+				}
+				oees.add(format.format(oee*100));
 			}
 		}
 		modelMap.addAttribute("deviceSites", deviceSites);

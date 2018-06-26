@@ -1,7 +1,6 @@
 package com.digitzones.dao;
 
-import java.util.Date;
-
+import com.digitzones.model.Classes;
 import com.digitzones.model.LostTimeRecord;
 /**
  * 损时记录dao
@@ -29,5 +28,5 @@ public interface ILostTimeRecordDao extends ICommonDao<LostTimeRecord> {
 	 * @param end
 	 * @return
 	 */
-	public Double queryLostTimeByTime(Date begin, Date end);
+	public Double queryLostTimeByTime(Classes c,Long deviceSiteId);
 }

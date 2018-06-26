@@ -47,4 +47,9 @@ public class ClassesServiceImpl implements IClassesService {
 	public void deleteObj(Long id) {
 		classesDao.deleteById(id);
 	}
+
+	@Override
+	public Classes queryCurrentClasses() {
+		return classesDao.queryCurrentClasses();
+	}
 }

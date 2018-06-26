@@ -28,11 +28,11 @@ public class ProcessRecordDaoImpl extends CommonDaoImpl<ProcessRecord> implement
 		c.set(Calendar.MINUTE,59);
 		Date end = c.getTime();
 		
-		String hql = "select pr.workPieceId,pr.processId,pr.deviceSiteId ,pr.classesId, count(*) from ProcessRecord pr  left join Classes c on pr.classesid=c.id where "
+		String hql = "select pr.workPieceId,pr.processId,pr.deviceSiteId , count(*) from ProcessRecord pr  left join Classes c on pr.classesid=c.id where "
 				+ " pr.deviceSiteId=?0 and pr.status=?1  and (pr.collectionDate between ?2 and ?3 ) and " + 
 				" (c.beginTime<c.endTime and CONVERT(varchar(100),pr.collectionDate,108) between c.beginTime and c.endTime) or ((c.beginTime>c.endTime ) " + 
 				" and ((CONVERT(varchar(100),pr.collectionDate,108) between c.beginTime and '23:59')) or (CONVERT(varchar(100),pr.collectionDate,108) between '00:00' and c.endTime)) " + 
-				" group by pr.workPieceId,pr.processId,pr.deviceSiteId ,pr.classesId";
+				" group by pr.workPieceId,pr.processId,pr.deviceSiteId ";
 		return getSession().createSQLQuery(hql).setParameter(0, deviceSiteId).setParameter(1,status)
 				.setParameter(2, begin)
 				.setParameter(3,end)
@@ -98,11 +98,11 @@ public class ProcessRecordDaoImpl extends CommonDaoImpl<ProcessRecord> implement
 		String hql = "select  count(*) from ProcessRecord pr  left join Classes c on pr.classesid=c.id where "
 				+ " pr.deviceSiteId=?0 and pr.status!=?1  and (pr.collectionDate between ?2 and ?3 ) and (c.beginTime<c.endTime and CONVERT(varchar(100),pr.collectionDate,108) between c.beginTime and c.endTime) or ((c.beginTime>c.endTime ) " + 
 				" and ((CONVERT(varchar(100),pr.collectionDate,108) between c.beginTime and '23:59')) or (CONVERT(varchar(100),pr.collectionDate,108) between '00:00' and c.endTime))";
-		return (Long) getSession().createSQLQuery(hql).setParameter(0, deviceSiteId)
+		return ((Integer) getSession().createSQLQuery(hql).setParameter(0, deviceSiteId)
 				.setParameter(1,Constant.ProcessRecord.NG)
 				.setParameter(2, begin)
 				.setParameter(3,end)
-				.uniqueResult();
+				.uniqueResult()).longValue();
 	}
 	@SuppressWarnings("deprecation")
 	@Override
@@ -119,11 +119,13 @@ public class ProcessRecordDaoImpl extends CommonDaoImpl<ProcessRecord> implement
 		Date end = c.getTime();
 		
 		String hql = "select  count(*) from ProcessRecord pr left join Classes c on pr.classesid=c.id where "
-				+ " pr.deviceSiteId=?0  and (pr.collectionDate between ?2 and ?3 ) and (c.beginTime<c.endTime and CONVERT(varchar(100),pr.collectionDate,108) between c.beginTime and c.endTime) or ((c.beginTime>c.endTime ) " + 
+				+ " pr.deviceSiteId=?0  and (pr.collectionDate between ?1 and ?2 ) and (c.beginTime<c.endTime and CONVERT(varchar(100),pr.collectionDate,108) between c.beginTime and c.endTime) or ((c.beginTime>c.endTime ) " + 
 				" and ((CONVERT(varchar(100),pr.collectionDate,108) between c.beginTime and '23:59')) or (CONVERT(varchar(100),pr.collectionDate,108) between '00:00' and c.endTime))";
-		return (Long) getSession().createSQLQuery(hql).setParameter(0, deviceSiteId)
-				.setParameter(1, begin)
-				.setParameter(2,end)
-				.uniqueResult();
+		
+			Integer result =  (Integer) getSession().createSQLQuery(hql).setParameter(0, deviceSiteId)
+					.setParameter(1, begin)
+					.setParameter(2,end)
+					.uniqueResult();
+		return result.longValue();
 	}
 }

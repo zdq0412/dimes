@@ -14,4 +14,10 @@ public interface IParameterService extends ICommonService<Parameters> {
 	 * @return
 	 */
 	public List<Parameters> queryAllParameters();
+	/**
+	 * 根据设备id查询非当前设备的参数
+	 * @param deviceId
+	 * @return
+	 */
+	public List<Parameters> queryOtherParametersByDeviceId(Long deviceId);
 }

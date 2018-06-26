@@ -14,6 +14,8 @@ public class Parameters extends CommonModel {
 	private static final long serialVersionUID = 1L;
 	private Boolean kfc;
 	private ParameterType parameterType;
+	/**记录是工艺参数还是设备参数*/
+	private String baseCode;
 	/**取值规则*/
 	private String rules;
 	public String getRules() {
@@ -35,5 +37,11 @@ public class Parameters extends CommonModel {
 	}
 	public void setKfc(Boolean kfc) {
 		this.kfc = kfc;
+	}
+	public String getBaseCode() {
+		return baseCode;
+	}
+	public void setBaseCode(String baseCode) {
+		this.baseCode = baseCode;
 	}
 }

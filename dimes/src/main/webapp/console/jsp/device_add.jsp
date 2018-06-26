@@ -3,7 +3,7 @@
 <div data-toggle="topjui-layout" data-options="fit:true">
 	<div
 		data-options="region:'center',title:'',fit:true,border:false,bodyCls:'border_right_bottom'">
-		<form id="ff" method="post">
+		<form id="addDeviceForm" method="post" enctype="multipart/form-data">
 			<div title="设备信息" data-options="iconCls:'fa fa-th'">
 				<div class="topjui-fluid">
 					<div style="height: 30px"></div>
@@ -38,7 +38,7 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">状态</label>
 							<div class="topjui-input-block">
-								<input type="text" name="name" id="deviceStatus"
+								<input type="text" name="status" id="deviceStatus"
 									data-toggle="topjui-combobox"
 									data-options="valueField:'value',textField:'text',data: [{text:'运行', value: '0'},{text: '待机',value: '1'},{text: '停机',value: '2'}]">
 							</div>
@@ -48,7 +48,7 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">制造商</label>
 							<div class="topjui-input-block">
-								<input type="text" name="name" data-toggle="topjui-textbox"
+								<input type="text" name="manufacturer" data-toggle="topjui-textbox"
 									id="manufacturer">
 							</div>
 						</div>
@@ -57,7 +57,7 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">经销商</label>
 							<div class="topjui-input-block">
-								<input type="text" name="name" data-toggle="topjui-textbox"
+								<input type="text" name="trader" data-toggle="topjui-textbox"
 									id="trader">
 							</div>
 						</div>
@@ -66,7 +66,7 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">安装日期</label>
 							<div class="topjui-input-block">
-								<input type="text" name="name" data-toggle="topjui-datebox"
+								<input type="text" name="installDate" data-toggle="topjui-datebox"
 									id="installDate" editable="false">
 							</div>
 						</div>
@@ -75,7 +75,7 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">出厂日期</label>
 							<div class="topjui-input-block">
-								<input type="text" name="name" data-toggle="topjui-datebox"
+								<input type="text" name="outFactoryDate" data-toggle="topjui-datebox"
 									id="outFactoryDate" editable="false">
 							</div>
 						</div>
@@ -84,7 +84,7 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">出厂编码</label>
 							<div class="topjui-input-block">
-								<input type="text" name="name" data-toggle="topjui-textbox"
+								<input type="text" name="outFactoryCode" data-toggle="topjui-textbox"
 									id="outFactoryCode">
 							</div>
 						</div>
@@ -93,7 +93,7 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">安装位置</label>
 							<div class="topjui-input-block">
-								<input type="text" name="name" data-toggle="topjui-textbox"
+								<input type="text" name="installPosition" data-toggle="topjui-textbox"
 									id="installPosition">
 							</div>
 						</div>
@@ -111,7 +111,7 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">OEE目标</label>
 							<div class="topjui-input-block">
-								<input type="number" name="name" data-toggle="topjui-textbox"
+								<input type="number" name="goalOee" data-toggle="topjui-textbox"
 									id="goalOee">
 							</div>
 						</div>
@@ -120,7 +120,7 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">参数取值</label>
 							<div class="topjui-input-block">
-								<input type="text" name="name" data-toggle="topjui-textbox"
+								<input type="text" name="parameterValueType" data-toggle="topjui-textbox"
 									id="parameterValueType">
 							</div>
 						</div>
@@ -133,8 +133,8 @@
 									data-options="editable:false,
    buttonText:'上传图片',
    accept:'images',
-   uploadUrl:'/json/response/upload.json'"
-									type="text">
+   uploadUrl:'device/upload.do'"
+									type="text" id="photo">
 							</div>
 						</div>
 					</div>

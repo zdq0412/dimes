@@ -53,10 +53,10 @@
 		$.get("deviceSite/queryDeviceSite4ParameterStatusShow.do", function(result) {
 			var $main = $("#main");
 			$main.append("<div id='title'>")
-			//for(var i = 0;i<result.deviceSites.length;i++){
-			for(var i = 0;i<5;i++){
+			for(var i = 0;i<result.deviceSites.length;i++){
+		//	for(var i = 0;i<5;i++){
 				$titleDiv = $("<div class='title'>");
-				//$titleDiv.append(result.deviceSites[i].name);
+				$titleDiv.append(result.deviceSites[i].name);
 				$contentDiv = $("<div class='content'>");
 				
 				$main.append($titleDiv);
@@ -65,16 +65,24 @@
 				$picDiv = $("<div class='pic'>");
 				
 				$oeeDiv = $("<div class='oee'>");
-				$rtyDiv = $("<div class='rty'>");
+				$rtyDiv = $("<div class='rty' style='padding:auto auto;'>");
+				
+				$rtyText = $("<div style='height:30% ;width:100%;font-size:0.5em;'>");
+				$rtyText.text("良品率");
+				$rtyDiv.append($rtyText);
+				
+				$rtyValue = $("<div style='height:70% ;width:100%;font-size:1em;'>");
+				$rtyDiv.append($rtyValue);
+				
 				$parameterDiv = $("<div class='parameter'>");
 				
 				$contentDiv.append($picDiv);
 				$contentDiv.append($oeeDiv);
 				$contentDiv.append($rtyDiv);
 				$contentDiv.append($parameterDiv);
-				$rtyDiv.append(result.rtys[i]?result.rtys[i]:0 + "%");
+				$rtyValue.append((result.rtys[i]?result.rtys[i]:0) + "%");
 				oee($oeeDiv.get(0),result.oees[i]?result.oees[i]:0);
-				//$picDiv.append("<img src='" + result.deviceSites[i].photo + "' style='height:100%;width:100%;'/>");
+				$picDiv.append("<img src='" + result.deviceSites[i].device.photo + "' style='height:100%;width:100%;'/>");
 			}
 		});
 	});

@@ -1,4 +1,7 @@
 package com.digitzones.controllers;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,13 +14,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.model.DeviceSiteParameterMapping;
 import com.digitzones.model.Pager;
 import com.digitzones.model.Parameters;
+import com.digitzones.service.IDeviceSiteParameterMappingService;
 import com.digitzones.service.IParameterService;
 @Controller
 @RequestMapping("/parameter")
 public class ParameterController {
 	private IParameterService parameterService;
+	private IDeviceSiteParameterMappingService deviceSiteParameterMappingService;
+	@Autowired
+	public void setDeviceSiteParameterMappingService(IDeviceSiteParameterMappingService deviceSiteParameterMappingService) {
+		this.deviceSiteParameterMappingService = deviceSiteParameterMappingService;
+	}
 	@Autowired
 	public void setParameterService(IParameterService parameterService) {
 		this.parameterService = parameterService;
@@ -46,7 +56,109 @@ public class ParameterController {
 		mm.addAttribute("msg", "");
 		return mm;
 	}
-
+	/**
+	 * 根据设备id分页查询参数信息
+	 * @param pid
+	 * @param rows
+	 * @param page
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/queryDeviceSiteParameterByDeviceId.do")
+	@ResponseBody
+	public ModelMap queryDeviceSiteParameterByDeviceId(@RequestParam(value="deviceId",required=false)Long deviceId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
+		Pager<Object[]> pager = null;
+		pager = deviceSiteParameterMappingService.queryObjs("from DeviceSiteParameterMapping dspm where dspm.deviceSite.device.id=?0", page, rows, new Object[] {deviceId});
+		ModelMap mm = new ModelMap();
+		mm.addAttribute("rows",pager.getData());
+		mm.addAttribute("total", pager.getTotalCount());
+		mm.addAttribute("code", "0");
+		mm.addAttribute("msg", "");
+		return mm;
+	}
+	/**
+	 * 根据设备id查询非当前设备的参数信息
+	 * @param pid
+	 * @param rows
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping("/queryOtherParametersByDeviceId.do")
+	@ResponseBody
+	public List<Parameters> queryOtherParametersByDeviceId(@RequestParam(value="deviceId",required=false)Long deviceId) {
+		List<Parameters> list = parameterService.queryOtherParametersByDeviceId(deviceId);
+		return list;
+	}
+	/**
+	 * 添加设备站点和参数的映射
+	 * @param deviceSiteParameter
+	 * @return
+	 */
+	@RequestMapping("/addDeviceSiteParameter.do")
+	@ResponseBody
+	public ModelMap addDeviceSiteParameter(DeviceSiteParameterMapping deviceSiteParameter) {
+		ModelMap modelMap = new ModelMap();
+		if(deviceSiteParameter.getParameter().getId()==null) {
+			deviceSiteParameter.setParameter(null);
+		}
+		deviceSiteParameter.setUpdateDate(new Date());
+		deviceSiteParameterMappingService.addObj(deviceSiteParameter);
+		modelMap.addAttribute("success", true);
+		modelMap.addAttribute("msg", "添加成功!");
+		return modelMap;
+	};
+	/**
+	 *更新设备站点和参数的映射
+	 * @param deviceSiteParameter
+	 * @return
+	 */
+	@RequestMapping("/updateDeviceSiteParameter.do")
+	@ResponseBody
+	public ModelMap updateDeviceSiteParameter(DeviceSiteParameterMapping deviceSiteParameter) {
+		ModelMap modelMap = new ModelMap();
+		DeviceSiteParameterMapping dspm = deviceSiteParameterMappingService.queryObjById(deviceSiteParameter.getId());
+		dspm.setLowLine(deviceSiteParameter.getLowLine());
+		dspm.setUpLine(deviceSiteParameter.getUpLine());
+		dspm.setStandardValue(deviceSiteParameter.getStandardValue());
+		dspm.setNote(deviceSiteParameter.getNote());
+		deviceSiteParameter.setUpdateDate(new Date());
+		deviceSiteParameterMappingService.updateObj(dspm);
+		modelMap.addAttribute("success", true);
+		modelMap.addAttribute("msg", "更新成功!");
+		return modelMap;
+	};
+	/**
+	 * 根据id删除设备站点和参数的映射对象
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/deleteDeviceSiteParameterById.do")
+	@ResponseBody
+	public ModelMap deleteDeviceSiteParameterById(String id) {
+		ModelMap modelMap = new ModelMap();
+		if(id!=null && id.contains("'")) {
+			id = id.replace("'", "");
+		}
+		deviceSiteParameterMappingService.deleteObj(Long.valueOf(id));
+		modelMap.addAttribute("statusCode", 200);
+		modelMap.addAttribute("title", "操作提示");
+		modelMap.addAttribute("message", "删除成功!");
+		
+		return modelMap;
+	}
+	/**
+	 * 根据id 查询设备站点和参数的映射对象
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/queryDeviceSiteParameterById.do")
+	@ResponseBody
+	public DeviceSiteParameterMapping queryDeviceSiteParameterById(Long id) {
+		DeviceSiteParameterMapping dspm = deviceSiteParameterMappingService.queryObjById(id);
+		return dspm;
+	}
+	
+	
 	/**
 	 * 添加参数
 	 * @param parameter
@@ -175,4 +287,5 @@ public class ParameterController {
 		modelMap.addAttribute("rows", pager.getData());
 		return modelMap;
 	}
+	
 } 

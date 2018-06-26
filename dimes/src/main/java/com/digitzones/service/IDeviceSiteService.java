@@ -37,4 +37,10 @@ public interface IDeviceSiteService extends ICommonService<DeviceSite> {
 	 * @return
 	 */
 	public List<DeviceSite> queryDeviceSitesByShow(boolean isShow);
+	/**
+	 * 根据设备id查询所有设备站点
+	 * @param deviceId
+	 * @return
+	 */
+	public List<DeviceSite> queryAllDeviceSitesByDeviceId(Long deviceId);
 }

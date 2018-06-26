@@ -50,6 +50,7 @@
                     <tr>
                         <th data-options="field:'id',title:'id',checkbox:false,width:'80px'"></th>
                         <th data-options="field:'code',title:'类别代码',width:'180px',align:'center'"></th>
+                        <th data-options="field:'baseCode',title:'baseCode',width:'180px',align:'center',hiddin:true"></th>
                         <th data-options="field:'name',title:'类别名称',sortable:false"></th>
                         <th data-options="field:'note',title:'备注',sortable:true"></th>
                         <th data-options="field:'parentCode',title:'父类别代码',sortable:true,
@@ -217,9 +218,16 @@
            			if(name==null || ''===$.trim(name)){
            				return false;
            			}
+           			
+           			var baseCode = $('#parameterTypeTg').iTreegrid('getSelected').baseCode;
+           			if(!baseCode){
+           				baseCode = $('#parameterTypeTg').iTreegrid('getSelected').code;
+           			}
+           			
            			$.get('parameterType/addParameterType.do',{
            			code:code,
            			name:name,
+           			baseCode:baseCode,
            			'parent.id':$('#parameterTypeTg').iTreegrid('getSelected').id,
            			note:$('#note').val()
            			},function(data){
@@ -258,6 +266,7 @@
            			id:$('#departmentDg').iDatagrid('getSelected').id,
            			code:code,
            			name:name,
+           			baseCode:$('#parameterTypeTg').iTreegrid('getSelected').code,
            			'parent.id':$('#parameterTypeTg').iTreegrid('getSelected').id,
            			note:$('#note').val()
            			},function(data){
@@ -334,6 +343,7 @@
            			$.get('parameter/addParameter.do',{
            			code:code,
            			name:name,
+           			baseCode:$('#departmentDg').iDatagrid('getSelected').baseCode,
            			'parameterType.id':$('#departmentDg').iDatagrid('getSelected').id,
            			note:$('#note').val(),
            			kfc:$('input[name=kfc] :checked').val()

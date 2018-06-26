@@ -1,7 +1,17 @@
 package com.digitzones.controllers;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -170,6 +180,27 @@ public class DeviceController {
 			deviceService.addObj(device);
 			modelMap.addAttribute("success", true);
 			modelMap.addAttribute("msg", "添加成功!");
+		}
+		return modelMap;
+	}
+	@RequestMapping("/upload.do")
+	@ResponseBody
+	public ModelMap upload(Part file,HttpServletRequest request) {
+		String dir = request.getServletContext().getRealPath("/")+"console/deviceImgs/";
+		String realName = file.getSubmittedFileName();
+		ModelMap modelMap = new ModelMap();
+		String fileName = new Date().getTime()+ realName.substring(realName.lastIndexOf("."));
+		InputStream is;
+		try {
+			is = file.getInputStream();
+			File out = new File(dir,fileName);
+			FileCopyUtils.copy(is, new FileOutputStream(out));
+			modelMap.addAttribute("statusCode", 200);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("message", "文件上传成功！");
+			modelMap.addAttribute("filePath", "console/deviceImgs/" + fileName);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return modelMap;
 	}

@@ -39,7 +39,7 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">开始时间</label>
 							<div>
-								<input name="startTime" id="startTime" data-toggle="topjui-timespinner" data-options="required:true,width:80,min:'08:00'">
+								<input name="startTime" id="startTime" data-toggle="topjui-timespinner" data-options="required:true,width:80,min:'00:00'">
 							</div>
 						</div>
 					</div>
@@ -47,7 +47,7 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">结束时间</label>
 							<div>
-								<input name="endTime" id="endTime" data-toggle="topjui-timespinner" data-options="required:true,width:80,min:'20:00'">
+								<input name="endTime" id="endTime" data-toggle="topjui-timespinner" data-options="required:true,width:80,min:'00:00'">
 							</div>
 						</div>
 					</div>

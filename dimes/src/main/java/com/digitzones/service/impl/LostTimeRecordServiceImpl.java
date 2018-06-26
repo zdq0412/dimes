@@ -1,13 +1,13 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.digitzones.dao.ILostTimeRecordDao;
+import com.digitzones.model.Classes;
 import com.digitzones.model.LostTimeRecord;
 import com.digitzones.model.Pager;
 import com.digitzones.service.ILostTimeRecordService;
@@ -69,7 +69,8 @@ public class LostTimeRecordServiceImpl implements ILostTimeRecordService {
 	}
 
 	@Override
-	public Double queryLostTimeByTime(Date begin, Date end) {
-		return lostTimeRecordDao.queryLostTimeByTime(begin, end);
+	public Double queryLostTimeByTime(Classes c,Long deviceSiteId) {
+		Double result = lostTimeRecordDao.queryLostTimeByTime(c,deviceSiteId);
+		return result==null?0:result;
 	}
 }

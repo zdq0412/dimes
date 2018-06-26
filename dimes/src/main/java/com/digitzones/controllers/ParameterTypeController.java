@@ -76,7 +76,9 @@ public class ParameterTypeController {
 			vo.setCode(son.getCode());
 			vo.setDisabled(son.getDisabled());
 			vo.setNote(son.getNote());
+			vo.setBaseCode(son.getBaseCode());
 			parameterTypeVOs.add(vo);
+			
 		}
 	}
 	/**
@@ -149,12 +151,13 @@ public class ParameterTypeController {
 		}
 		ModelMap modelMap = new ModelMap();
 		Long count = parameterTypeService.queryCountOfSubParameterType(Long.valueOf(id));
-		if(count>0) {
+		Long parameterCount = parameterTypeService.queryCountOfParameter(Long.valueOf(id));
+		if(count>0 || parameterCount>0) {
 			modelMap.addAttribute("success", false);
 			modelMap.addAttribute("statusCode", 300);
 			modelMap.addAttribute("title", "操作提示");
-			modelMap.addAttribute("msg", "该参数类型下存在子类型，不允许删除!");
-			modelMap.addAttribute("message", "该参数类型下存在子类型，不允许删除!");
+			modelMap.addAttribute("msg", "该参数类型下存在子类型或参数，不允许删除!");
+			modelMap.addAttribute("message", "该参数类型下存在子类型或参数，不允许删除!");
 		}else {
 			parameterTypeService.deleteObj(Long.valueOf(id));
 			modelMap.addAttribute("success", true);

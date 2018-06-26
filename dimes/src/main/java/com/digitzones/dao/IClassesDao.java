@@ -7,5 +7,9 @@ import com.digitzones.model.Classes;
  * 2018年6月11日
  */
 public interface IClassesDao extends ICommonDao<Classes> {
-
+	/**
+	 * 查询当前时间的班次 
+	 * @return
+	 */
+	public Classes queryCurrentClasses();
 }

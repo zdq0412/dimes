@@ -47,5 +47,9 @@
 		<property name="staticField"
 			value="com.alibaba.fastjson.serializer.SerializerFeature.DisableCircularReferenceDetect"></property>
 	</bean>
+	<!-- 使用web3.0实现文件上传 -->
+	<bean id="multipartResolver"
+        class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+</bean>
 </beans>
 

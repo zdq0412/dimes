@@ -1,8 +1,8 @@
 package com.digitzones.service;
 
-import java.util.Date;
 import java.util.List;
 
+import com.digitzones.model.Classes;
 import com.digitzones.model.LostTimeRecord;
 /**
  * 损时记录service
@@ -37,5 +37,5 @@ public interface ILostTimeRecordService extends ICommonService<LostTimeRecord> {
 	 * @param end
 	 * @return
 	 */
-	public Double queryLostTimeByTime(Date begin,Date end);
+	public Double queryLostTimeByTime(Classes c,Long deviceSiteId);
 }
