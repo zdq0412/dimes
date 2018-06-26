@@ -387,6 +387,7 @@
            			$.get('deviceSite/addDeviceSite.do',{
            			code:code,
            			name:name,
+           			show:$('#show').val(),
            			status:$('#status').val(),
            			'device.id':$('#deviceDg').iDatagrid('getSelected').id,
            			note:$('#note').val(),
@@ -426,6 +427,7 @@
 		           			id:$('#deviceSite').iDatagrid('getSelected').id,
 		           			code:code,
 		           			name:name,
+		           			show:$('#show').val(),
 		           			status:$('#status').val(),
 		           			'device.id':$('#deviceDg').iDatagrid('getSelected').id,
 		           			'barCodeAddress':$('#barCodeAddress').val(),

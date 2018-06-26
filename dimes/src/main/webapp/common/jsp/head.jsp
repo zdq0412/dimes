@@ -33,7 +33,7 @@
     <!-- layui框架js -->
     <script type="text/javascript" src="console/js/static/plugins/layui/layui.js" charset="utf-8"></script>
     <!-- 首页js -->
-    <script type="text/javascript" src="console/js/static/public/js/topjui.index.js" charset="utf-8"></script>
+   
     <script type="text/javascript">
     	var contextPath = "<%=basePath%>";
     </script>

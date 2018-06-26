@@ -119,6 +119,7 @@ public class PressLightRecordController {
 		PressLightRecord plr = pressLightRecordService.queryObjById(Long.valueOf(id));
 		plr.setRecovered(true);
 		plr.setRecoverTime(new Date());
+		plr.setHalt(false);
 		pressLightRecordService.updateObj(plr);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("success", true);

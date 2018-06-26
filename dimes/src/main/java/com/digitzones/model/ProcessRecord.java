@@ -28,7 +28,7 @@ public class ProcessRecord {
 	/**设备站点名称*/
 	private String deviceSiteName;
 	/**采集时间*/
-	@DateTimeFormat(pattern = "yyyy-MM-dd") 
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") 
 	private Date collectionDate;
 	/**生产序号*/
 	private String serialNo;
@@ -38,6 +38,8 @@ public class ProcessRecord {
 	private String productUserName;
 	/**班次代码*/
 	private String classesCode;
+	/**班次id*/
+	private Long classesId;
 	/**班次名称*/
 	private  String classesName;
 	/**工单编号*/
@@ -52,6 +54,8 @@ public class ProcessRecord {
 	private String workPieceCode;
 	/**工件名称*/
 	private String workPieceName;
+	/**工件id*/
+	private Long workPieceId;
 	/**规格型号*/
 	private String unitType;
 	/**客户图号*/
@@ -68,11 +72,38 @@ public class ProcessRecord {
 	private String stoveNumber;
 	/**工序代码*/
 	private String processCode;
+	/**工序id*/
+	private Long processId;
 	/**工序名称*/
 	private String processName;
 	/**是否被删除*/
 	private Boolean deleted = false;
-	
+	/**加工状态,NG,OK*/
+	private String status;
+	public Long getClassesId() {
+		return classesId;
+	}
+	public void setClassesId(Long classesId) {
+		this.classesId = classesId;
+	}
+	public Long getWorkPieceId() {
+		return workPieceId;
+	}
+	public void setWorkPieceId(Long workPieceId) {
+		this.workPieceId = workPieceId;
+	}
+	public Long getProcessId() {
+		return processId;
+	}
+	public void setProcessId(Long processId) {
+		this.processId = processId;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	public String getProcessCode() {
 		return processCode;
 	}

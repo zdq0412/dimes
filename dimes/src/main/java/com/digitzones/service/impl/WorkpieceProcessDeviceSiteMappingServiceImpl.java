@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,5 +80,13 @@ public class WorkpieceProcessDeviceSiteMappingServiceImpl implements IWorkpieceP
 			}
 		}*/
 		return this.queryObjs("from WorkpieceProcessDeviceSiteMapping wpdsm where wpdsm.workpieceProcess.workpiece.id=?0", page, rows, new Object[] {workpieceId});
+	}
+
+	@Override
+	public WorkpieceProcessDeviceSiteMapping queryByWorkPieceIdAndProcessIdAndDeviceSiteId(Long workPieceId,
+			Long processId, Long deviceSiteId) {
+		List<WorkpieceProcessDeviceSiteMapping> list = workpieceProcessDeviceSiteMappingDao.findByHQL("from WorkpieceProcessDeviceSiteMapping wpdsm where wpdsm.workpieceProcess.workPieceId=?0"
+				+ "	and wpdsm.workpieceProcess.processId=?1 and wpdsm.deviceSite.id=?2", new Object[] {workPieceId,processId,deviceSiteId});
+		return (list!=null && list.size()>0)?list.get(0):null;
 	}
 }

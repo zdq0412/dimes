@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,30 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 	@Override
 	public void deleteObj(Long id) {
 		processRecordDao.deleteById(id);
+	}
+
+	@Override
+	public List<Long[]> queryCountByDeviceSiteIdAndStatus(Long deviceSiteId, String status) {
+		return processRecordDao.queryCountByDeviceSiteIdAndStatus(deviceSiteId, status);
+	}
+
+	@Override
+	public List<Long[]> queryPreMonthDeviceSiteIdAndStatus(Long deviceSiteId, String status) {
+		return processRecordDao.queryPreMonthDeviceSiteIdAndStatus(deviceSiteId, status);
+	}
+
+	@Override
+	public List<Long[]> queryCurrentMonthDeviceSiteIdAndStatus(Long deviceSiteId, String status) {
+		return processRecordDao.queryCurrentMonthDeviceSiteIdAndStatus(deviceSiteId, status);
+	}
+
+	@Override
+	public Long queryCountByDeviceSiteIdAndNotNg(Long deviceSiteId) {
+		return processRecordDao.queryCountByDeviceSiteIdAndNotNg(deviceSiteId);
+	}
+
+	@Override
+	public Long queryCurrentDayCountByDeviceSiteId(Long deviceSiteId) {
+		return processRecordDao.queryCurrentDayCountByDeviceSiteId(deviceSiteId);
 	}
 }

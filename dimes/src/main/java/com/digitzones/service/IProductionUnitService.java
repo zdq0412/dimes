@@ -11,15 +11,19 @@ import com.digitzones.model.ProductionUnit;
  */
 public interface IProductionUnitService extends ICommonService<ProductionUnit>{
 	/**
-	 * 查询所有生产单元
+	 * 查询所有生产单元，用于树形结构
 	 * @return
 	 */
 	public List<ProductionUnit> queryTopProductionUnits();
-	
 	/**
 	 * 根据父生产单元id查询子生产单元数量
 	 * @param pid
 	 * @return
 	 */
 	public Long queryCountOfSubProductionUnit(Serializable pid);
+	/**
+	 * 查询所有的生产单元(去除最顶层生产单元)
+	 * @return
+	 */
+	public List<ProductionUnit> queryAllProductionUnits();
 }

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ include file="../../common/jsp/head.jsp" %>
+     <script type="text/javascript" src="console/js/static/public/js/topjui.index.js" charset="utf-8"></script>
     <title>DIMES</title>
 </head>
 <body>

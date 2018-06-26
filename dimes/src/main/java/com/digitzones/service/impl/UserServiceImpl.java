@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,16 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public void deleteObj(Long id) {
 		userDao.deleteById(id);
+	}
+
+	@Override
+	public User login(String username, String password) {
+		List<User> users = this.userDao.findByHQL("from User u where u.username=?0 and u.password=?1", new Object[] {username,password});
+		return (users!=null&&users.size()>0)?users.get(0):null;
+	}
+
+	@Override
+	public User queryUserByUsername(String username) {
+		return userDao.findSingleByProperty("username", username);
 	}
 }

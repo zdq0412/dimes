@@ -31,6 +31,15 @@ public class DeviceSite extends CommonModel {
 	private String status;
 	/**站点参数*/
 	private Set<Parameters> parameters;
+	/**是否在参数状态中显示*/
+	private Boolean show = false;
+	
+	public Boolean getShow() {
+		return show;
+	}
+	public void setShow(Boolean show) {
+		this.show = show;
+	}
 	public String getBarCodeAddress() {
 		return barCodeAddress;
 	}

@@ -12,4 +12,11 @@ public interface IDeviceSiteDao extends ICommonDao<DeviceSite> {
 	 * @return
 	 */
 	public Long queryCountOfDeviceSite();
+	/**
+	 * 根据站点状态查询
+	 * @param status
+	 * @return
+	 */
+	public Long queryCountOfDeviceSiteByStatus(String status);
+	
 }

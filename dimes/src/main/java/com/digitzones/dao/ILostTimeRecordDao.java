@@ -1,5 +1,7 @@
 package com.digitzones.dao;
 
+import java.util.Date;
+
 import com.digitzones.model.LostTimeRecord;
 /**
  * 损时记录dao
@@ -21,4 +23,11 @@ public interface ILostTimeRecordDao extends ICommonDao<LostTimeRecord> {
 	 * @return
 	 */
 	public Double queryHoursOfPlanHaltByYearAndMonth(Integer year,Integer month) ;
+	/**
+	 * 根据时间段查找损时信息
+	 * @param begin
+	 * @param end
+	 * @return
+	 */
+	public Double queryLostTimeByTime(Date begin, Date end);
 }

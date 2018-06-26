@@ -37,6 +37,15 @@
 					</div>
 					<div class="topjui-row">
 						<div class="topjui-col-sm12">
+							<label class="topjui-form-label">参数页面中显示</label>
+							<div class="topjui-input-block">
+								<input type="checkbox" name="show" value="true"
+									data-toggle="topjui-textbox" id="show">
+							</div>
+						</div>
+					</div>
+					<div class="topjui-row">
+						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">状态</label>
 							<div class="topjui-input-block">
 								<input type="text" name="status" id="status" data-toggle="topjui-combobox"  data-options="valueField:'value',textField:'text',data: [{text:'运行', value: '0'},{text: '待机',value: '1'},{text: '停机',value: '2'}]">

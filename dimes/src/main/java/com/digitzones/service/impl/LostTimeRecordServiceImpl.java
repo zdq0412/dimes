@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +66,10 @@ public class LostTimeRecordServiceImpl implements ILostTimeRecordService {
 	@Override
 	public Double queryHoursOfPlanHaltByYearAndMonth(Integer year, Integer month) {
 		return lostTimeRecordDao.queryHoursOfPlanHaltByYearAndMonth(year, month);
+	}
+
+	@Override
+	public Double queryLostTimeByTime(Date begin, Date end) {
+		return lostTimeRecordDao.queryLostTimeByTime(begin, end);
 	}
 }

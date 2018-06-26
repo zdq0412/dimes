@@ -11,7 +11,7 @@
 					<div class="topjui-col-sm12">
 						<label class="topjui-form-label">生产时间</label>
 						<div class="topjui-input-block">
-							<input type="text" name="collectionDate" data-toggle="topjui-datebox"
+							<input type="text" name="collectionDate" data-toggle="topjui-datetimebox"
 								data-options="required:false" id="collectionDate">
 						</div>
 					</div>

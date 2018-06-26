@@ -125,12 +125,14 @@ public class ModuleTest {
 		Module son26 = new Module();
 		son26.setParent(son2);
 		son26.setName("参数状态");
+		son26.setUrl("console/jsp/parameterStatus.jsp");
 		son26.setLeaf(true);
 		moduleService.addModule(son26);
 		
 		Module son27 = new Module();
 		son27.setParent(son2);
 		son27.setName("OEE");
+		son27.setUrl("console/jsp/oee.jsp");
 		son27.setLeaf(true);
 		moduleService.addModule(son27);
 		

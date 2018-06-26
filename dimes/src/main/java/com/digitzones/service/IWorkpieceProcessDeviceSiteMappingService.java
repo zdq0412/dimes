@@ -16,4 +16,12 @@ public interface IWorkpieceProcessDeviceSiteMappingService extends ICommonServic
 	 * @return
 	 */
 	public Pager<WorkpieceProcessDeviceSiteMapping> queryOrAddWorkpieceProcessDeviceSiteMappingByWorkpieceId(Long workpieceId,Integer rows,Integer page);
+	/**
+	 * 根据工件id，工序id，站点id查询映射信息
+	 * @param workPieceId
+	 * @param processId
+	 * @param deviceSiteId
+	 * @return
+	 */
+	public WorkpieceProcessDeviceSiteMapping queryByWorkPieceIdAndProcessIdAndDeviceSiteId(Long workPieceId,Long processId,Long deviceSiteId);
 }

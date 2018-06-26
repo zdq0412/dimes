@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,4 +54,24 @@ public class DeviceSiteServiceImpl implements IDeviceSiteService {
 		return deviceSiteDao.queryCountOfDeviceSite();
 	}
 
+	@Override
+	public Long queryCountOfDeviceSiteByStatus(String status) {
+		return deviceSiteDao.queryCountOfDeviceSiteByStatus(status);
+	}
+
+	@Override
+	public List<DeviceSite> queryDeviceSitesByProductionUnitId(Long productionUnitId) {
+		String hql = "from DeviceSite ds where ds.device.productionUnit.id=?0";
+		return deviceSiteDao.findByHQL(hql, new Object[] {productionUnitId});
+	}
+
+	@Override
+	public List<DeviceSite> queryAllDeviceSites() {
+		return deviceSiteDao.findAll();
+	}
+
+	@Override
+	public List<DeviceSite> queryDeviceSitesByShow(boolean isShow) {
+		return this.deviceSiteDao.findListByProperty("show", isShow);
+	}
 }

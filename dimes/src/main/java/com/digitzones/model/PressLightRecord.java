@@ -61,8 +61,6 @@ public class PressLightRecord {
 	private DeviceSite deviceSite;
 	/**删除标识*/
 	private Boolean deleted = false;
-	/**是否为计划停机，如果为计划停机，则不计入损时*/
-	private Boolean planHalt;
 	/**是否恢复*/
 	private Boolean recovered;
 	
@@ -91,12 +89,6 @@ public class PressLightRecord {
 		this.deleted = deleted;
 	}
 	
-	public Boolean getPlanHalt() {
-		return planHalt;
-	}
-	public void setPlanHalt(Boolean planHalt) {
-		this.planHalt = planHalt;
-	}
 	@ManyToOne
 	@JoinColumn(name="DEVICESITE_ID")
 	public DeviceSite getDeviceSite() {

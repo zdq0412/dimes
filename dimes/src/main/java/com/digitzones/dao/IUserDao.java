@@ -8,5 +8,4 @@ import com.digitzones.model.User;
  * 2018年6月11日
  */
 public interface IUserDao extends ICommonDao<User> {
-
 }

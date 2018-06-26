@@ -58,4 +58,9 @@ public class ProductionUnitServiceImpl implements IProductionUnitService {
 	public Long queryCountOfSubProductionUnit(Serializable pid) {
 		return productionUnitDao.findCount("from ProductionUnit pu inner join pu.parent p where p.id=?0", new Object[] {pid});
 	}
+
+	@Override
+	public List<ProductionUnit> queryAllProductionUnits() {
+		return this.productionUnitDao.findByHQL("from ProductionUnit pu where pu.parent!=null", new Object[] {});
+	}
 }

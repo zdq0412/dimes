@@ -3,7 +3,6 @@
 <div data-toggle="topjui-layout" data-options="fit:true">
 	<div
 		data-options="region:'center',title:'',fit:true,border:false,bodyCls:'border_right_bottom'">
-
 		<form id="ff" method="post">
 			<div title="设备信息" data-options="iconCls:'fa fa-th'">
 				<div class="topjui-fluid">
@@ -39,7 +38,9 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">状态</label>
 							<div class="topjui-input-block">
-									<input type="text" name="name" id="deviceStatus" data-toggle="topjui-combobox"  data-options="valueField:'value',textField:'text',data: [{text:'运行', value: '0'},{text: '待机',value: '1'},{text: '停机',value: '2'}]">
+								<input type="text" name="name" id="deviceStatus"
+									data-toggle="topjui-combobox"
+									data-options="valueField:'value',textField:'text',data: [{text:'运行', value: '0'},{text: '待机',value: '1'},{text: '停机',value: '2'}]">
 							</div>
 						</div>
 					</div>
@@ -121,6 +122,19 @@
 							<div class="topjui-input-block">
 								<input type="text" name="name" data-toggle="topjui-textbox"
 									id="parameterValueType">
+							</div>
+						</div>
+					</div>
+					<div class="topjui-row">
+						<div class="topjui-col-sm12">
+							<label class="topjui-form-label">上传图片</label>
+							<div class="topjui-input-block">
+								<input name="photo" data-toggle="topjui-uploadbox"
+									data-options="editable:false,
+   buttonText:'上传图片',
+   accept:'images',
+   uploadUrl:'/json/response/upload.json'"
+									type="text">
 							</div>
 						</div>
 					</div>

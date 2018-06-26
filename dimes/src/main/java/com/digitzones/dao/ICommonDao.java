@@ -60,7 +60,7 @@ public interface ICommonDao<T> {
 	 * @param value 属性值
 	 * @return T
 	 */
-	public T findSingleByProperty(String property,Object value);
+	public T findSingleByProperty(String property,Object String);
 	/**
 	 * 根据属性查找对象列表
 	 * @param property
