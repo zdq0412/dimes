@@ -76,6 +76,30 @@
 				
 				$parameterDiv = $("<div class='parameter'>");
 				
+				var $table = $("<table style='width:100%;'>");
+				var $tr = $("<tr style='backgroun-color:#F00'>");
+				$table.append($tr);
+				
+				var $parameterNameTd = $("<th>参数名</th>");
+				var $parameterValueTd = $("<th>参数值</th>");
+				$tr.append($parameterNameTd);
+				$tr.append($parameterValueTd);
+				//循环显示参数信息
+				for(var j = 0;j<result.parameters[i].length;j++){
+					var $contentTr = $("<tr>");
+					var $contentNameTd = $("<td>");
+					var $contentValueTd = $("<td>");
+					
+					$contentTr.append($contentNameTd);
+					$contentTr.append($contentValueTd);
+					
+					$table.append($contentTr);
+					$contentNameTd.append(result.parameters[i][j].parameter.name);
+					$contentValueTd.append(result.parameters[i][j].trueValue);
+				}
+				
+				$parameterDiv.append($table);
+				
 				$contentDiv.append($picDiv);
 				$contentDiv.append($oeeDiv);
 				$contentDiv.append($rtyDiv);
@@ -121,6 +145,11 @@
 	height: 1080px;
 	width: 1920px;
 	background-color: #191970;
+}
+
+table tr td,table tr th{
+	text-align:center;
+	font-size:1.5em;
 }
 
 #title {

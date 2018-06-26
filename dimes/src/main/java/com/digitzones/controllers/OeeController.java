@@ -104,10 +104,10 @@ public class OeeController {
 					int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
 					double oee = 0;
 					if(totalMinutes>classesBeginMinutes) {
-						oee = (totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/totalMinutes;
+						oee = (totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/(totalMinutes-classesBeginMinutes);
 						//
 					}else {
-						oee = (24+totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/totalMinutes;
+						oee = (24+totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/(24*60+totalMinutes-classesBeginMinutes);
 					}
 					sumOee += oee;
 				}
@@ -120,10 +120,10 @@ public class OeeController {
 				int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
 				double oee = 0;
 				if(totalMinutes>classesBeginMinutes) {
-					oee = (totalMinutes-lostTime-classesBeginMinutes)/totalMinutes;
+					oee = (totalMinutes-lostTime-classesBeginMinutes)/(totalMinutes-classesBeginMinutes);
 					//
 				}else {
-					oee = (24+totalMinutes-lostTime-classesBeginMinutes)/totalMinutes;
+					oee = (24*60+totalMinutes-lostTime-classesBeginMinutes)/(24*60+totalMinutes-classesBeginMinutes);
 				}
 				sumOee += oee;
 			}
@@ -165,10 +165,10 @@ public class OeeController {
 						int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
 						double oee = 0;
 						if(totalMinutes>classesBeginMinutes) {
-							oee = (totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/totalMinutes;
+							oee = (totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/(totalMinutes-classesBeginMinutes);
 							//
 						}else {
-							oee = (24+totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/totalMinutes;
+							oee = (24+totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/(24*60+totalMinutes-classesBeginMinutes);
 						}
 						sumOee += oee;
 					}
@@ -181,10 +181,10 @@ public class OeeController {
 					int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
 					double oee = 0;
 					if(totalMinutes>classesBeginMinutes) {
-						oee = (totalMinutes-lostTime-classesBeginMinutes)/totalMinutes;
+						oee = (totalMinutes-lostTime-classesBeginMinutes)/(totalMinutes-classesBeginMinutes);
 						//
 					}else {
-						oee = (24+totalMinutes-lostTime-classesBeginMinutes)/totalMinutes;
+						oee = (24+totalMinutes-lostTime-classesBeginMinutes)/(24*60+totalMinutes-classesBeginMinutes);
 					}
 					sumOee += oee;
 				}
@@ -229,10 +229,10 @@ public class OeeController {
 					int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
 					double oee = 0;
 					if(totalMinutes>classesBeginMinutes) {
-						oee = (totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/totalMinutes;
+						oee = (totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/(totalMinutes-classesBeginMinutes);
 						//
 					}else {
-						oee = (24+totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/totalMinutes;
+						oee = (24+totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/(24*60+totalMinutes-classesBeginMinutes);
 					}
 					sumOee += oee;
 				}
@@ -245,10 +245,10 @@ public class OeeController {
 				int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
 				double oee = 0;
 				if(totalMinutes>classesBeginMinutes) {
-					oee = (totalMinutes-lostTime-classesBeginMinutes)/totalMinutes;
+					oee = (totalMinutes-lostTime-classesBeginMinutes)/(totalMinutes-classesBeginMinutes);
 					//
 				}else {
-					oee = (24+totalMinutes-lostTime-classesBeginMinutes)/totalMinutes;
+					oee = (24+totalMinutes-lostTime-classesBeginMinutes)/(24*60+totalMinutes-classesBeginMinutes);
 				}
 				sumOee += oee;
 			}
@@ -287,10 +287,10 @@ public class OeeController {
 					int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
 					double oee = 0;
 					if(totalMinutes>classesBeginMinutes) {
-						oee = (totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/totalMinutes;
+						oee = (totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/(totalMinutes-classesBeginMinutes);
 						//
 					}else {
-						oee = (24+totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/totalMinutes;
+						oee = (24+totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/(24*60+totalMinutes-classesBeginMinutes);
 					}
 					sumOee += oee;
 				}
@@ -303,10 +303,10 @@ public class OeeController {
 				int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
 				double oee = 0;
 				if(totalMinutes>classesBeginMinutes) {
-					oee = (totalMinutes-lostTime-classesBeginMinutes)/totalMinutes;
+					oee = (totalMinutes-lostTime-classesBeginMinutes)/(totalMinutes-classesBeginMinutes);
 					//
 				}else {
-					oee = (24+totalMinutes-lostTime-classesBeginMinutes)/totalMinutes;
+					oee = (24+totalMinutes-lostTime-classesBeginMinutes)/(24*60+totalMinutes-classesBeginMinutes);
 				}
 				sumOee += oee;
 			}

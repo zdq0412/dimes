@@ -1,15 +1,9 @@
 package com.digitzones.model;
-import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * 设备站点
  * @author zdq
@@ -29,8 +23,6 @@ public class DeviceSite extends CommonModel {
 	 * 2：待机
 	 * */
 	private String status;
-	/**站点参数*/
-	private Set<Parameters> parameters;
 	/**是否在参数状态中显示*/
 	private Boolean show = false;
 	
@@ -48,14 +40,6 @@ public class DeviceSite extends CommonModel {
 	public Device getDevice() {
 		return device;
 	}
-	@ManyToMany(targetEntity=Parameters.class)
-	@JoinTable(name="DEVICESITE_PARAMETERS",joinColumns= {
-			@JoinColumn(name="DEVICESITE_ID")
-	},inverseJoinColumns= {@JoinColumn(name="PARAMETER_ID")})
-	@JsonIgnore
-	public Set<Parameters> getParameters() {
-		return parameters;
-	}
 	public String getStatus() {
 		return status;
 	}
@@ -64,9 +48,6 @@ public class DeviceSite extends CommonModel {
 	}
 	public void setDevice(Device device) {
 		this.device = device;
-	}
-	public void setParameters(Set<Parameters> parameters) {
-		this.parameters = parameters;
 	}
 	public void setStatus(String status) {
 		this.status = status;

@@ -3,6 +3,7 @@ package com.digitzones.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -93,7 +94,7 @@ public class DeviceSiteParameterMapping {
 	public void setDeviceSite(DeviceSite deviceSite) {
 		this.deviceSite = deviceSite;
 	}
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="PARAMETER_ID")
 	public Parameters getParameter() {
 		return parameter;

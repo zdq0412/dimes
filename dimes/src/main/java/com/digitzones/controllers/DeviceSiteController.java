@@ -16,9 +16,11 @@ import com.digitzones.constants.Constant;
 import com.digitzones.model.Classes;
 import com.digitzones.model.Device;
 import com.digitzones.model.DeviceSite;
+import com.digitzones.model.DeviceSiteParameterMapping;
 import com.digitzones.model.Pager;
 import com.digitzones.model.WorkpieceProcessDeviceSiteMapping;
 import com.digitzones.service.IClassesService;
+import com.digitzones.service.IDeviceSiteParameterMappingService;
 import com.digitzones.service.IDeviceSiteService;
 import com.digitzones.service.ILostTimeRecordService;
 import com.digitzones.service.IPressLightRecordService;
@@ -38,6 +40,11 @@ public class DeviceSiteController {
 	private IWorkpieceProcessDeviceSiteMappingService workpieceProcessDeviceSiteMappingService;
 	private IClassesService classesService;
 	private ILostTimeRecordService lostTimeRecordService;
+	private IDeviceSiteParameterMappingService deviceSiteParameterMappingService;
+	@Autowired
+	public void setDeviceSiteParameterMappingService(IDeviceSiteParameterMappingService deviceSiteParameterMappingService) {
+		this.deviceSiteParameterMappingService = deviceSiteParameterMappingService;
+	}
 	@Autowired
 	public void setLostTimeRecordService(ILostTimeRecordService lostTimeRecordService) {
 		this.lostTimeRecordService = lostTimeRecordService;
@@ -251,10 +258,13 @@ public class DeviceSiteController {
 		ModelMap modelMap = new ModelMap();
 		List<DeviceSite> deviceSites = deviceSiteService.queryDeviceSitesByShow(true);
 		List<String> oees = new ArrayList<>();
+		List<List<DeviceSiteParameterMapping>> list = new ArrayList<>();
 		//良品率
 		List<String> rtys = new ArrayList<>();
 		//根据设备站点查询加工信息
 		for(DeviceSite ds : deviceSites) {
+			//查询设备站点关联的参数
+			list.add(deviceSiteParameterMappingService.queryByDeviceSiteId(ds.getId()));
 			//根据设备站点id查询当天的加工数量
 			long count = processRecordService.queryCurrentDayCountByDeviceSiteId(ds.getId());
 			//根据设备站点id查询当前非NG数量
@@ -286,10 +296,10 @@ public class DeviceSiteController {
 					int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
 					double oee = 0;
 					if(totalMinutes>classesBeginMinutes) {
-						oee = (totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/totalMinutes;
+						oee = (totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/(totalMinutes-classesBeginMinutes);
 						//
 					}else {
-						oee = (24+totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/totalMinutes;
+						oee = (24+totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/(24*60+totalMinutes-classesBeginMinutes);
 					}
 					oees.add(format.format(oee*100));
 				}
@@ -302,15 +312,16 @@ public class DeviceSiteController {
 				int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
 				double oee = 0;
 				if(totalMinutes>classesBeginMinutes) {
-					oee = (totalMinutes-lostTime-classesBeginMinutes)/totalMinutes;
+					oee = (totalMinutes-lostTime-classesBeginMinutes)/(totalMinutes-classesBeginMinutes);
 					//
 				}else {
-					oee = (24+totalMinutes-lostTime-classesBeginMinutes)/totalMinutes;
+					oee = (24*60+totalMinutes-lostTime-classesBeginMinutes)/(24*60+totalMinutes-classesBeginMinutes);
 				}
 				oees.add(format.format(oee*100));
 			}
 		}
 		modelMap.addAttribute("deviceSites", deviceSites);
+		modelMap.addAttribute("parameters", list);
 		modelMap.addAttribute("oees", oees);
 		modelMap.addAttribute("rtys", rtys);
 		return modelMap;

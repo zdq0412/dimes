@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,10 @@ public class DeviceSiteParameterMappingServiceImpl implements IDeviceSiteParamet
 	@Override
 	public void deleteObj(Long id) {
 		deviceSiteParameterMappingDao.deleteById(id);
+	}
+
+	@Override
+	public List<DeviceSiteParameterMapping> queryByDeviceSiteId(Long deviceSiteId) {
+		return deviceSiteParameterMappingDao.findByHQL("from DeviceSiteParameterMapping dspm where dspm.deviceSite.id=?0", new Object[] {deviceSiteId});
 	}
 }

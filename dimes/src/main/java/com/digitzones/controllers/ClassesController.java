@@ -244,7 +244,7 @@ public class ClassesController {
 	@ResponseBody
 	public ModelMap queryOtherDevices(Long classesId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
 		String hql = "select d from Device d where d.id not in (select cdm.device.id from ClassesDeviceMapping cdm"
-				+ " ) or d.id in (select cdm.device.id from ClassesDeviceMapping cdm where cdm.classes.id!=?0)";
+				+ "  where  cdm.classes.id=?0)";
 		Pager<Device> pager = classesService.queryObjs(hql, page, rows, new Object[] {classesId});
 		ModelMap modelMap = new ModelMap();
 		
