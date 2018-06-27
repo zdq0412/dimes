@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,5 +73,10 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 	@Override
 	public Long queryCurrentDayCountByDeviceSiteId(Long deviceSiteId) {
 		return processRecordDao.queryCurrentDayCountByDeviceSiteId(deviceSiteId);
+	}
+
+	@Override
+	public List<Long[]> queryByDay(Long deviceSiteId, String status, Date now) {
+		return processRecordDao.queryByDay(deviceSiteId, status, now);
 	}
 }

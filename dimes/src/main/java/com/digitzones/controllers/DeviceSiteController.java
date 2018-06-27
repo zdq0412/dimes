@@ -280,7 +280,9 @@ public class DeviceSiteController {
 			Classes c = classesService.queryCurrentClasses();
 			Date now = new Date();
 			//查询损时时间(包括计划停机时间)
-			double lostTime = lostTimeRecordService.queryLostTimeByTime(c,ds.getId()); 
+			double lostTime = lostTimeRecordService.queryLostTime(c,ds.getId(),new Date()); 
+			//查询计划停机时间
+			double planHaltTime = lostTimeRecordService.queryPlanHaltTime(c, ds.getId(),new Date());
 			if(idList!=null && idList.size()>0) {
 				for(Long[] ids : idList) {
 					//根据工序,工件，设备站点查找标准节拍
@@ -295,11 +297,12 @@ public class DeviceSiteController {
 					cal.setTime(c.getStartTime());
 					int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
 					double oee = 0;
+					double sumMinutes = totalMinutes - classesBeginMinutes - planHaltTime;
 					if(totalMinutes>classesBeginMinutes) {
-						oee = (totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/(totalMinutes-classesBeginMinutes);
+						oee = (sumMinutes-lostTime-ids[3]*processingBeat)/sumMinutes;
 						//
 					}else {
-						oee = (24+totalMinutes-lostTime-classesBeginMinutes-ids[3]*processingBeat)/(24*60+totalMinutes-classesBeginMinutes);
+						oee = (24+sumMinutes-lostTime-ids[3]*processingBeat)/(24*60+sumMinutes);
 					}
 					oees.add(format.format(oee*100));
 				}
@@ -310,12 +313,13 @@ public class DeviceSiteController {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(c.getStartTime());
 				int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
+				//总加工时间
+				double sumMinutes = totalMinutes - classesBeginMinutes - planHaltTime;
 				double oee = 0;
 				if(totalMinutes>classesBeginMinutes) {
-					oee = (totalMinutes-lostTime-classesBeginMinutes)/(totalMinutes-classesBeginMinutes);
-					//
+					oee = (sumMinutes-lostTime)/sumMinutes;
 				}else {
-					oee = (24*60+totalMinutes-lostTime-classesBeginMinutes)/(24*60+totalMinutes-classesBeginMinutes);
+					oee = (24+sumMinutes-lostTime)/(24*60+sumMinutes);
 				}
 				oees.add(format.format(oee*100));
 			}

@@ -1,4 +1,5 @@
 package com.digitzones.controllers;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,21 +15,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.model.Classes;
 import com.digitzones.model.DeviceSite;
 import com.digitzones.model.LostTimeRecord;
 import com.digitzones.model.Pager;
 import com.digitzones.model.PressLightType;
+import com.digitzones.service.IClassesService;
+import com.digitzones.service.IDeviceService;
 import com.digitzones.service.IDeviceSiteService;
 import com.digitzones.service.ILostTimeRecordService;
 import com.digitzones.service.IPressLightTypeService;
+import com.digitzones.util.DateStringUtil;
 import com.digitzones.vo.LostTimeRecordVO;
 @Controller
 @RequestMapping("/lostTimeRecord")
 public class LostTimeRecordController {
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private DecimalFormat decimalFormat = new DecimalFormat("#.00");
 	private IDeviceSiteService deviceSiteService;
 	private ILostTimeRecordService lostTimeRecordService;
 	private IPressLightTypeService pressLightTypeService;
+	private IClassesService classesService;
+	private IDeviceService deviceService;
+	@Autowired
+	public void setDeviceService(IDeviceService deviceService) {
+		this.deviceService = deviceService;
+	}
+
+	@Autowired
+	public void setClassesService(IClassesService classesService) {
+		this.classesService = classesService;
+	}
+
 	@Autowired
 	public void setPressLightTypeService(IPressLightTypeService pressLightTypeService) {
 		this.pressLightTypeService = pressLightTypeService;
@@ -229,9 +247,9 @@ public class LostTimeRecordController {
 
 			data.add(list);
 		}
-		
+
 		double max = 0;
-		
+
 		Calendar c = Calendar.getInstance();
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH) + 1;
@@ -324,6 +342,89 @@ public class LostTimeRecordController {
 		}
 		modelMap.addAttribute("hours", hours);
 		modelMap.addAttribute("ratios", ratios);
+		return modelMap;
+	}
+	/**
+	 * 损时原因分析
+	 * @param productionUnitId
+	 * @return
+	 */
+	@RequestMapping("/queryLostTimeReason4ProductionUnit.do")
+	@ResponseBody
+	public ModelMap queryLostTimeReason4ProductionUnit(Long productionUnitId) {
+		ModelMap modelMap = new ModelMap();
+		//产生一个月的时间
+		DateStringUtil util = new DateStringUtil();
+		List<Date> days =util.generateOneMonthDay(util.date2Month(new Date()));
+
+		List<String> dayList = new ArrayList<>();
+		for(Date day : days) {
+			dayList.add(util.date2DayOfMonth(day));
+		}
+		//根据产线查找目标OEE
+		double goalOee = deviceService.queryOeeByProductionUnitId(productionUnitId)*1.0/100;
+		//存放每个班的损时数
+		List<String> lostTimeList = new ArrayList<>();
+		//存放总损时数(每个班的损时List)
+		List<List<String>> list = new ArrayList<>();
+		Date date = new Date();
+		//根据生产单元id查询设备站点
+		List<DeviceSite> deviceSites = deviceSiteService.queryDeviceSitesByProductionUnitId(productionUnitId);
+		//查询所有班次
+		List<Classes> classesList = classesService.queryAllClasses();
+		
+		double totalHours = 0;
+		for(int i = 0;i<classesList.size();i++) {
+			
+			
+			Classes c = classesList.get(i);
+			
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(c.getStartTime());
+			//结束时间
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(c.getEndTime());
+			long totalMinutes = 0;
+			//班次开始时间大于结束时间
+			if(calendar.get(Calendar.HOUR_OF_DAY)<cal.get(Calendar.HOUR_OF_DAY)) {
+				totalMinutes = cal.get(Calendar.HOUR_OF_DAY)*60+cal.get(Calendar.MINUTE)-calendar.get(Calendar.HOUR_OF_DAY)*60-calendar.get(Calendar.MINUTE);
+			}else {
+				totalMinutes = 24*60+(calendar.get(Calendar.HOUR_OF_DAY)*60+calendar.get(Calendar.MINUTE))-(cal.get(Calendar.HOUR_OF_DAY)*60-cal.get(Calendar.MINUTE));
+			}
+			
+			double sumHours = totalMinutes*1.0/60;
+			totalHours+=sumHours;
+			for(Date now : days) {
+				String nowDay = util.date2DayOfMonth(now);
+				String dateDay = util.date2DayOfMonth(date);
+				double sumLostTimeCount = 0;
+				if(Integer.valueOf(nowDay)<=Integer.valueOf(dateDay)) {
+
+					for(DeviceSite ds : deviceSites) {
+						//查询损时时间(包括计划停机时间)
+						double lostTime = lostTimeRecordService.queryLostTime4PerDay(c,ds.getId(),now);
+						//查询计划停机时间
+						double planHaltTime = lostTimeRecordService.queryPlanHaltTime(c, ds.getId(),now);
+						sumLostTimeCount += (lostTime-planHaltTime)/60;
+					}
+					lostTimeList.add(decimalFormat.format(sumLostTimeCount));
+				}else {
+					lostTimeList.add(0+"");
+				}
+			}
+			list.add(lostTimeList);
+		}
+		List<String> goalLostTimeList = new ArrayList<>();
+		//计算损时目标
+		double goalLostTime = totalHours * (1-goalOee);
+		for(@SuppressWarnings("unused") Date now : days) {
+			goalLostTimeList.add(decimalFormat.format(goalLostTime));
+		}
+		
+		modelMap.addAttribute("classes",classesList);
+		modelMap.addAttribute("goalLostTimeList",goalLostTimeList);
+		modelMap.addAttribute("lostTimeList",list);
+		modelMap.addAttribute("days", dayList);
 		return modelMap;
 	}
 } 

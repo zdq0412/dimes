@@ -66,4 +66,9 @@ public class DeviceServiceImpl implements IDeviceService {
 	public List<Device> queryDevicesByProductionUnitId(Long productionUnitId) {
 		return this.deviceDao.findByHQL("from Device d where d.productionUnit.id=?0", new Object[] {productionUnitId});
 	}
+
+	@Override
+	public double queryOeeByProductionUnitId(Long productionUnitId) {
+		return deviceDao.queryOeeByProductionUnitId(productionUnitId);
+	}
 }

@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,5 +52,10 @@ public class ClassesServiceImpl implements IClassesService {
 	@Override
 	public Classes queryCurrentClasses() {
 		return classesDao.queryCurrentClasses();
+	}
+
+	@Override
+	public List<Classes> queryAllClasses() {
+		return classesDao.findAll();
 	}
 }

@@ -175,6 +175,7 @@ public class ModuleTest {
 		son31.setParent(son3);
 		son31.setName("OEE记录表");
 		son31.setLeaf(true);
+		son31.setUrl("console/jsp/oee4ProductionUnit.jsp");
 		moduleService.addModule(son31);
 		
 		Module son32 = new Module();
@@ -205,6 +206,7 @@ public class ModuleTest {
 		son36.setParent(son3);
 		son36.setName("损失时间分析");
 		son36.setLeaf(true);
+		son36.setUrl("console/jsp/lostTimeReason.jsp");
 		moduleService.addModule(son36);
 		
 		Module son4 = new Module();

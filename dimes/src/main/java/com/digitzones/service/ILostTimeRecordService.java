@@ -1,5 +1,6 @@
 package com.digitzones.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.digitzones.model.Classes;
@@ -32,10 +33,26 @@ public interface ILostTimeRecordService extends ICommonService<LostTimeRecord> {
 	 */
 	public Double queryHoursOfPlanHaltByYearAndMonth(Integer year,Integer month) ;
 	/**
-	 * 根据时间段查找损时信息
-	 * @param begin
-	 * @param end
+	 * 查询当天损时时间
+	 * @param c
+	 * @param deviceSiteId
+	 * @param date 损时日期
 	 * @return
 	 */
-	public Double queryLostTimeByTime(Classes c,Long deviceSiteId);
+	public Double queryLostTime(Classes c,Long deviceSiteId,Date date);
+	/**
+	 * 查询当天计划停机时间
+	 * @param c
+	 * @param deviceSiteId
+	 * @return
+	 */
+	public Double queryPlanHaltTime(Classes c,Long deviceSiteId,Date date);
+	/**
+	 * 每天损时
+	 * @param c
+	 * @param deviceSiteId
+	 * @param date
+	 * @return
+	 */
+	public Double queryLostTime4PerDay(Classes c,Long deviceSiteId,Date date);
 }

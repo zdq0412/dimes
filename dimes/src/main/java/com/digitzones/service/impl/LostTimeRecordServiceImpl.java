@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +70,20 @@ public class LostTimeRecordServiceImpl implements ILostTimeRecordService {
 	}
 
 	@Override
-	public Double queryLostTimeByTime(Classes c,Long deviceSiteId) {
-		Double result = lostTimeRecordDao.queryLostTimeByTime(c,deviceSiteId);
+	public Double queryLostTime(Classes c,Long deviceSiteId,Date date) {
+		Double result = lostTimeRecordDao.queryLostTime(c,deviceSiteId,date);
 		return result==null?0:result;
+	}
+
+	@Override
+	public Double queryPlanHaltTime(Classes c, Long deviceSiteId,Date date) {
+		Double result = lostTimeRecordDao.queryPlanHaltTime(c, deviceSiteId,date);
+		return result ==null?0:result;
+	}
+
+	@Override
+	public Double queryLostTime4PerDay(Classes c, Long deviceSiteId, Date date) {
+		Double result = lostTimeRecordDao.queryLostTime4PerDay(c, deviceSiteId, date);
+		return result ==null?0:result;
 	}
 }

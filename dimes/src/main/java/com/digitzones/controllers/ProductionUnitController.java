@@ -181,6 +181,16 @@ public class ProductionUnitController {
 		ProductionUnit productionUnit = productionUnitService.queryObjById(id);
 		return productionUnit;
 	}
+	
+	/**
+	 * 查询所有生产单元
+	 * @return
+	 */
+	@RequestMapping("/queryAllProductionUnits.do")
+	@ResponseBody
+	public List<ProductionUnit> queryAllProductionUnits(){
+		return productionUnitService.queryAllProductionUnits();
+	}
 	/**
 	 * 更新部门
 	 * @param department

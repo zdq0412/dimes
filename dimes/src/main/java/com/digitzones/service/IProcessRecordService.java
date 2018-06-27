@@ -1,5 +1,6 @@
 package com.digitzones.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.digitzones.model.ProcessRecord;
@@ -31,7 +32,7 @@ public interface IProcessRecordService extends ICommonService<ProcessRecord> {
 	 */
 	public List<Long[]> queryCurrentMonthDeviceSiteIdAndStatus(Long deviceSiteId,String status);
 	/**
-	 * 根据设备站点id查询当天的加工数量
+	 * 根据设备站点id查询当天的非NG的加工数量
 	 * @param deviceSiteId
 	 * @return 
 	 */
@@ -42,4 +43,12 @@ public interface IProcessRecordService extends ICommonService<ProcessRecord> {
 	 * @return
 	 */
 	public Long queryCurrentDayCountByDeviceSiteId(Long deviceSiteId);
+	/**
+	 * 根据日期(天)查询工序、工件、设备站点id及该状态下的记录数
+	 * @param deviceSiteId
+	 * @param status
+	 * @param now
+	 * @return
+	 */
+	public List<Long[]> queryByDay(Long deviceSiteId, String status, Date now) ;
 }

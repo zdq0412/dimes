@@ -96,7 +96,7 @@
                      parentGrid:{
                          type:'datagrid',
                          id:'productionUnitDg',
-                         param:'id:id'
+                         param:'productionUnitId:id'
                      }">
 						<div title="设备信息" data-options="id:'tab0',iconCls:'fa fa-th'">
 							<!-- datagrid表格 -->

@@ -1,5 +1,6 @@
 package com.digitzones.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.digitzones.model.ProcessRecord;
@@ -42,4 +43,12 @@ public interface IProcessRecordDao extends ICommonDao<ProcessRecord> {
 	 * @return List<Long[]> :工件id，工序id，设备站点id,班次id，记录数
 	 */
 	public List<Long[]> queryCurrentMonthDeviceSiteIdAndStatus(Long deviceSiteId,String status);
+	/**
+	 * 根据日期(天)查询工序、工件、设备站点id及该状态下的记录数
+	 * @param deviceSiteId
+	 * @param status
+	 * @param day
+	 * @return
+	 */
+	public List<Long[]> queryByDay(Long deviceSiteId,String status,Date day);
 }

@@ -45,7 +45,7 @@ public class Device extends CommonModel {
 	/**安装位置*/
 	private String installPosition;
 	/**是否为瓶颈设备*/
-	private Boolean bottleneck;
+	private Boolean bottleneck = false;
 	/**目标OEE*/
 	private Float goalOee;
 	/**参数取值

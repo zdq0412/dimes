@@ -21,4 +21,10 @@ public interface IDeviceService extends ICommonService<Device> {
 	 * @return
 	 */
 	public List<Device> queryDevicesByProductionUnitId(Long productionUnitId);
+	/**
+	 * 根据生产单元id查找最大目标oee值
+	 * @param productionUnitId
+	 * @return
+	 */
+	public double queryOeeByProductionUnitId(Long productionUnitId);
 }
