@@ -48,9 +48,9 @@
 			           childTab: [{id:'southTabs'}]">
                     <thead>
                     <tr>
-                        <th data-options="field:'id',title:'id',checkbox:false,width:'80px'"></th>
+                        <th data-options="field:'id',title:'id',checkbox:false,width:'80px',hidden:true"></th>
                         <th data-options="field:'code',title:'类别代码',width:'180px',align:'center'"></th>
-                        <th data-options="field:'baseCode',title:'baseCode',width:'180px',align:'center',hiddin:true"></th>
+                        <th data-options="field:'baseCode',title:'baseCode',width:'180px',align:'center',hidden:true"></th>
                         <th data-options="field:'name',title:'类别名称',sortable:false"></th>
                         <th data-options="field:'note',title:'备注',sortable:true"></th>
                         <th data-options="field:'parentCode',title:'父类别代码',sortable:true,
@@ -228,7 +228,7 @@
            			code:code,
            			name:name,
            			baseCode:baseCode,
-           			'parent.id':$('#parameterTypeTg').iTreegrid('getSelected').id,
+           			'parent.id':$('#departmentDg').iTreegrid('getSelected').id,
            			note:$('#note').val()
            			},function(data){
            				if(data.success){
@@ -266,8 +266,8 @@
            			id:$('#departmentDg').iDatagrid('getSelected').id,
            			code:code,
            			name:name,
-           			baseCode:$('#parameterTypeTg').iTreegrid('getSelected').code,
-           			'parent.id':$('#parameterTypeTg').iTreegrid('getSelected').id,
+           			baseCode:$('#departmentDg').iDatagrid('getSelected').baseCode,
+           			'parent.id':$('#departmentDg').iDatagrid('getSelected').parent.id,
            			note:$('#note').val()
            			},function(data){
            				if(data.success){

@@ -3,12 +3,17 @@ package com.digitzones.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
 /**
  * 站点关联装备
  * @author zdq
@@ -18,22 +23,108 @@ import javax.persistence.TemporalType;
 @Table(name="EQUIPMENT_DEVICESITE")
 public class EquipmentDeviceSiteMapping {
 	private Long id;
-	/**站点代码*/
-	private String deviceSiteCode;
-	/**站点名称*/
-	private String deviceSiteName;
-	/**装备代码*/
-	private String quipmentCode;
-	/**装备名称*/
-	private String quipmentName;
+	/**站点*/
+	private DeviceSite deviceSite;
+	/**装备或量具*/
+	private Equipment equipment;
 	/**工单号*/
 	private String workSheetCode;
 	/**关联日期*/
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date mappingDate;
-	/**设备序号，具体设备的 编号*/
-	private String deviceNo;
+	/**装备或量具的序列号*/
+	private String no;
 	/**使用频次*/
-	private Float usageRate;
+	private Float usageRate = 1f;
+	/**解除绑定日期*/
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date unbindDate;
+	/**是否解除了绑定*/
+	 private Boolean unbind = false;
+	 /**绑定人id*/
+	 private Long bindUserId;
+	 /**绑定人姓名*/
+	 private String bindUsername;
+	 /**解除绑定用户id*/
+	 private Long unbindUserId;
+	 /**解除绑定用户名称*/
+	 private String unbindUsername;
+	 /**辅助人id*/
+	 private Long helperId;
+	 /**辅助人姓名*/
+	 private String helperName;
+	 
+	public String getNo() {
+		return no;
+	}
+	public void setNo(String no) {
+		this.no = no;
+	}
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="DEVICESITE_ID")
+	public DeviceSite getDeviceSite() {
+		return deviceSite;
+	}
+	public void setDeviceSite(DeviceSite deviceSite) {
+		this.deviceSite = deviceSite;
+	}
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="EQUIPMENT_ID")
+	public Equipment getEquipment() {
+		return equipment;
+	}
+	public void setEquipment(Equipment equipment) {
+		this.equipment = equipment;
+	}
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date getUnbindDate() {
+		return unbindDate;
+	}
+	public void setUnbindDate(Date unbindDate) {
+		this.unbindDate = unbindDate;
+	}
+	public Boolean getUnbind() {
+		return unbind;
+	}
+	public void setUnbind(Boolean unbind) {
+		this.unbind = unbind;
+	}
+	public Long getBindUserId() {
+		return bindUserId;
+	}
+	public void setBindUserId(Long bindUserId) {
+		this.bindUserId = bindUserId;
+	}
+	public String getBindUsername() {
+		return bindUsername;
+	}
+	public void setBindUsername(String bindUsername) {
+		this.bindUsername = bindUsername;
+	}
+	public Long getUnbindUserId() {
+		return unbindUserId;
+	}
+	public void setUnbindUserId(Long unbindUserId) {
+		this.unbindUserId = unbindUserId;
+	}
+	public String getUnbindUsername() {
+		return unbindUsername;
+	}
+	public void setUnbindUsername(String unbindUsername) {
+		this.unbindUsername = unbindUsername;
+	}
+	public Long getHelperId() {
+		return helperId;
+	}
+	public void setHelperId(Long helperId) {
+		this.helperId = helperId;
+	}
+	public String getHelperName() {
+		return helperName;
+	}
+	public void setHelperName(String helperName) {
+		this.helperName = helperName;
+	}
 	public Float getUsageRate() {
 		return usageRate;
 	}
@@ -48,30 +139,6 @@ public class EquipmentDeviceSiteMapping {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getDeviceSiteCode() {
-		return deviceSiteCode;
-	}
-	public void setDeviceSiteCode(String deviceSiteCode) {
-		this.deviceSiteCode = deviceSiteCode;
-	}
-	public String getDeviceSiteName() {
-		return deviceSiteName;
-	}
-	public void setDeviceSiteName(String deviceSiteName) {
-		this.deviceSiteName = deviceSiteName;
-	}
-	public String getQuipmentCode() {
-		return quipmentCode;
-	}
-	public void setQuipmentCode(String quipmentCode) {
-		this.quipmentCode = quipmentCode;
-	}
-	public String getQuipmentName() {
-		return quipmentName;
-	}
-	public void setQuipmentName(String quipmentName) {
-		this.quipmentName = quipmentName;
-	}
 	public String getWorkSheetCode() {
 		return workSheetCode;
 	}
@@ -84,11 +151,5 @@ public class EquipmentDeviceSiteMapping {
 	}
 	public void setMappingDate(Date mappingDate) {
 		this.mappingDate = mappingDate;
-	}
-	public String getDeviceNo() {
-		return deviceNo;
-	}
-	public void setDeviceNo(String deviceNo) {
-		this.deviceNo = deviceNo;
 	}
 }

@@ -90,6 +90,9 @@ public class EmployeeController {
 			modelMap.addAttribute("msg", "员工代码已被使用!");
 			modelMap.addAttribute("success", false);
 		}else {
+			if(employee.getPosition().getId()==null) {
+				employee.setPosition(null);
+			}
 			employeeService.addObj(employee);
 			modelMap.addAttribute("msg", "添加成功!");
 			modelMap.addAttribute("success", true);

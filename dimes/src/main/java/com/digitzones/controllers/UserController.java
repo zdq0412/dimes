@@ -1,5 +1,6 @@
 package com.digitzones.controllers;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -157,11 +158,30 @@ public class UserController {
 	 */
 	@RequestMapping("/login.do")
 	public String login(User user,HttpServletRequest request) {
+		HttpSession session = request.getSession();
 		User u = userService.login(user.getUsername(), new PasswordEncoder(user.getUsername()).encode(user.getPassword()));
 		String returnPage = "redirect:/console/jsp/console.jsp";
 		if(u==null) {
 			returnPage = "redirect:/login.jsp";
+		}else {
+			session.setAttribute(Constant.User.LOGIN_USER, u);
 		}
 		return returnPage;
+	}
+	/**
+	 * 查询非当前的所有用户
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/queryNotCurrentUsers.do")
+	@ResponseBody
+	public List<User> queryNotCurrentUsers(HttpServletRequest request){
+		HttpSession session = request.getSession();
+		User currentUser = (User) session.getAttribute(Constant.User.LOGIN_USER);
+		if(currentUser!=null) {
+			return userService.queryNotCurrentUsers(currentUser.getId());
+		}else {
+			return userService.queryAllUsers();
+		}
 	}
 } 

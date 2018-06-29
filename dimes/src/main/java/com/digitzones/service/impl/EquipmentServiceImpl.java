@@ -1,10 +1,12 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.digitzones.constants.Constant;
 import com.digitzones.dao.IEquipmentDao;
 import com.digitzones.model.Equipment;
 import com.digitzones.model.Pager;
@@ -48,4 +50,8 @@ public class EquipmentServiceImpl implements IEquipmentService {
 		equipmentDao.deleteById(id);
 	}
 
+	@Override
+	public List<Equipment> queryAllEquipments() {
+		return equipmentDao.findByHQL("from Equipment e where e.baseCode=?0", new Object[] {Constant.EquipmentType.EQUIPMENT});
+	}
 }

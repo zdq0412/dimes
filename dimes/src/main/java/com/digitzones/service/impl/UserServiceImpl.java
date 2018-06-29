@@ -59,4 +59,14 @@ public class UserServiceImpl implements IUserService {
 	public User queryUserByUsername(String username) {
 		return userDao.findSingleByProperty("username", username);
 	}
+
+	@Override
+	public List<User> queryNotCurrentUsers(Long currentUserId) {
+		return userDao.findByHQL("from User u where u.id!=?0", new Object[] {currentUserId});
+	}
+
+	@Override
+	public List<User> queryAllUsers() {
+		return userDao.findAll();
+	}
 }

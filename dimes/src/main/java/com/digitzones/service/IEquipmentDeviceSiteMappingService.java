@@ -7,5 +7,10 @@ import com.digitzones.model.EquipmentDeviceSiteMapping;
  * 2018年6月11日
  */
 public interface IEquipmentDeviceSiteMappingService extends ICommonService<EquipmentDeviceSiteMapping> {
-
+	/**
+	 * 根据序列号查询装备和设备的关联
+	 * @param no
+	 * @return
+	 */
+	public EquipmentDeviceSiteMapping queryByNo(String no);
 }

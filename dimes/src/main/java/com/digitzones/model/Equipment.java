@@ -8,6 +8,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
 /**
  * 装备
  * @author zdq
@@ -26,19 +28,31 @@ public class Equipment extends CommonModel {
 	/**经销商*/
 	private String trader;
 	/**出厂日期*/
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date outFactoryDate;
 	/**计量目标*/
 	private Float measurementObjective;
 	/**计量类型*/
-	private Float measurementType;
+	private String measurementType;
 	/**计量累积*/
 	private Float cumulation;
 	/**计量差异*/
 	private Float measurementDifference;
+	/**质保期*/
+	private Float warrantyPeriod;
 	/**装备类型*/
 	private EquipmentType equipmentType;
 	/**装备图片*/
 	private String pic;
+	/**记录是量具还是装备*/
+	private String baseCode;
+	
+	public Float getWarrantyPeriod() {
+		return warrantyPeriod;
+	}
+	public void setWarrantyPeriod(Float warrantyPeriod) {
+		this.warrantyPeriod = warrantyPeriod;
+	}
 	public String getUnitType() {
 		return unitType;
 	}
@@ -50,6 +64,12 @@ public class Equipment extends CommonModel {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getBaseCode() {
+		return baseCode;
+	}
+	public void setBaseCode(String baseCode) {
+		this.baseCode = baseCode;
 	}
 	public String getManufacturer() {
 		return manufacturer;
@@ -76,10 +96,10 @@ public class Equipment extends CommonModel {
 	public void setMeasurementObjective(Float measurementObjective) {
 		this.measurementObjective = measurementObjective;
 	}
-	public Float getMeasurementType() {
+	public String getMeasurementType() {
 		return measurementType;
 	}
-	public void setMeasurementType(Float measurementType) {
+	public void setMeasurementType(String measurementType) {
 		this.measurementType = measurementType;
 	}
 	@ManyToOne

@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<%@page import="com.digitzones.constants.Constant"%>
+<%@page import="com.digitzones.model.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% 
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+	/* User user = (User)session.getAttribute(Constant.User.LOGIN_USER);
+	if(user == null){
+		response.sendRedirect(basePath + "login.jsp");
+		return;
+	} */
 %>
+
 <!DOCTYPE html>
 <html>
 <head>

@@ -42,4 +42,37 @@ public class Constant {
 	public static class ProcessRecord{
 		public static final String NG = "ng";
 	}
+	/**
+	 * 参数类型
+	 * @author zdq
+	 * 2018年6月27日
+	 */
+	public static class ParameterType{
+		/**工艺参数*/
+		public static final String ART="ART";
+		/**设备参数*/
+		public static final String DEVICE="DEVICE";
+	}
+	/**
+	 * 装备类型
+	 * @author zdq
+	 * 2018年6月27日
+	 */
+	public static class EquipmentType{
+		/**装备*/
+		public static final String EQUIPMENT="EQUIPMENT";
+		/**设备参数*/
+		public static final String MEASURINGTOOL="MEASURINGTOOL";
+	}
+	/**
+	 * 装备
+	 * @author zdq
+	 * 2018年6月28日
+	 */
+	public static class Equipment{
+		/**计时型*/
+		public static final String TIMING = "TIMING";
+		/**计数型*/
+		public static final String COUNTING = "COUNTING";
+	}
 }

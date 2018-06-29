@@ -6,6 +6,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.digitzones.model.Department;
+import com.digitzones.model.EquipmentType;
 /**
  * 功能模块测试类
  * @author zdq
@@ -18,6 +19,7 @@ import com.digitzones.model.PressLightType;
 import com.digitzones.model.ProductionUnit;
 import com.digitzones.model.WorkpieceType;
 import com.digitzones.service.IDepartmentService;
+import com.digitzones.service.IEquipmentTypeService;
 import com.digitzones.service.IModuleService;
 import com.digitzones.service.INGReasonTypeService;
 import com.digitzones.service.IParameterTypeService;
@@ -34,6 +36,11 @@ public class ModuleTest {
 	private IParameterTypeService parameterTypeService;
 	private IPressLightTypeService  pressLightTypeService;
 	private IWorkpieceTypeService workpieceTypeService;
+	private IEquipmentTypeService equipmentTypeService;
+	@Autowired
+	public void setEquipmentTypeService(IEquipmentTypeService equipmentTypeService) {
+		this.equipmentTypeService = equipmentTypeService;
+	}
 	@Autowired
 	public void setWorkpieceTypeService(IWorkpieceTypeService workpieceTypeService) {
 		this.workpieceTypeService = workpieceTypeService;
@@ -263,12 +270,14 @@ public class ModuleTest {
 		son8.setParent(m);
 		son8.setName("装备关联");
 		son8.setLeaf(true);
+		son8.setUrl("console/jsp/equipmentMappingRecord.jsp");
 		moduleService.addModule(son8);
 		
 		Module son9 = new Module();
 		son9.setParent(m);
 		son9.setName("量具关联");
 		son9.setLeaf(true);
+		son9.setUrl("console/jsp/measuringToolMappingRecord.jsp");
 		moduleService.addModule(son9);
 		
 		Module son10 = new Module();
@@ -361,6 +370,7 @@ public class ModuleTest {
 		Module basicSon22 = new Module();
 		basicSon22.setParent(basicSon2);
 		basicSon22.setName("装备信息");
+		basicSon22.setUrl("console/jsp/equipmentType.jsp");
 		basicSon22.setLeaf(true);
 		moduleService.addModule(basicSon22);
 		
@@ -368,6 +378,7 @@ public class ModuleTest {
 		basicSon23.setParent(basicSon2);
 		basicSon23.setName("量具信息");
 		basicSon23.setLeaf(true);
+		basicSon23.setUrl("console/jsp/measuringToolType.jsp");
 		moduleService.addModule(basicSon23);
 		
 		Module basicSon24 = new Module();
@@ -523,5 +534,18 @@ public class ModuleTest {
 		workpieceType.setName("工件类别");
 		
 		workpieceTypeService.addObj(workpieceType);
+		
+		//量具和装备类型
+		EquipmentType equipmentType = new EquipmentType();
+		equipmentType.setCode("EQUIPMENT");
+		equipmentType.setName("装备");
+		
+		equipmentTypeService.addObj(equipmentType);
+		
+		EquipmentType measuringtool = new EquipmentType();
+		measuringtool.setCode("MEASURINGTOOL");
+		measuringtool.setName("量具");
+		
+		equipmentTypeService.addObj(measuringtool);
 	}
 }

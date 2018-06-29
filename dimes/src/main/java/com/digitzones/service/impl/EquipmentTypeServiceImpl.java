@@ -1,10 +1,12 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.digitzones.constants.Constant;
 import com.digitzones.dao.IEquipmentTypeDao;
 import com.digitzones.model.EquipmentType;
 import com.digitzones.model.Pager;
@@ -46,6 +48,21 @@ public class EquipmentTypeServiceImpl implements IEquipmentTypeService {
 	@Override
 	public void deleteObj(Long id) {
 		equipmentTypeDao.deleteById(id);
+	}
+
+	@Override
+	public List<EquipmentType> queryTopEquipmentType() {
+		return  equipmentTypeDao.findByHQL("from EquipmentType p where p.parent is null and p.code=?0", new Object[] {Constant.EquipmentType.EQUIPMENT});
+	}
+
+	@Override
+	public Long queryCountOfSubEquipmentType(Serializable pid) {
+		return equipmentTypeDao.findCount("from EquipmentType d inner join d.parent p where p.id=?0", new Object[] {pid});
+	}
+
+	@Override
+	public Long queryCountOfEquipment(Serializable typeId) {
+		return  equipmentTypeDao.findCount("from Equipment d inner join d.equipmentType p where p.id=?0", new Object[] {typeId});
 	}
 
 }

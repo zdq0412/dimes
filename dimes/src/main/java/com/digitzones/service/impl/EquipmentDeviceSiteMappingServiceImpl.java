@@ -47,4 +47,9 @@ public class EquipmentDeviceSiteMappingServiceImpl implements IEquipmentDeviceSi
 	public void deleteObj(Long id) {
 		equipmentDeviceSiteMappingDao.deleteById(id);
 	}
+
+	@Override
+	public EquipmentDeviceSiteMapping queryByNo(String no) {
+		return equipmentDeviceSiteMappingDao.findSingleByProperty("no", no);
+	}
 }

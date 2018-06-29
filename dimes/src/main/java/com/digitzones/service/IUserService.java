@@ -1,5 +1,7 @@
 package com.digitzones.service;
 
+import java.util.List;
+
 import com.digitzones.model.User;
 /**
  * 用户管理service
@@ -20,4 +22,14 @@ public interface IUserService extends ICommonService<User> {
 	 * @return
 	 */
 	public User queryUserByUsername(String username);
+	/**
+	 * 查询非当前用户
+	 * @return
+	 */
+	public List<User> queryNotCurrentUsers(Long currentUserId);
+	/**
+	 * 查询所有用户
+	 * @return
+	 */
+	public List<User> queryAllUsers();
 }
