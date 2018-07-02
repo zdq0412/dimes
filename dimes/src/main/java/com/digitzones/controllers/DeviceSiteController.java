@@ -221,7 +221,7 @@ public class DeviceSiteController {
 	public ModelMap queryOtherDeviceSites(Long processId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
 		ModelMap modelMap = new ModelMap();
 		String hql = "select ds from DeviceSite ds where ds.id not in ("
-				+ "select pdm.deviceSite.id from ProcessDeviceSiteMapping pdm) or ds.id in (select pdm_.deviceSite.id from ProcessDeviceSiteMapping pdm_ where pdm_.processes.id!=?0)";
+				+ "select pdm.deviceSite.id from ProcessDeviceSiteMapping pdm where pdm.processes.id!=?0 )";
 		Pager<DeviceSite> pager = deviceSiteService.queryObjs(hql, page, rows, new Object[] {processId});
 		modelMap.addAttribute("total", pager.getTotalCount());
 		modelMap.addAttribute("rows", pager.getData());
@@ -261,6 +261,12 @@ public class DeviceSiteController {
 		List<List<DeviceSiteParameterMapping>> list = new ArrayList<>();
 		//良品率
 		List<String> rtys = new ArrayList<>();
+		//查询当前班次
+		Classes c = classesService.queryCurrentClasses();
+		if(c==null) {
+			modelMap.addAttribute("error", "不存在当前班次信息!");
+			return modelMap;
+		}
 		//根据设备站点查询加工信息
 		for(DeviceSite ds : deviceSites) {
 			//查询设备站点关联的参数
@@ -276,13 +282,15 @@ public class DeviceSiteController {
 			}
 			//查询加工信息中的工序，工件，设备站点id,NG数量
 			List<Long[]> idList = processRecordService.queryCountByDeviceSiteIdAndStatus(ds.getId(), Constant.ProcessRecord.NG);
-			//查询当前班次
-			Classes c = classesService.queryCurrentClasses();
 			Date now = new Date();
+			double lostTime = 0;
+			double planHaltTime = 0;
+			if(c!=null) {
 			//查询损时时间(包括计划停机时间)
-			double lostTime = lostTimeRecordService.queryLostTime(c,ds.getId(),new Date()); 
-			//查询计划停机时间
-			double planHaltTime = lostTimeRecordService.queryPlanHaltTime(c, ds.getId(),new Date());
+				lostTime = lostTimeRecordService.queryLostTime(c,ds.getId(),new Date()); 
+				//查询计划停机时间
+				planHaltTime = lostTimeRecordService.queryPlanHaltTime(c, ds.getId(),new Date());
+			}
 			if(idList!=null && idList.size()>0) {
 				for(Long[] ids : idList) {
 					//根据工序,工件，设备站点查找标准节拍

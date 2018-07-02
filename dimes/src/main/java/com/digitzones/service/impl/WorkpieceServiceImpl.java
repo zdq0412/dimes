@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,16 @@ public class WorkpieceServiceImpl implements IWorkpieceService {
 	@Override
 	public void deleteObj(Long id) {
 		workpieceDao.deleteById(id);
+	}
+
+	@Override
+	public List<Workpiece> queryAllWorkpieces(String q) {
+		String hql = "from Workpiece w where w.code like ?0 or w.name like ?0 or w.unitType like ?0 or w.customerGraphNumber like ?0";
+		return this.workpieceDao.findByHQL(hql, new Object[] {"%" + q + "%"});
+	}
+	@Override
+	public List<Workpiece> queryAllWorkpieces() {
+		String hql = "from Workpiece w ";
+		return this.workpieceDao.findByHQL(hql, new Object[] {});
 	}
 }

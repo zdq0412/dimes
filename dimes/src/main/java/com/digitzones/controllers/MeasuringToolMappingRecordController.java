@@ -53,7 +53,7 @@ public class MeasuringToolMappingRecordController {
 	@ResponseBody
 	public ModelMap queryMeasuringToolMappingRecordByDeviceSiteId(Long deviceSiteId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
 		ModelMap modelMap = new ModelMap();
-		String hql = "from EquipmentDeviceSiteMapping edsm where edsm.deviceSite.id=?0 and edsm.unbind=?1 and edsm.measuringTool.baseCode=?2";
+		String hql = "from EquipmentDeviceSiteMapping edsm where edsm.deviceSite.id=?0 and edsm.unbind=?1 and edsm.equipment.baseCode=?2";
 		Pager<EquipmentDeviceSiteMapping> pager = measuringToolDeviceSiteMappingService.queryObjs(hql, page, rows, new Object[] {deviceSiteId,false,Constant.EquipmentType.MEASURINGTOOL});
 		modelMap.addAttribute("total", pager.getTotalCount());
 		modelMap.addAttribute("rows", pager.getData());
@@ -127,6 +127,10 @@ public class MeasuringToolMappingRecordController {
 		vo.setBindUserId(plr.getBindUserId());
 		vo.setDeviceSite(plr.getDeviceSite());
 		vo.setEquipment(plr.getEquipment());
+		if(plr.getEquipment()!=null) {
+			vo.setEquipmentName(plr.getEquipment().getName());
+			vo.setEquipmentId(plr.getEquipment().getId());
+		}
 		vo.setHelperId(plr.getHelperId());
 		vo.setHelperName(plr.getHelperName());
 		vo.setNo(plr.getNo());

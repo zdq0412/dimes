@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.constants.Constant;
 import com.digitzones.model.DeviceSiteParameterMapping;
 import com.digitzones.model.Pager;
 import com.digitzones.model.Parameters;
@@ -278,11 +279,11 @@ public class ParameterController {
 	@RequestMapping("/queryOtherParameters.do")
 	@ResponseBody
 	@SuppressWarnings("unchecked")
-	public ModelMap queryOtherParameters(Long processId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
+	public ModelMap queryOtherParameters(Long processId,@RequestParam(value="rows",defaultValue="20")int rows,@RequestParam(defaultValue="1")int page) {
 		ModelMap modelMap = new ModelMap();
 		String hql = "select ds from Parameters ds where ds.id not in ("
-				+ "select pdm.parameters.id from ProcessesParametersMapping pdm) or ds.id in (select pdm_.parameters.id from ProcessesParametersMapping pdm_ where pdm_.processes.id!=?0)";
-		Pager<Parameters> pager = parameterService.queryObjs(hql, page, rows, new Object[] {processId});
+				+ "select pdm.parameters.id from ProcessesParametersMapping pdm where pdm.processes.id=?0) and ds.baseCode=?1";
+		Pager<Parameters> pager = parameterService.queryObjs(hql, page, rows, new Object[] {processId,Constant.ParameterType.DEVICE});
 		modelMap.addAttribute("total", pager.getTotalCount());
 		modelMap.addAttribute("rows", pager.getData());
 		return modelMap;

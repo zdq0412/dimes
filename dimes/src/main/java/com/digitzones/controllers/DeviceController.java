@@ -21,6 +21,7 @@ import com.digitzones.model.Pager;
 import com.digitzones.model.ProductionUnit;
 import com.digitzones.service.IDeviceService;
 import com.digitzones.service.IProductionUnitService;
+import com.digitzones.vo.DeviceVO;
 /**
  * 设备管理控制器
  * @author zdq
@@ -211,9 +212,41 @@ public class DeviceController {
 	 */
 	@RequestMapping("/queryDeviceById.do")
 	@ResponseBody
-	public Device queryDeviceById(Long id) {
+	public DeviceVO queryDeviceById(Long id) {
 		Device device = deviceService.queryObjById(id);
-		return device;
+		return model2VO(device);
+	}
+	/**
+	 * 将领域模型转换为值对象
+	 * @param device
+	 * @return
+	 */
+	private DeviceVO model2VO(Device device) {
+		if(device == null) {
+			return null;
+		}
+		
+		DeviceVO vo = new DeviceVO();
+		vo.setId(device.getId());
+		vo.setCode(device.getCode());
+		vo.setName(device.getName());
+		vo.setGoalOee(device.getGoalOee());
+		vo.setInstallDate(device.getInstallDate());
+		vo.setInstallPosition(device.getInstallPosition());
+		vo.setDeviceType(device.getDeviceType());
+		vo.setManufacturer(device.getManufacturer());
+		vo.setNote(device.getNote());
+		vo.setBottleneck(device.getBottleneck().toString());
+		vo.setOutFactoryCode(device.getOutFactoryCode());
+		vo.setPhoto(device.getPhoto());
+		vo.setOutFactoryDate(device.getOutFactoryDate());
+		vo.setParameterValueType(device.getParameterValueType());
+		vo.setUnitType(device.getUnitType());
+		vo.setDeviceType(device.getDeviceType());
+		vo.setProductionUnit(device.getProductionUnit());
+		vo.setTrader(device.getTrader());
+		vo.setStatus(device.getStatus());
+		return vo;
 	}
 	/**
 	 * 更新部门

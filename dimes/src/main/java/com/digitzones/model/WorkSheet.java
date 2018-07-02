@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
 /**
  * 工单
  * @author zdq
@@ -20,10 +22,12 @@ public class WorkSheet {
 	/**工单编号*/
 	private String no;
 	/**生产日期*/
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date manufactureDate;
 	/**制单人*/
 	private String documentMaker;
 	/**制单日期*/
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date makeDocumentDate;
 	/**工件代码*/
 	private String workPieceCode;
@@ -43,6 +47,8 @@ public class WorkSheet {
 	private String batchNumber;
 	/**炉号*/
 	private String stoveNumber;
+	/**生产单元id*/
+	private Long productionUnitId;
 	/**生产单元代码*/
 	private String productionUnitCode;
 	/**生产单元名称*/
@@ -53,6 +59,20 @@ public class WorkSheet {
 	private String status;
 	/**完成时间*/
 	private Date completeTime;
+	/**是否被删除*/
+	private Boolean deleted;
+	public Long getProductionUnitId() {
+		return productionUnitId;
+	}
+	public void setProductionUnitId(Long productionUnitId) {
+		this.productionUnitId = productionUnitId;
+	}
+	public Boolean getDeleted() {
+		return deleted;
+	}
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {

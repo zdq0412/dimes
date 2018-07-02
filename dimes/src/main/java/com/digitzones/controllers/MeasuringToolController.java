@@ -185,7 +185,11 @@ public class MeasuringToolController {
 	 */
 	@RequestMapping("/queryAllMeasuringTools.do")
 	@ResponseBody
-	public List<Equipment> queryAllMeasuringTools(){
-		return measuringToolService.queryAllMeasuringTools();
+	public List<Equipment> queryAllMeasuringTools(String q){
+		if(q==null) {
+			return measuringToolService.queryAllMeasuringTools();
+		}else {
+			return measuringToolService.queryMeasuringToolsByCodeOrNameOrUnity(q);
+		}
 	}
 } 

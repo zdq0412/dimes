@@ -54,4 +54,10 @@ public class MeasuringToolServiceImpl implements IMeasuringToolService {
 	public List<Equipment> queryAllMeasuringTools() {
 		return equipmentDao.findByHQL("from Equipment e where e.baseCode=?0", new Object[] {Constant.EquipmentType.MEASURINGTOOL});
 	}
+
+	@Override
+	public List<Equipment> queryMeasuringToolsByCodeOrNameOrUnity(String value) {
+		String hql = "from Equipment e where (e.code like ?0 or e.name like ?0 or e.unitType like ?0) and e.baseCode=?1";
+		return equipmentDao.findByHQL(hql,new Object[] {"%" + value + "%",Constant.EquipmentType.MEASURINGTOOL});
+	}
 }

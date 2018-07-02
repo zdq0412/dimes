@@ -18,6 +18,8 @@ public class EquipmentDeviceSiteMappingVO {
 	private DeviceSite deviceSite;
 	/**装备或量具*/
 	private Equipment equipment;
+	private String equipmentName;
+	private Long equipmentId;
 	/**工单号*/
 	private String workSheetCode;
 	/**关联日期*/
@@ -43,6 +45,18 @@ public class EquipmentDeviceSiteMappingVO {
 	 /**辅助人姓名*/
 	 private String helperName;
 	 
+	public String getEquipmentName() {
+		return equipmentName;
+	}
+	public void setEquipmentName(String equipmentName) {
+		this.equipmentName = equipmentName;
+	}
+	public Long getEquipmentId() {
+		return equipmentId;
+	}
+	public void setEquipmentId(Long equipmentId) {
+		this.equipmentId = equipmentId;
+	}
 	public String getMappingDate() {
 		return mappingDate;
 	}

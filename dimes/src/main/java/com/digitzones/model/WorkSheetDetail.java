@@ -1,6 +1,7 @@
 package com.digitzones.model;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,15 +39,15 @@ public class WorkSheetDetail {
 	/**站点名称*/
 	private String deviceSiteName;
 	/**完工数量*/
-	private Integer completeCount;
+	private Integer completeCount = 0;
 	/**合格数量*/
-	private Integer qualifiedCount;
+	private Integer qualifiedCount = 0;
 	/**不合格数量*/
-	private Integer unqualifiedCount;
+	private Integer unqualifiedCount = 0;
 	/**返修数量*/
-	private Integer repairCount;
+	private Integer repairCount = 0;
 	/**报废数量*/
-	private Integer scrapCount;
+	private Integer scrapCount = 0;
 	/**参数取值来源*/
 	private String parameterSource;
 	/**首件报告*/
@@ -58,7 +61,11 @@ public class WorkSheetDetail {
 	/**完成时间*/
 	private Date completeTime;
 	/**报工数*/
-	private Integer reportCount;
+	private Integer reportCount = 0;
+	/**
+	 * 工件详情参数记录
+	 */
+	private Set<WorkSheetDetailParametersRecord> workSheetDetailParametersRecords;
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
@@ -185,5 +192,12 @@ public class WorkSheetDetail {
 	public void setReportCount(Integer reportCount) {
 		this.reportCount = reportCount;
 	}
-	
+	@OneToMany
+	@OrderBy("ID DESC")
+	public Set<WorkSheetDetailParametersRecord> getWorkSheetDetailParametersRecords() {
+		return workSheetDetailParametersRecords;
+	}
+	public void setWorkSheetDetailParametersRecords(Set<WorkSheetDetailParametersRecord> workSheetDetailParametersRecords) {
+		this.workSheetDetailParametersRecords = workSheetDetailParametersRecords;
+	}
 }

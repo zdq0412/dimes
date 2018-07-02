@@ -127,6 +127,10 @@ public class EquipmentMappingRecordController {
 		vo.setBindUserId(plr.getBindUserId());
 		vo.setDeviceSite(plr.getDeviceSite());
 		vo.setEquipment(plr.getEquipment());
+		if(plr.getEquipment()!=null) {
+			vo.setEquipmentName(plr.getEquipment().getName());
+			vo.setEquipmentId(plr.getEquipment().getId());
+		}
 		vo.setHelperId(plr.getHelperId());
 		vo.setHelperName(plr.getHelperName());
 		vo.setNo(plr.getNo());

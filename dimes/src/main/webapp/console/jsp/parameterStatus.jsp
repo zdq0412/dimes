@@ -51,6 +51,12 @@
     	var contextPath = "<%=basePath%>";
 	$(function() {
 		$.get("deviceSite/queryDeviceSite4ParameterStatusShow.do", function(result) {
+			
+			if(result.error){
+				alert(result.error);
+				return ;
+			}
+		
 			var $main = $("#main");
 			$main.append("<div id='title'>")
 			for(var i = 0;i<result.deviceSites.length;i++){

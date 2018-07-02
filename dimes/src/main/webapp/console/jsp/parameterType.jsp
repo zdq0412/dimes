@@ -218,7 +218,6 @@
            			if(name==null || ''===$.trim(name)){
            				return false;
            			}
-           			
            			var baseCode = $('#parameterTypeTg').iTreegrid('getSelected').baseCode;
            			if(!baseCode){
            				baseCode = $('#parameterTypeTg').iTreegrid('getSelected').code;
@@ -228,7 +227,7 @@
            			code:code,
            			name:name,
            			baseCode:baseCode,
-           			'parent.id':$('#departmentDg').iTreegrid('getSelected').id,
+           			'parent.id':$('#parameterTypeTg').iTreegrid('getSelected').id,
            			note:$('#note').val()
            			},function(data){
            				if(data.success){

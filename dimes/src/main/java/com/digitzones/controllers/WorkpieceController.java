@@ -1,4 +1,6 @@
 package com.digitzones.controllers;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -472,5 +474,19 @@ public class WorkpieceController {
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("title", "操作提示");
 		return modelMap;
+	}
+	/**
+	 * 根据条件查询工件信息
+	 * @param q
+	 * @return
+	 */
+	@RequestMapping("/queryWorkpieces.do")
+	@ResponseBody
+	public List<Workpiece> queryWorkpieces(String q){
+		if(q!=null && !"".equals(q.trim())) {
+			return workpieceService.queryAllWorkpieces(q);
+		}else {
+			return workpieceService.queryAllWorkpieces();
+		}
 	}
 } 

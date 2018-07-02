@@ -48,8 +48,8 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">制造商</label>
 							<div class="topjui-input-block">
-								<input type="text" name="manufacturer" data-toggle="topjui-textbox"
-									id="manufacturer">
+								<input type="text" name="manufacturer"
+									data-toggle="topjui-textbox" id="manufacturer">
 							</div>
 						</div>
 					</div>
@@ -66,8 +66,8 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">安装日期</label>
 							<div class="topjui-input-block">
-								<input type="text" name="installDate" data-toggle="topjui-datebox"
-									id="installDate" editable="false">
+								<input type="text" name="installDate"
+									data-toggle="topjui-datebox" id="installDate" editable="false">
 							</div>
 						</div>
 					</div>
@@ -75,8 +75,9 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">出厂日期</label>
 							<div class="topjui-input-block">
-								<input type="text" name="outFactoryDate" data-toggle="topjui-datebox"
-									id="outFactoryDate" editable="false">
+								<input type="text" name="outFactoryDate"
+									data-toggle="topjui-datebox" id="outFactoryDate"
+									editable="false">
 							</div>
 						</div>
 					</div>
@@ -84,8 +85,8 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">出厂编码</label>
 							<div class="topjui-input-block">
-								<input type="text" name="outFactoryCode" data-toggle="topjui-textbox"
-									id="outFactoryCode">
+								<input type="text" name="outFactoryCode"
+									data-toggle="topjui-textbox" id="outFactoryCode">
 							</div>
 						</div>
 					</div>
@@ -93,8 +94,8 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">安装位置</label>
 							<div class="topjui-input-block">
-								<input type="text" name="installPosition" data-toggle="topjui-textbox"
-									id="installPosition">
+								<input type="text" name="installPosition"
+									data-toggle="topjui-textbox" id="installPosition">
 							</div>
 						</div>
 					</div>
@@ -120,8 +121,19 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">参数取值</label>
 							<div class="topjui-input-block">
-								<input type="text" name="parameterValueType" data-toggle="topjui-textbox"
-									id="parameterValueType">
+								<!-- <input type="text" name="parameterValueType" data-toggle="topjui-textbox"
+									id="parameterValueType"> -->
+
+
+								<input name="parameterValueType" id="parameterValueType"
+									data-toggle="topjui-combobox"
+									data-options="valueField: 'text',
+textField: 'text',
+data: [{
+    text: '固定值',
+},{
+    text: '变动值',
+}]">
 							</div>
 						</div>
 					</div>

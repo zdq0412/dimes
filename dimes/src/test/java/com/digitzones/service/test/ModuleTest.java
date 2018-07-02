@@ -80,9 +80,14 @@ public class ModuleTest {
 		Module son1 = new Module();
 		son1.setParent(parent1);
 		son1.setName("生产工单");
-		son1.setLeaf(true);
 		moduleService.addModule(son1);
 		
+		Module son11 = new Module();
+		son11.setUrl("console/jsp/workSheet.jsp");
+		son11.setLeaf(true);
+		son11.setName("生产工单");
+		son11.setParent(son1);
+		moduleService.addModule(son11);
 		
 		Module parent2 = new Module();
 		parent2.setName("数字中心");

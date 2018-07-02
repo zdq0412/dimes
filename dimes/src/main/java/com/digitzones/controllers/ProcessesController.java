@@ -153,7 +153,7 @@ public class ProcessesController {
 	public ModelMap queryOtherProcesses(Long workpieceId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
 		ModelMap modelMap = new ModelMap();
 		String hql = "select ds from Processes ds where ds.id not in ("
-				+ "select pdm.process.id from WorkpieceProcessMapping pdm) or ds.id in (select pdm_.process.id from WorkpieceProcessMapping pdm_ where pdm_.workpiece.id!=?0)";
+				+ "select pdm.process.id from WorkpieceProcessMapping pdm where pdm.workpiece.id=?0)";
 		Pager<Processes> pager = processesService.queryObjs(hql, page, rows, new Object[] {workpieceId});
 		modelMap.addAttribute("total", pager.getTotalCount());
 		modelMap.addAttribute("rows", pager.getData());

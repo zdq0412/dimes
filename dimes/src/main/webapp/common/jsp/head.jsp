@@ -6,11 +6,11 @@
 <% 
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
-	/* User user = (User)session.getAttribute(Constant.User.LOGIN_USER);
+	/*  User user = (User)session.getAttribute(Constant.User.LOGIN_USER);
 	if(user == null){
 		response.sendRedirect(basePath + "login.jsp");
 		return;
-	} */
+	} */ 
 %>
 
 <!DOCTYPE html>

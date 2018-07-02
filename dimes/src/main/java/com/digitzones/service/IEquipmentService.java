@@ -14,4 +14,10 @@ public interface IEquipmentService extends ICommonService<Equipment> {
 	 * @return
 	 */
 	public List<Equipment> queryAllEquipments();
+	/**
+	 * 根据量具编码或名称或规格型号查询装备信息
+	 * @param value
+	 * @return
+	 */
+	public List<Equipment> queryEquipmentsByCodeOrNameOrUnity(String value);
 }

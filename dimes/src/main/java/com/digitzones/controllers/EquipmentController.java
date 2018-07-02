@@ -183,8 +183,11 @@ public class EquipmentController {
 	 */
 	@RequestMapping("/queryAllEquipments.do")
 	@ResponseBody
-	public List<Equipment> queryAllEquipments(){
-		return equipmentService.queryAllEquipments();
+	public List<Equipment> queryAllEquipments(String q){
+		if(q==null) {
+			return equipmentService.queryAllEquipments();
+		}else {
+			return equipmentService.queryEquipmentsByCodeOrNameOrUnity(q);
+		}
 	}
-
 } 

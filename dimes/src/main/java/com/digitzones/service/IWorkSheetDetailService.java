@@ -15,4 +15,10 @@ public interface IWorkSheetDetailService extends ICommonService<WorkSheetDetail>
 	 * @return
 	 */
 	public List<WorkSheetDetail> queryWorkSheetDetailsByWorkSheetId(Long workSheetId);
+	/**
+	 * 根据工件id查询工序，设备站点等信息，并在内存中构建为WorkSheetDetail类型的列表 
+	 * @param workpieceId
+	 * @return
+	 */
+	public void buildWorkSheetDetailListInMemoryByWorkpieceId(Long workpieceId);
 }

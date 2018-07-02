@@ -1,30 +1,19 @@
-package com.digitzones.model;
+package com.digitzones.vo;
 
 import java.util.Date;
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.digitzones.model.CommonModel;
+import com.digitzones.model.DeviceType;
+import com.digitzones.model.ProductionUnit;
 
 /**
- * 设备
+ * 设备VO
  * @author zdq
  * 2018年6月3日
  */
-@Entity
-@Table(name="DEVICE")
-public class Device extends CommonModel {
+public class DeviceVO extends CommonModel {
 	private static final long serialVersionUID = 1L;
 	/**规格型号*/
 	private String unitType;
@@ -45,7 +34,7 @@ public class Device extends CommonModel {
 	/**安装位置*/
 	private String installPosition;
 	/**是否为瓶颈设备*/
-	private Boolean bottleneck = false;
+	private String bottleneck;
 	/**目标OEE*/
 	private Float goalOee;
 	/**参数取值
@@ -55,39 +44,10 @@ public class Device extends CommonModel {
 	private String parameterValueType;
 	/**设备类别*/
 	private DeviceType deviceType;
-	/**设备站点*/
-	private Set<DeviceSite> deviceSites;
 	/**生产单元*/
 	private ProductionUnit productionUnit;
 	/**设备图片*/
 	private String photo;
-	/**
-	 * 设备和班次关联类
-	 */
-	private Set<ClassesDeviceMapping> classesDevice;
-	@OneToMany(mappedBy="device",targetEntity=ClassesDeviceMapping.class)
-	@JsonIgnore
-	public Set<ClassesDeviceMapping> getClassesDevice() {
-		return classesDevice;
-	}
-	public void setClassesDevice(Set<ClassesDeviceMapping> classesDevice) {
-		this.classesDevice = classesDevice;
-	}
-	@OneToMany(mappedBy="device",fetch=FetchType.EAGER,targetEntity=DeviceSite.class)
-	@OrderBy("ID DESC")
-	@JsonIgnore
-	public Set<DeviceSite> getDeviceSites() {
-		return deviceSites;
-	}
-	public void setDeviceSites(Set<DeviceSite> deviceSites) {
-		this.deviceSites = deviceSites;
-	}
-	public String getPhoto() {
-		return photo;
-	}
-	public void setPhoto(String photo) {
-		this.photo = photo;
-	}
 	public String getUnitType() {
 		return unitType;
 	}
@@ -112,14 +72,12 @@ public class Device extends CommonModel {
 	public void setTrader(String trader) {
 		this.trader = trader;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date getInstallDate() {
 		return installDate;
 	}
 	public void setInstallDate(Date installDate) {
 		this.installDate = installDate;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date getOutFactoryDate() {
 		return outFactoryDate;
 	}
@@ -138,10 +96,10 @@ public class Device extends CommonModel {
 	public void setInstallPosition(String installPosition) {
 		this.installPosition = installPosition;
 	}
-	public Boolean getBottleneck() {
+	public String getBottleneck() {
 		return bottleneck;
 	}
-	public void setBottleneck(Boolean bottleneck) {
+	public void setBottleneck(String bottleneck) {
 		this.bottleneck = bottleneck;
 	}
 	public Float getGoalOee() {
@@ -156,20 +114,23 @@ public class Device extends CommonModel {
 	public void setParameterValueType(String parameterValueType) {
 		this.parameterValueType = parameterValueType;
 	}
-	@ManyToOne
-	@JoinColumn(name="DEVICETYPE_ID")
 	public DeviceType getDeviceType() {
 		return deviceType;
 	}
 	public void setDeviceType(DeviceType deviceType) {
 		this.deviceType = deviceType;
 	}
-	@ManyToOne
-	@JoinColumn(name="PRODUCTIONUNIT_ID")
 	public ProductionUnit getProductionUnit() {
 		return productionUnit;
 	}
 	public void setProductionUnit(ProductionUnit productionUnit) {
 		this.productionUnit = productionUnit;
 	}
+	public String getPhoto() {
+		return photo;
+	}
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+	
 }

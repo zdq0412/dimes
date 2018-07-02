@@ -139,8 +139,8 @@
 									data-options="field:'bindUsername',title:'关联人员',sortable:false"></th>
 								<th
 									data-options="field:'helperName',title:'辅助人员',sortable:false"></th>
-								<th
-									data-options="field:'unbindUsername',title:'解除人员',sortable:false"></th>
+							<!-- 	<th
+									data-options="field:'unbindUsername',title:'解除人员',sortable:false"></th> -->
 								<th
 									data-options="field:'workSheetCode',title:'工单号',sortable:false"></th>
 								<th data-options="field:'usageRate',title:'使用频次',sortable:false"></th>
@@ -328,14 +328,14 @@
                 url:'equipmentMappingRecord/queryEquipmentMappingRecordById.do?id={id}',
                  buttons:[
            	{text:'编辑',handler:function(){
-           		var equipmentId = $('#equipment').val();
+           		var equipmentId = $('#equipmentId').val();
            			if(!equipmentId){
            				return false;
            			}
            			$.get('equipmentMappingRecord/updateEquipmentMappingRecord.do',{
            			id:$('#departmentDg').iDatagrid('getSelected').id,
            			mappingDate:$('#mappingDate').val(),
-           			'equipment.id':$('#equipment').val(),
+           			'equipment.id':$('#equipmentId').val(),
            			no:$('#no').val(),
            			'deviceSite.id':$('#departmentTg').iTreegrid('getSelected').id,
            			workSheetCode:$('#workSheetCode').val(),

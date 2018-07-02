@@ -4,7 +4,14 @@ package com.digitzones.constants;
  * @author zdq
  * 2018年6月8日
  */
+import java.util.ArrayList;
+import java.util.List;
+import com.digitzones.model.WorkSheetDetail;
 public class Constant {
+	/**
+	 * 工单详情静态内存存储列表
+	 */
+	public static List<WorkSheetDetail> workSheetDetail = new ArrayList<>();
 	/**
 	 * 相关文档相关的常量
 	 */
