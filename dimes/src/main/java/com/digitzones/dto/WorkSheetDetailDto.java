@@ -1,30 +1,11 @@
-package com.digitzones.model;
-
-import java.util.Date;
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+package com.digitzones.dto;
 
 /**
  * 工单 详情
  * @author zdq
  * 2018年6月4日
  */
-@Entity
-@Table(name="WORKSHEETDETAIL")
-public class WorkSheetDetail {
+public class WorkSheetDetailDto {
 	private Long id;
 	/**工序id*/
 	private Long processId;
@@ -60,59 +41,27 @@ public class WorkSheetDetail {
 	private String status;
 	/**备注*/
 	private String note;
-	/**所属工单*/
-	private WorkSheet workSheet;
-	/**完成时间*/
-	private Date completeTime;
 	/**报工数*/
 	private Integer reportCount = 0;
 	/**生产数量*/
-	private Integer productionCount=0;
-	/**删除标识*/
-	private Boolean deleted = false;
-	public Boolean getDeleted() {
-		return deleted;
-	}
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
-	}
-	/**工单详情参数记录*/
-	private Set<WorkSheetDetailParametersRecord> parameterRecords;
-	@OneToMany(mappedBy="workSheetDetail")
-	@OrderBy("ID DESC")
-	@JsonIgnore
-	public Set<WorkSheetDetailParametersRecord> getParameterRecords() {
-		return parameterRecords;
-	}
-	public void setParameterRecords(Set<WorkSheetDetailParametersRecord> parameterRecords) {
-		this.parameterRecords = parameterRecords;
-	}
-	public Long getProcessId() {
-		return processId;
-	}
+	private Integer productionCount = 0;
 	public Integer getProductionCount() {
 		return productionCount;
 	}
 	public void setProductionCount(Integer productionCount) {
 		this.productionCount = productionCount;
 	}
-	public void setProcessId(Long processId) {
-		this.processId = processId;
-	}
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	public Long getDeviceSiteId() {
-		return deviceSiteId;
+	public Long getProcessId() {
+		return processId;
 	}
-	public void setDeviceSiteId(Long deviceSiteId) {
-		this.deviceSiteId = deviceSiteId;
+	public void setProcessId(Long processId) {
+		this.processId = processId;
 	}
 	public String getProcessCode() {
 		return processCode;
@@ -137,6 +86,12 @@ public class WorkSheetDetail {
 	}
 	public void setDeviceName(String deviceName) {
 		this.deviceName = deviceName;
+	}
+	public Long getDeviceSiteId() {
+		return deviceSiteId;
+	}
+	public void setDeviceSiteId(Long deviceSiteId) {
+		this.deviceSiteId = deviceSiteId;
 	}
 	public String getDeviceSiteCode() {
 		return deviceSiteCode;
@@ -204,25 +159,11 @@ public class WorkSheetDetail {
 	public void setNote(String note) {
 		this.note = note;
 	}
-	@ManyToOne
-	@JoinColumn(name="WORKSHEET_ID")
-	public WorkSheet getWorkSheet() {
-		return workSheet;
-	}
-	public void setWorkSheet(WorkSheet workSheet) {
-		this.workSheet = workSheet;
-	}
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date getCompleteTime() {
-		return completeTime;
-	}
-	public void setCompleteTime(Date completeTime) {
-		this.completeTime = completeTime;
-	}
 	public Integer getReportCount() {
 		return reportCount;
 	}
 	public void setReportCount(Integer reportCount) {
 		this.reportCount = reportCount;
 	}
+	
 }

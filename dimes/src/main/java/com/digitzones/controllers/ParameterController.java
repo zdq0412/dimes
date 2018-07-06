@@ -288,5 +288,4 @@ public class ParameterController {
 		modelMap.addAttribute("rows", pager.getData());
 		return modelMap;
 	}
-	
 } 

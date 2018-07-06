@@ -22,6 +22,17 @@ public class WorkpieceProcessMapping {
 	private Workpiece workpiece;
 	/**工序*/
 	private Processes process;
+	/**参数取值
+	 * 固定值
+	 * 变动值
+	 * */
+	private String parameterValueType;
+	public String getParameterValueType() {
+		return parameterValueType;
+	}
+	public void setParameterValueType(String parameterValueType) {
+		this.parameterValueType = parameterValueType;
+	}
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {

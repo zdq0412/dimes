@@ -16,7 +16,10 @@
 			        	}
 			        }},
 			        {field:'note',title:'备注',width:100}
-			    ]]
+			    ]],
+			    queryParams:{
+			    	workpieceId:$('#departmentDg').iDatagrid("getSelected").id
+			    }
 			});
 		}); 
 </script>
@@ -24,5 +27,6 @@
 	<div
 		data-options="region:'center',title:'',fit:true,border:false,bodyCls:'border_right_bottom'">
 		<table id="processesTable"></table>
+
 	</div>
 </div>

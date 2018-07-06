@@ -1,34 +1,20 @@
-package com.digitzones.model;
-import java.util.Date;
+package com.digitzones.vo;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.springframework.format.annotation.DateTimeFormat;
 /**
  * 工单
  * @author zdq
  * 2018年6月4日
  */
-@Entity
-@Table(name="WORKSHEET")
-public class WorkSheet {
+public class WorkSheetVO {
 	private Long id;
 	/**工单编号*/
 	private String no;
 	/**生产日期*/
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date manufactureDate;
+	private String manufactureDate;
 	/**制单人*/
 	private String documentMaker;
 	/**制单日期*/
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date makeDocumentDate;
+	private String makeDocumentDate;
 	/**工件代码*/
 	private String workPieceCode;
 	/**工件名称*/
@@ -58,23 +44,9 @@ public class WorkSheet {
 	/**工单状态*/
 	private String status;
 	/**完成时间*/
-	private Date completeTime;
+	private String completeTime;
 	/**是否被删除*/
-	private Boolean deleted = false;
-	public Long getProductionUnitId() {
-		return productionUnitId;
-	}
-	public void setProductionUnitId(Long productionUnitId) {
-		this.productionUnitId = productionUnitId;
-	}
-	public Boolean getDeleted() {
-		return deleted;
-	}
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
-	}
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	private String deleted ;
 	public Long getId() {
 		return id;
 	}
@@ -87,11 +59,10 @@ public class WorkSheet {
 	public void setNo(String no) {
 		this.no = no;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date getManufactureDate() {
+	public String getManufactureDate() {
 		return manufactureDate;
 	}
-	public void setManufactureDate(Date manufactureDate) {
+	public void setManufactureDate(String manufactureDate) {
 		this.manufactureDate = manufactureDate;
 	}
 	public String getDocumentMaker() {
@@ -100,11 +71,10 @@ public class WorkSheet {
 	public void setDocumentMaker(String documentMaker) {
 		this.documentMaker = documentMaker;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date getMakeDocumentDate() {
+	public String getMakeDocumentDate() {
 		return makeDocumentDate;
 	}
-	public void setMakeDocumentDate(Date makeDocumentDate) {
+	public void setMakeDocumentDate(String makeDocumentDate) {
 		this.makeDocumentDate = makeDocumentDate;
 	}
 	public String getWorkPieceCode() {
@@ -161,6 +131,12 @@ public class WorkSheet {
 	public void setStoveNumber(String stoveNumber) {
 		this.stoveNumber = stoveNumber;
 	}
+	public Long getProductionUnitId() {
+		return productionUnitId;
+	}
+	public void setProductionUnitId(Long productionUnitId) {
+		this.productionUnitId = productionUnitId;
+	}
 	public String getProductionUnitCode() {
 		return productionUnitCode;
 	}
@@ -185,12 +161,17 @@ public class WorkSheet {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date getCompleteTime() {
+	public String getCompleteTime() {
 		return completeTime;
 	}
-	public void setCompleteTime(Date completeTime) {
+	public void setCompleteTime(String completeTime) {
 		this.completeTime = completeTime;
+	}
+	public String getDeleted() {
+		return deleted;
+	}
+	public void setDeleted(String deleted) {
+		this.deleted = deleted;
 	}
 	
 }

@@ -13,6 +13,10 @@ public class Constant {
 	 */
 	public static List<WorkSheetDetail> workSheetDetail = new ArrayList<>();
 	/**
+	 * 存储工件id，只在添加工单时使用
+	 */
+	public static String WORKPIECEID = "UNSIGNED";
+	/**
 	 * 相关文档相关的常量
 	 */
 	public static class RelatedDoc{

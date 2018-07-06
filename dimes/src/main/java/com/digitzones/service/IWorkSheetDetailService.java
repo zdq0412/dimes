@@ -2,6 +2,8 @@ package com.digitzones.service;
 
 import java.util.List;
 
+import com.digitzones.model.Pager;
+import com.digitzones.model.ProcessDeviceSiteMapping;
 import com.digitzones.model.WorkSheetDetail;
 /**
  * 工单详情service
@@ -21,4 +23,16 @@ public interface IWorkSheetDetailService extends ICommonService<WorkSheetDetail>
 	 * @return
 	 */
 	public void buildWorkSheetDetailListInMemoryByWorkpieceId(Long workpieceId);
+	/**
+	 * 根据工序id查询设备站点 
+	 * @param processId
+	 * @return
+	 */
+	public Pager<ProcessDeviceSiteMapping> queryOtherDeviceSitesByProcessId(Long processId,int pageNo, int pageSize);
+	/**
+	 * 查询该工序下的工单详情数
+	 * @param processId
+	 * @return
+	 */
+	public Long queryCountByProcessId(Long processId,Long workSheetId);
 }

@@ -15,4 +15,9 @@ public interface IWorkSheetService extends ICommonService<WorkSheet> {
 	 * @return
 	 */
 	public List<WorkSheet> queryOtherWorkSheetByDeviceSiteId(Long deviceSiteId);
+	/**
+	 * 添加工单
+	 * @param workSheet
+	 */
+	public void addWorkSheet(WorkSheet workSheet);
 }

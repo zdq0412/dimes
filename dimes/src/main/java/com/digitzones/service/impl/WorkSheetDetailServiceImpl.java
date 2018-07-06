@@ -1,28 +1,41 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.digitzones.constants.Constant;
 import com.digitzones.dao.IWorkSheetDetailDao;
-import com.digitzones.dao.IWorkpieceProcessDeviceSiteMappingDao;
+import com.digitzones.dao.IWorkpieceProcessMappingDao;
+import com.digitzones.dao.IWorkpieceProcessParameterMappingDao;
 import com.digitzones.model.Pager;
+import com.digitzones.model.ProcessDeviceSiteMapping;
 import com.digitzones.model.WorkSheetDetail;
-import com.digitzones.model.WorkpieceProcessDeviceSiteMapping;
+import com.digitzones.model.WorkSheetDetailParametersRecord;
+import com.digitzones.model.WorkpieceProcessMapping;
+import com.digitzones.model.WorkpieceProcessParameterMapping;
 import com.digitzones.service.IWorkSheetDetailService;
 @Service
 public class WorkSheetDetailServiceImpl implements IWorkSheetDetailService {
 	private IWorkSheetDetailDao workSheetDetailDao;
-	private IWorkpieceProcessDeviceSiteMappingDao workpieceProcessDeviceSiteMappingDao;
 	private Random random = new Random();
+	private IWorkpieceProcessMappingDao workPieceProcessMappingDao;
+	private IWorkpieceProcessParameterMappingDao workpieceProcessParameterMappingDao;
 	@Autowired
-	public void setWorkpieceProcessDeviceSiteMappingDao(
-			IWorkpieceProcessDeviceSiteMappingDao workpieceProcessDeviceSiteMappingDao) {
-		this.workpieceProcessDeviceSiteMappingDao = workpieceProcessDeviceSiteMappingDao;
+	public void setWorkpieceProcessParameterMappingDao(
+			IWorkpieceProcessParameterMappingDao workpieceProcessParameterMappingDao) {
+		this.workpieceProcessParameterMappingDao = workpieceProcessParameterMappingDao;
+	}
+
+	@Autowired
+	public void setWorkPieceProcessMappingDao(IWorkpieceProcessMappingDao workPieceProcessMappingDao) {
+		this.workPieceProcessMappingDao = workPieceProcessMappingDao;
 	}
 
 	@Autowired
@@ -68,23 +81,59 @@ public class WorkSheetDetailServiceImpl implements IWorkSheetDetailService {
 
 	@Override
 	public void buildWorkSheetDetailListInMemoryByWorkpieceId(Long workpieceId) {
-		Constant.workSheetDetail.clear();
 		//根据工件id查询工件工序和站点对象
-		String hql = "from WorkpieceProcessDeviceSiteMapping wpdsm where wpdsm.workpieceProcess.workpiece.id=?0";
-		List<WorkpieceProcessDeviceSiteMapping> workpieceProcessDeviceSiteMappings = workpieceProcessDeviceSiteMappingDao.findByHQL(hql, new Object[] {workpieceId});
-		for(WorkpieceProcessDeviceSiteMapping wpdsm : workpieceProcessDeviceSiteMappings) {
+		String hql = "from WorkpieceProcessMapping wpdsm where wpdsm.workpiece.id=?0";
+		List<WorkpieceProcessMapping> workpieceProcessMappings = workPieceProcessMappingDao.findByHQL(hql, new Object[] {workpieceId});
+		for(WorkpieceProcessMapping wpm : workpieceProcessMappings) {
 			WorkSheetDetail detail = new WorkSheetDetail();
 			detail.setId(random.nextLong());
-			detail.setDeviceCode(wpdsm.getDeviceSite().getDevice().getCode());
-			detail.setDeviceName(wpdsm.getDeviceSite().getDevice().getName());
-			detail.setDeviceSiteCode(wpdsm.getDeviceSite().getCode());
-			detail.setDeviceSiteName(wpdsm.getDeviceSite().getName());
-			detail.setDeviceSiteId(wpdsm.getDeviceSite().getId());
-			detail.setProcessCode(wpdsm.getWorkpieceProcess().getProcess().getCode());
-			detail.setProcessName(wpdsm.getWorkpieceProcess().getProcess().getName());
-			detail.setParameterSource(wpdsm.getDeviceSite().getDevice().getParameterValueType());
+			detail.setProcessCode(wpm.getProcess().getCode());
+			detail.setProcessId(wpm.getProcess().getId());
+			detail.setProcessName(wpm.getProcess().getName());
+			detail.setParameterSource(wpm.getParameterValueType());
 			
 			Constant.workSheetDetail.add(detail);
 		}
+		
+		long recordId = 1;
+		
+		//查询工件工序的参数
+		for(WorkSheetDetail detail : Constant.workSheetDetail) {
+			String hql1 = "from WorkpieceProcessParameterMapping wppm where wppm.workpieceProcess.workpiece.id=?0 and wppm.workpieceProcess.process.id=?1";
+		    List<WorkpieceProcessParameterMapping>  list = workpieceProcessParameterMappingDao.findByHQL(hql1, new Object[] {workpieceId,detail.getProcessId()});
+		    
+		    if(list!=null && list.size()>0) {
+		    	Set<WorkSheetDetailParametersRecord> parametersRecords = new HashSet<>();
+		    	for(WorkpieceProcessParameterMapping wppm : list) {
+		    		WorkSheetDetailParametersRecord wdpr = new WorkSheetDetailParametersRecord();
+		    		wdpr.setLowLine(wppm.getLowLine());
+		    		wdpr.setUpLine(wppm.getUpLine());
+		    		wdpr.setStandardValue(wppm.getStandardValue());
+		    		wdpr.setParameterCode(wppm.getParameter().getCode());
+		    		wdpr.setParameterName(wppm.getParameter().getName());
+		    		wdpr.setId(recordId++);
+		    		
+		    		parametersRecords.add(wdpr);
+		    	}
+		    	detail.setParameterRecords(parametersRecords);
+		    }
+		}
+	}
+
+	@Override
+	public Pager<ProcessDeviceSiteMapping> queryOtherDeviceSitesByProcessId(Long processId, int pageNo, int pageSize) {
+		List<Long> deviceSiteIdList = new ArrayList<>();
+		for(WorkSheetDetail detail : Constant.workSheetDetail) {
+			Long deviceSiteId = detail.getDeviceSiteId();
+			if(deviceSiteId!=null && deviceSiteId>0) {
+				deviceSiteIdList.add(detail.getDeviceSiteId());
+			}
+		}
+		return workSheetDetailDao.queryDeviceSiteOutOfListByProcessId(deviceSiteIdList, processId, pageNo, pageSize);
+	}
+
+	@Override
+	public Long queryCountByProcessId(Long processId,Long workSheetId) {
+		return workSheetDetailDao.queryCountByProcessIdAndWorkSheetId(processId, workSheetId);
 	}
 }

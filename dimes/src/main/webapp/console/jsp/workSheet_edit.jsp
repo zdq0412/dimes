@@ -2,60 +2,34 @@
 	pageEncoding="UTF-8"%>
 <script>
 	$(function() {
-		//查询所有工件
-		$('#workPieceCode').iCombogrid(
-				{
-					idField : 'code',
-					textField : 'name',
-					delay : 500,
-					mode : 'remote',
-					url : 'workpiece/queryWorkpieces.do',
-					columns : [ [ {
-						field : 'id',
-						title : 'id',
-						width : 60,
-						hidden : true
-					}, {
-						field : 'code',
-						title : '代码',
-						width : 100
-					}, {
-						field : 'name',
-						title : '名称',
-						width : 100
-					}, {
-						field : 'unitType',
-						title : '规格型号',
-						width : 100
-					}, {
-						field : 'customerGraphNumber',
-						title : '客户图号',
-						width : 100
-					} ] ],
-					onClickRow : function(index, row) {
-						$("#workPieceName").textbox("setValue", row.name);
-						$("#unitType").textbox("setValue", row.unitType);
-						$("#customerGraphNumber").textbox("setValue",
-								row.customerGraphNumber);
-						$("#graphNumber").textbox("setValue", row.graphNumber);
-						$("#version").textbox("setValue", row.version);
-						//查询所有工序,设备和站点
-						$('#workSheetDetail').iEdatagrid("reload", {
-							'workpieceId' : row.id
-						});
-					}
-				});
+		//修改生产单元				
+		$("#productionUnitName").iCombotreegrid({
+			url:'productionUnit/queryTopProductionUnits.do',
+	        idField:'name',
+	        treeField:'name',
+	        columns:[[
+	            {field:'name',title:'名称',width:300}
+	        ]],
+	        onClickRow:function(row){
+	        	$("#productionUnitId").val(row.id);
+	        }
+		});	
+		
 		// 可编辑工单 详情
 		$('#workSheetDetail').iEdatagrid({
-			url : 'workSheet/queryWorkSheetDetailsInMemoryByWorkpieceId.do',
+			url : 'workSheet/queryWorkSheetDetailByWorkSheetId.do',
+			queryParams:{
+				workSheetId:$('#productionUnitDg').iDatagrid('getSelected').id				
+			},
+			
 			onClickCell : function(rowIndex, field, value) {
 				if (field == 'firstReport') {
 					$('#parameterDialog').dialog("open");
 				}
 				//根据工序查询站点
-				if(field=='deviceSiteCode' || field=='deviceSiteName'){
+			/* 	if(field=='deviceSiteCode' || field=='deviceSiteName'){
 					 $('#deviceSitesDialog').dialog("open");
-				}
+				} */
 			}
 		});
 		
@@ -66,7 +40,7 @@
 			height : 600,
 			closed : true,
 			cache : false,
-			href : 'console/jsp/workSheet_addParameter.jsp',
+			href : 'console/jsp/workSheet_editParameter.jsp',
 			modal : true
 		});
 		
@@ -122,7 +96,7 @@
 							<label class="topjui-form-label">单号</label>
 							<div class="topjui-input-block">
 								<input type="text" name="no" data-toggle="topjui-textbox"
-									data-options="required:true" id="no">
+									data-options="required:true" id="no" readonly="readonly">
 							</div>
 						</div>
 						<div class="topjui-col-sm3">
@@ -138,8 +112,11 @@
 							<label class="topjui-form-label">工件代码</label>
 							<div class="topjui-input-block">
 								<input type="text" name="workPieceCode"
-									data-toggle="topjui-combogrid" data-options="required:true"
+									data-toggle="topjui-textbox" readonly="readonly"
 									id="workPieceCode">
+<!-- 								<input type="text" name="workPieceCode"
+									data-toggle="topjui-combogrid" data-options="required:true"
+									id="workPieceCode"> -->
 							</div>
 						</div>
 						<div class="topjui-col-sm3">
@@ -214,21 +191,11 @@
 						<div class="topjui-col-sm3">
 							<label class="topjui-form-label">生产单元</label>
 							<div class="topjui-input-block">
-								<!-- 	<input data-toggle="topjui-combotreegrid" data-options="width:'100%',
-							        panelWidth:500,
-							        url:'',
-							        idField:'id',
-							        treeField:'name',
-							        columns:[[
-							            {field:'id',title:'id',hidden:true},
-							            {field:'code',title:'编码',width:100},
-							            {field:'name',title:'名称',width:100}
-							        ]]"  name="productionUnitName" id="productionUnitName">
-							        查询具有装备的生产单元 -->
+							<input data-toggle="topjui-combotreegrid" data-options="width:'100%'" name="productionUnitName" id="productionUnitName">
+							
+							
 								<input type="hidden" name="productionUnitId"
-									id="productionUnitId"> <input type="text"
-									name="productionUnitName" id="productionUnitName"
-									data-toggle="topjui-textbox" readonly="readonly">
+									id="productionUnitId"> 
 							</div>
 						</div>
 					</div>
@@ -273,24 +240,26 @@
 							<th
 								data-options="field:'deviceSiteName',title:'站点名称',width:100,align:'center'"></th>
 							<th
-								data-options="field:'producitonCount',title:'生产数量',width:100,align:'center'"></th>
+								data-options="field:'productionCount',title:'生产数量',width:100,align:'center'" editor='numberbox'></th>
 							<th
-								data-options="field:'completeCount',title:'完工数量',width:100,align:'center'"></th>
+								data-options="field:'completeCount',title:'完工数量',width:100,align:'center'" editor='numberbox'></th>
 							<th
-								data-options="field:'qualifiedCount',title:'合格数量',width:100,align:'center'"></th>
+								data-options="field:'reportCount',title:'报工数',width:100,align:'center'" editor='numberbox'></th>
 							<th
-								data-options="field:'unqualifiedCount',title:'不合格数量',width:100,align:'center'"></th>
+								data-options="field:'qualifiedCount',title:'合格数量',width:100,align:'center'" editor='numberbox'></th>
 							<th
-								data-options="field:'repairCount',title:'返修数量',width:100,align:'center'"></th>
-							<th data-options="field:'scrapCount',title:'报废数量',width:100,align:'center'"></th>
+								data-options="field:'unqualifiedCount',title:'不合格数量',width:100,align:'center'" editor='numberbox'></th>
+							<th
+								data-options="field:'repairCount',title:'返修数量',width:100,align:'center'" editor='numberbox'></th>
+							<th data-options="field:'scrapCount',title:'报废数量',width:100,align:'center'" editor='numberbox'></th>
 							<th
 								data-options="field:'parameterSource',title:'参数取值来源',width:100,align:'center'"></th>
 							<th
 								data-options="field:'firstReport',title:'首件报告',width:100,align:'center'"></th>
 							<th
-								data-options="field:'status',title:'状态',width:100,align:'center'"></th>
+								data-options="field:'status',title:'状态',width:100,align:'center'" editor='text'></th>
 							<th
-								data-options="field:'note',title:'备注',width:100,align:'center'"></th>
+								data-options="field:'note',title:'备注',width:100,align:'center'" editor='text'></th>
 						</tr>
 					</thead>
 				</table>
@@ -381,3 +350,42 @@
 
 <div id="parameterDialog"></div>
 <div id="deviceSitesDialog"></div>
+
+<!-- 工具按钮 -->
+	<div id="workSheetDetail-toolbar" class="topjui-toolbar"
+		data-options="grid:{
+           type:'datagrid',
+           id:'workSheetDetail'
+       }">
+		<!-- <a href="javascript:void(0)" data-toggle="topjui-menubutton"
+			data-options="method:'openDialog',
+       extend: '#workSheetDetail-toolbar',
+       iconCls: 'fa fa-plus',
+       dialog:{
+           id:'productionUnitAddDialog',
+           width:1880,
+           height:850,
+           href:'console/jsp/workSheet_add.jsp',
+           buttons:[
+           	{text:'保存',handler:function(){
+           	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
+           	{text:'关闭',handler:function(){
+           		$('#productionUnitAddDialog').iDialog('close');
+           	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
+           ]}">新增</a> -->
+
+			<a href="javascript:void(0)" data-toggle="topjui-menubutton"
+			data-options="method:'doAjax',
+       extend: '#workSheetDetail-toolbar',
+       iconCls:'fa fa-trash'" onclick="$('#workSheetDetail').iEdatagrid('cancelRow')">取消编辑</a>
+			<a href="javascript:void(0)" data-toggle="topjui-menubutton"
+			data-options="method:'doAjax',
+       extend: '#workSheetDetail-toolbar',
+       iconCls:'fa fa-plus'" onclick="$('#workSheetDetail').iEdatagrid('saveRow')">保存</a>
+			<a href="javascript:void(0)" data-toggle="topjui-menubutton"
+			data-options="method:'doAjax',
+       extend: '#workSheetDetail-toolbar',
+       iconCls:'fa fa-trash',
+       url:'workSheet/deleteWorkSheetDetail.do',
+       grid: {uncheckedMsg:'请先勾选要删除的数据',id:'workSheetDetail',param:'id:id,processId:processId,workSheetId:workSheetId'}" >删除</a>
+	</div>

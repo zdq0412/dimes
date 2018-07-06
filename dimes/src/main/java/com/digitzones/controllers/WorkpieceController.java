@@ -119,10 +119,10 @@ public class WorkpieceController {
 	@RequestMapping("/queryOtherProcessDeviceSites.do")
 	@ResponseBody
 	public ModelMap queryOtherProcessDeviceSites(Long workpieceId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
-		String hql = "select pdsm from ProcessDeviceSiteMapping pdsm where pdsm.processes.id not in ("
-				+ "select wpdsm.workpieceProcess.process.id from WorkpieceProcessDeviceSiteMapping wpdsm"
-				+ " )";
-		Pager<ProcessDeviceSiteMapping> pager = workpieceService.queryObjs(hql, page, rows, new Object[] {});
+		String hql = "select pdsm from ProcessDeviceSiteMapping pdsm where pdsm.deviceSite.id not in ("
+				+ "select wpdsm.deviceSite.id from WorkpieceProcessDeviceSiteMapping wpdsm"
+				+ "  where wpdsm.workpieceProcess.workpiece.id = ?0 and wpdsm.workpieceProcess.process.id=pdsm.processes.id)";
+		Pager<ProcessDeviceSiteMapping> pager = workpieceService.queryObjs(hql, page, rows, new Object[] {workpieceId});
 		ModelMap modelMap = new ModelMap();
 		
 		modelMap.addAttribute("total", pager.getTotalCount());
@@ -140,10 +140,10 @@ public class WorkpieceController {
 	@RequestMapping("/queryOtherProcessParameters.do")
 	@ResponseBody
 	public ModelMap queryOtherProcessParameters(Long workpieceId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
-		String hql = "select pdsm from ProcessesParametersMapping pdsm where pdsm.processes.id not in ("
-				+ "select wpdsm.workpieceProcess.process.id from WorkpieceProcessParameterMapping wpdsm"
-				+ " )";
-		Pager<ProcessesParametersMapping> pager = workpieceService.queryObjs(hql, page, rows, new Object[] {});
+		String hql = "select pdsm from ProcessesParametersMapping pdsm where pdsm.parameters.id not in ("
+				+ "select wpdsm.parameter.id from WorkpieceProcessParameterMapping wpdsm"
+				+ "  where pdsm.processes.id=wpdsm.workpieceProcess.process.id and wpdsm.workpieceProcess.workpiece.id=?0) ";
+		Pager<ProcessesParametersMapping> pager = workpieceService.queryObjs(hql, page, rows, new Object[] {workpieceId});
 		ModelMap modelMap = new ModelMap();
 		
 		modelMap.addAttribute("total", pager.getTotalCount());

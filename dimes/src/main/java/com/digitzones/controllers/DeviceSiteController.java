@@ -71,7 +71,7 @@ public class DeviceSiteController {
 		this.deviceSiteService = deviceSiteService;
 	}
 	/**
-	 * 分页查询生产单元中的设备
+	 * 查询设备下的站点
 	 * @param pid
 	 * @param rows
 	 * @param page
@@ -221,7 +221,7 @@ public class DeviceSiteController {
 	public ModelMap queryOtherDeviceSites(Long processId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
 		ModelMap modelMap = new ModelMap();
 		String hql = "select ds from DeviceSite ds where ds.id not in ("
-				+ "select pdm.deviceSite.id from ProcessDeviceSiteMapping pdm where pdm.processes.id!=?0 )";
+				+ "select pdm.deviceSite.id from ProcessDeviceSiteMapping pdm where pdm.processes.id=?0 )";
 		Pager<DeviceSite> pager = deviceSiteService.queryObjs(hql, page, rows, new Object[] {processId});
 		modelMap.addAttribute("total", pager.getTotalCount());
 		modelMap.addAttribute("rows", pager.getData());
