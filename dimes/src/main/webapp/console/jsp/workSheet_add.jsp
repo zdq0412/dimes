@@ -5,7 +5,7 @@
 		//查询所有工件
 		$('#workPieceCode').iCombogrid(
 				{
-					idField : 'code',
+					idField : 'id',
 					textField : 'name',
 					delay : 500,
 					mode : 'remote',
@@ -48,6 +48,8 @@
 		// 可编辑工单 详情
 		$('#workSheetDetail').iEdatagrid({
 			url : 'workSheet/queryWorkSheetDetailsInMemoryByWorkpieceId.do',
+			updateUrl:'workSheet/updateWorkSheetDetailInMemory.do',
+			autoSave:true,
 			onClickCell : function(rowIndex, field, value) {
 				if (field == 'firstReport') {
 					$('#parameterDialog').dialog("open");
@@ -191,7 +193,7 @@
 							<label class="topjui-form-label">生产总量</label>
 							<div class="topjui-input-block">
 								<input type="number" name="productCount"
-									data-toggle="topjui-textbox" data-options="required:false"
+									data-toggle="topjui-textbox" data-options="required:true"
 									id="productCount">
 							</div>
 						</div>
@@ -226,7 +228,10 @@
 							        ]]"  name="productionUnitName" id="productionUnitName">
 							        查询具有装备的生产单元 -->
 								<input type="hidden" name="productionUnitId"
-									id="productionUnitId"> <input type="text"
+									id="productionUnitId"> 
+								<input type="hidden" name="productionUnitCode"
+									id="productionUnitCode"> 
+									<input type="text"
 									name="productionUnitName" id="productionUnitName"
 									data-toggle="topjui-textbox" readonly="readonly">
 							</div>
@@ -273,24 +278,26 @@
 							<th
 								data-options="field:'deviceSiteName',title:'站点名称',width:100,align:'center'"></th>
 							<th
-								data-options="field:'producitonCount',title:'生产数量',width:100,align:'center'"></th>
+								data-options="field:'productionCount',title:'生产数量',width:100,align:'center'" editor='numberbox'></th>
 							<th
-								data-options="field:'completeCount',title:'完工数量',width:100,align:'center'"></th>
+								data-options="field:'completeCount',title:'完工数量',width:100,align:'center'" editor='numberbox'></th>
 							<th
-								data-options="field:'qualifiedCount',title:'合格数量',width:100,align:'center'"></th>
+								data-options="field:'reportCount',title:'报工数',width:100,align:'center'" editor='numberbox'></th>
 							<th
-								data-options="field:'unqualifiedCount',title:'不合格数量',width:100,align:'center'"></th>
+								data-options="field:'qualifiedCount',title:'合格数量',width:100,align:'center'" editor='numberbox'></th>
 							<th
-								data-options="field:'repairCount',title:'返修数量',width:100,align:'center'"></th>
-							<th data-options="field:'scrapCount',title:'报废数量',width:100,align:'center'"></th>
+								data-options="field:'unqualifiedCount',title:'不合格数量',width:100,align:'center'" editor='numberbox'></th>
+							<th
+								data-options="field:'repairCount',title:'返修数量',width:100,align:'center'" editor='numberbox'></th>
+							<th data-options="field:'scrapCount',title:'报废数量',width:100,align:'center'" editor='numberbox'></th>
 							<th
 								data-options="field:'parameterSource',title:'参数取值来源',width:100,align:'center'"></th>
 							<th
 								data-options="field:'firstReport',title:'首件报告',width:100,align:'center'"></th>
 							<th
-								data-options="field:'status',title:'状态',width:100,align:'center'"></th>
+								data-options="field:'status',title:'状态',width:100,align:'center'" editor='text'></th>
 							<th
-								data-options="field:'note',title:'备注',width:100,align:'center'"></th>
+								data-options="field:'note',title:'备注',width:100,align:'center'" editor='text'></th>
 						</tr>
 					</thead>
 				</table>
@@ -378,6 +385,18 @@
 		</div>
 	</div>
 </div>
-
 <div id="parameterDialog"></div>
 <div id="deviceSitesDialog"></div>
+<!-- 工具按钮 -->
+<div id="workSheetDetail-toolbar" class="topjui-toolbar"
+	data-options="grid:{
+           type:'datagrid',
+           id:'workSheetDetail'
+       }">
+	<a href="javascript:void(0)" data-toggle="topjui-menubutton"
+		data-options="method:'doAjax',
+       extend: '#workSheetDetail-toolbar',
+       iconCls:'fa fa-trash',
+       url:'workSheet/deleteWorkSheetDetailInMemory.do',
+       grid: {uncheckedMsg:'请先勾选要删除的数据',id:'workSheetDetail',param:'id:id'}">删除</a>
+</div>

@@ -1,5 +1,10 @@
 package com.digitzones.controllers;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -144,8 +149,12 @@ public class ProcessRecordController {
 	 */
 	@RequestMapping("/queryOtherWorkSheetByDeviceSiteId.do")
 	@ResponseBody
-	public List<WorkSheet> queryOtherWorkSheetByDeviceSiteId(Long deviceSiteId){
-		return workSheetService.queryOtherWorkSheetByDeviceSiteId(deviceSiteId);
+	public List<WorkSheet> queryOtherWorkSheetByDeviceSiteId(Long deviceSiteId,String q){
+		if(q==null) {
+			return workSheetService.queryOtherWorkSheetByDeviceSiteId(deviceSiteId);
+		}else {
+			return workSheetService.queryOtherWorkSheetByDeviceSiteIdAndConditions(deviceSiteId, q);
+		}
 	}
 	/**
 	 * 根据工单id查找工单 详情
@@ -155,6 +164,34 @@ public class ProcessRecordController {
 	@RequestMapping("/queryWorkSheetDetailsByWorkSheetId.do")
 	@ResponseBody
 	public List<WorkSheetDetail> queryWorkSheetDetailsByWorkSheetId(Long workSheetId){
-		return workSheetDetailService.queryWorkSheetDetailsByWorkSheetId(workSheetId);
+		List<WorkSheetDetail> list = workSheetDetailService.queryWorkSheetDetailsByWorkSheetId(workSheetId);
+		Map<Long, WorkSheetDetail> map = new HashMap<>();
+		for(WorkSheetDetail detail : list) {
+			map.put(detail.getProcessId(), detail);
+		}
+		Collection<WorkSheetDetail> c = map.values();
+		Iterator<WorkSheetDetail> it = c.iterator();
+		List<WorkSheetDetail> details = new ArrayList<>();
+		while(it.hasNext()) {
+			details.add(it.next());
+		}
+		return details;
+	}
+	/**
+	 * 根据工单详情查询
+	 * @param workSheetId
+	 * @param rows
+	 * @param page
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/queryProcessRecordByWorkSheetId.do")
+	@ResponseBody
+	public ModelMap queryProcessRecordByWorkSheetId(Long workSheetId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
+		Pager<ProcessRecord> pager = processRecordService.queryObjs("from ProcessRecord pr where pr.workSheetId=?0 and pr.deleted=?1", page, rows, new Object[] {workSheetId,false});
+		ModelMap modelMap = new ModelMap();
+		modelMap.addAttribute("total", pager.getTotalCount());
+		modelMap.addAttribute("rows", pager.getData());
+		return modelMap;
 	}
 } 

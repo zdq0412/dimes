@@ -15,6 +15,8 @@ public interface ICommonDao<T> {
 	 * @return
 	 */
 	public Serializable save(T t);
+	
+	public void flush();
 	/**
 	 * 根据id删除
 	 * @param id

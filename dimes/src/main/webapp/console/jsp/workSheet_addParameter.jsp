@@ -44,3 +44,18 @@ $(function(){
 		</table>
 	</div>
 </div>
+
+<div id="workSheetDetailParameter-toolbar" class="topjui-toolbar"
+		data-options="grid:{
+           type:'datagrid',
+           id:'workSheetDetailParameter'
+       }">
+			<a href="javascript:void(0)" data-toggle="topjui-menubutton"
+			data-options="method:'doAjax',
+       extend: '#workSheetDetailParameter-toolbar',
+       iconCls:'fa fa-trash'" onclick="$('#workSheetDetailParameter').iEdatagrid('cancelRow')">取消编辑</a>
+			<a href="javascript:void(0)" data-toggle="topjui-menubutton"
+			data-options="method:'doAjax',
+       extend: '#workSheetDetailParameter-toolbar',
+       iconCls:'fa fa-plus'" onclick="$('#workSheetDetailParameter').iEdatagrid('saveRow')">保存</a>
+	</div>

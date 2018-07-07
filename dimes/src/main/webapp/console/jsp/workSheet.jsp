@@ -48,10 +48,11 @@
                        },
 			           childTab: [{id:'southTabs'}]">
 						<thead>
-									<tr>
-										<th data-options="field:'id',title:'id',checkbox:false"></th>
-										<th data-options="field:'no',title:'单号',sortable:false"></th>
-										<th data-options="field:'manufactureDate',title:'生产日期',sortable:false, formatter:function(value,row,index){
+							<tr>
+								<th data-options="field:'id',title:'id',checkbox:false"></th>
+								<th data-options="field:'no',title:'单号',sortable:false"></th>
+								<th
+									data-options="field:'manufactureDate',title:'生产日期',sortable:false, formatter:function(value,row,index){
                                     if (value) {
                                         var date = new Date(value);
                                         var month = date.getMonth()+1;
@@ -75,20 +76,27 @@
                                     	return '';
                                     }
                                 }"></th>
-										<th data-options="field:'workPieceCode',title:'工件代码',sortable:false"></th>
-										<th data-options="field:'workPieceName',title:'工件名称',sortable:false"></th>
-										<th data-options="field:'unitType',title:'规格型号',sortable:false"></th>
-										<th data-options="field:'graphNumber',title:'图号',sortable:false"></th>
-										<th data-options="field:'customerGraphNumber',title:'客户图号',sortable:false"></th>
-										<th data-options="field:'version',title:'版本号',sortable:false"></th>
-										<th data-options="field:'productCount',title:'生产数量',sortable:false"></th>
-										<th data-options="field:'batchNumber',title:'批号',sortable:false"></th>
-										<th data-options="field:'stoveNumber',title:'炉号',sortable:false"></th>
-										<th data-options="field:'productionUnitName',title:'生产单元',sortable:false"></th>
-										<th data-options="field:'status',title:'状态',sortable:false"></th>
-										<th data-options="field:'note',title:'备注',sortable:false"></th>
-										<th data-options="field:'documentMaker',title:'制单人',sortable:false"></th>
-										<th data-options="field:'makeDocumentDate',title:'制单日期',sortable:false, formatter:function(value,row,index){
+								<th
+									data-options="field:'workPieceCode',title:'工件代码',sortable:false"></th>
+								<th
+									data-options="field:'workPieceName',title:'工件名称',sortable:false"></th>
+								<th data-options="field:'unitType',title:'规格型号',sortable:false"></th>
+								<th data-options="field:'graphNumber',title:'图号',sortable:false"></th>
+								<th
+									data-options="field:'customerGraphNumber',title:'客户图号',sortable:false"></th>
+								<th data-options="field:'version',title:'版本号',sortable:false"></th>
+								<th
+									data-options="field:'productCount',title:'生产数量',sortable:false"></th>
+								<th data-options="field:'batchNumber',title:'批号',sortable:false"></th>
+								<th data-options="field:'stoveNumber',title:'炉号',sortable:false"></th>
+								<th
+									data-options="field:'productionUnitName',title:'生产单元',sortable:false"></th>
+								<th data-options="field:'status',title:'状态',sortable:false"></th>
+								<th data-options="field:'note',title:'备注',sortable:false"></th>
+								<th
+									data-options="field:'documentMaker',title:'制单人',sortable:false"></th>
+								<th
+									data-options="field:'makeDocumentDate',title:'制单日期',sortable:false, formatter:function(value,row,index){
                                     if (value) {
                                         var date = new Date(value);
                                         var month = date.getMonth()+1;
@@ -112,8 +120,8 @@
                                     	return '';
                                     }
                                 }"></th>
-									</tr>
-								</thead>
+							</tr>
+						</thead>
 					</table>
 				</div>
 			</div>
@@ -132,7 +140,7 @@
        parentGrid:{
                type:'treegrid',
                id:'productionUnitTg',
-               param:'productionUnitId:id,productionUnitName:name'
+               param:'productionUnitId:id,productionUnitName:name,productionUnitCode:code'
             },
        dialog:{
            id:'productionUnitAddDialog',
@@ -142,37 +150,109 @@
            buttons:[
            	{text:'保存',handler:function(){
            	
-           			var no = $('#no').val();
+           		var rows = $('#workSheetDetail').iEdatagrid('getRows');
+				$('#workSheetDetail').iEdatagrid('saveRow'); 
+				var detailArray = new Array();
+				for(var i = 0;i<rows.length;i++){
+			 	var row=rows[i];
+			    var detail={
+						processName:row.processName,
+						productionCount:row.productionCount
+					};
+					detailArray.push(detail);
+				}
+					//生产总量
+			
+			var productCount=$('#productCount').val();
+					if(!productCount){
+						//alert('请填写生产总量');
+						return false;
+					}
+					var  no =$('#no').val();
            			if(no==null || ''===$.trim(no)){
-           				return false;
+           				//alert('请填写工单号');
+						return false;
            			}
-           			var workPieceCode = $('#workPieceCode').val();
-           			if(workPieceCode==null || ''===$.trim(workPieceCode)){
-           				return false;
-           			}
-           			$.get('workSheet/addWorkSheet.do',{
-           			no:no,
-           			manufactureDate:$('#manufactureDate').val(),
-           			workPieceName:$('#workPieceName').val(),
-           			unitType:$('#unitType').val(),
-           			graphNumber:$('#graphNumber').val(),
-           			customerGraphNumber:$('#customerGraphNumber').val(),
-           			version:$('#version').val(),
-           			productCount:$('#productCount').val(),
-           			batchNumber:$('#batchNumber').val(),
-           			stoveNumber:$('#stoveNumber').val(),
-           			productionUnitId:$('#productionUnitId').val(),
-           			productionUnitName:$('#productionUnitName').val(),
-           			note:$('#note').val(),
-           			workPieceCode:workPieceCode
-           			},function(data){
-           				if(data.success){
-	           				$('#productionUnitAddDialog').iDialog('close');
-	           				$('#productionUnitDg').iDatagrid('reload');
-           				}else{
-           					alert(data.msg);
-           				}
-           			});
+           			var workpieceCode = $('#workPieceCode').val();
+           			if(workpieceCode==null || ''===$.trim(workpieceCode)){
+           					//alert('请选择工件');
+			        		return false;
+					} 	
+					
+					var data=[];
+						for(var i=0; i<detailArray.length;i++){
+						if(!data[detailArray[i].processName]){
+							data[detailArray[i].processName] = parseInt(detailArray[i].productionCount);
+						}else{
+							data[detailArray[i].processName] += parseInt(detailArray[i].productionCount);
+						}
+					}
+           	
+           		var flag = false;
+           	
+           		for(var key in data){
+						if(data[key]<productCount){
+							flag = true;
+							break;
+						}
+					}
+           	
+           	if(flag){
+				   $.iMessager.confirm('警告','单个工序的生产量和小于生产总量，确认该操作吗？',function(r){
+				    if (r){
+				    $.get('workSheet/addWorkSheet.do',{
+					           			no:no,
+					           			manufactureDate:$('#manufactureDate').val(),
+					           			workPieceName:$('#workPieceName').val(),
+					           			unitType:$('#unitType').val(),
+					           			graphNumber:$('#graphNumber').val(),
+					           			customerGraphNumber:$('#customerGraphNumber').val(),
+					           			version:$('#version').val(),
+					           			productCount:$('#productCount').val(),
+					           			batchNumber:$('#batchNumber').val(),
+					           			stoveNumber:$('#stoveNumber').val(),
+					           			productionUnitId:$('#productionUnitId').val(),
+					           			productionUnitName:$('#productionUnitName').val(),
+					           			productionUnitCode:$('#productionUnitCode').val(),
+					           			note:$('#note').val(),
+					           			workPieceCode:$('#workPieceCode').val()
+					           			},function(data){
+					           				if(data.success){
+						           				$('#productionUnitAddDialog').iDialog('close');
+						           				$('#productionUnitDg').iDatagrid('reload');
+					           				}else{
+					           					alert(data.msg);
+					           				}
+					           			});
+				    }
+				});
+           	}else{
+           		$.get('workSheet/addWorkSheet.do',{
+					           			no:no,
+					           			manufactureDate:$('#manufactureDate').val(),
+					           			workPieceName:$('#workPieceName').val(),
+					           			unitType:$('#unitType').val(),
+					           			graphNumber:$('#graphNumber').val(),
+					           			customerGraphNumber:$('#customerGraphNumber').val(),
+					           			version:$('#version').val(),
+					           			productCount:$('#productCount').val(),
+					           			batchNumber:$('#batchNumber').val(),
+					           			stoveNumber:$('#stoveNumber').val(),
+					           			productionUnitId:$('#productionUnitId').val(),
+					           			productionUnitName:$('#productionUnitName').val(),
+					           			productionUnitCode:$('#productionUnitCode').val(),
+					           			note:$('#note').val(),
+					           			workPieceCode:$('#workPieceCode').val()
+					           			},function(data){
+					           				if(data.success){
+						           				$('#productionUnitAddDialog').iDialog('close');
+						           				$('#productionUnitDg').iDatagrid('reload');
+					           				}else{
+					           					alert(data.msg);
+					           				}
+					           			});
+           	}
+           	
            	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
            	{text:'关闭',handler:function(){
            		$('#productionUnitAddDialog').iDialog('close');
@@ -190,13 +270,11 @@
                 url:'workSheet/queryWorkSheetById.do?id={id}',
                  buttons:[
            	{text:'保存',handler:function(){
-           	$('#workSheetDetail').iEdatagrid('saveRow');
-           		var rows = $('#workSheetDetail').iEdatagrid('getChanges');
+           		var rows = $('#workSheetDetail').iEdatagrid('getRows');
 				$('#workSheetDetail').iEdatagrid('saveRow'); 
 				var detailArray = new Array();
 				for(var i = 0;i<rows.length;i++){
-					var row = rows[i];
-					var detail = {
+					var row=rows[i]; var detail={
 						id:row.id,
 						processId:row.processId,
 						processCode:row.processCode,
@@ -213,12 +291,26 @@
 						scrapCount:row.scrapCount,
 						parameterSource:row.parameterSource,
 						firstReport:row.firstReport,
-						status:row.firstReport,
-						note:row.note
+						status:row.status,
+						note:row.note,
+						reportCount:row.reportCount,
+						productionCount:row.productionCount
 					};
 					
 					detailArray.push(detail);
 				}
+					//生产总量
+			var productCount=$('#productCount').val();
+					
+					var data=[];
+			for(var i=0; i<detailArray.length;i++){
+						if(!data[detailArray[i].processName]){
+							data[detailArray[i].processName] = parseInt(detailArray[i].productionCount);
+						}else{
+							data[detailArray[i].processName] += parseInt(detailArray[i].productionCount);
+						}
+					}
+					
 					var details = JSON.stringify(detailArray);
 					var workSheet = JSON.stringify({
            			id:$('#productionUnitDg').iDatagrid('getSelected').id,
@@ -234,18 +326,44 @@
            			stoveNumber:$('#stoveNumber').val(),
            			productionUnitId:$('#productionUnitId').val(),
            			productionUnitName:$('#productionUnitName').val(),
+           			productionUnitCode:$('#productionUnitCode').val(),
            			note:$('#note').val(),
            			workPieceCode:$('#workPieceCode').val()
            			});
 					
-           			 $.get('workSheet/updateWorkSheet.do',{details:details,workSheet:workSheet},function(data){
-           				if(data.success){
-	           				$('#productionUnitEditDialog').iDialog('close');
-	           				$('#productionUnitDg').iDatagrid('reload');
-           				}else{
-           					alert(data.msg);
-           				}
-           			}); 
+					var flag = false;
+					
+					for(var key in data){
+						if(data[key]<productCount){
+							flag = true;
+							break;
+						}
+					}
+					if(flag){
+						 $.iMessager.confirm('警告','单个工序生产量和小于生产总量？',function(r){
+							    if (r){
+							    	$.get('workSheet/updateWorkSheet.do',{details:details,workSheet:workSheet},function(data){
+				           				if(data.success){
+					           				$('#productionUnitEditDialog').iDialog('close');
+					           				$('#productionUnitDg').iDatagrid('reload');
+				           				}else{
+				           					alert(data.msg);
+				           				}
+				           			});
+							    }
+							});
+					}else{
+						$.get('workSheet/updateWorkSheet.do',{details:details,workSheet:workSheet},function(data){
+				           				if(data.success){
+					           				$('#productionUnitEditDialog').iDialog('close');
+					           				$('#productionUnitDg').iDatagrid('reload');
+				           				}else{
+				           					alert(data.msg);
+				           				}
+				           			});
+					}
+					
+				
            	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
            	{text:'关闭',handler:function(){
            		$('#productionUnitEditDialog').iDialog('close');

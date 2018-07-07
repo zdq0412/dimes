@@ -243,17 +243,22 @@
            			$.get('processRecord/addProcessRecord.do',{
            			collectionDate:$('#collectionDate').val(),
            			serialNo:$('#serialNo').val(),
-           			no:$('#no').text(),
+           			no:$('#no').iCombogrid('getValue'),
+           			workSheetId:$('#workSheetId').val(),
            			workPieceCode:$('#workPieceCode').val(),
            			workPieceName:$('#workPieceName').val(),
            			unitType:$('#unitType').val(),
            			graphNumber:$('#graphNumber').val(),
            			version:$('#version').val(),
+           			processId:$('#processId').val(),
            			processCode:$('#processCode').val(),
            			processName:$('#processName').val(),
            			batchNumber:$('#batchNumber').val(),
            			'deviceSiteId':$('#departmentTg').iTreegrid('getSelected').id,
-           			stoveNumber:$('#stoveNumber').val()
+           			deviceSiteCode:$('#departmentTg').iTreegrid('getSelected').code,
+           			deviceSiteName:$('#departmentTg').iTreegrid('getSelected').name,
+           			stoveNumber:$('#stoveNumber').val(),
+           			status:$('#status').val()
            			},function(data){
            				if(data.success){
 	           				$('#departmentAddDialog').iDialog('close');
@@ -293,17 +298,22 @@
            			id:$('#departmentDg').iDatagrid('getSelected').id,
            			collectionDate:$('#collectionDate').val(),
            			serialNo:$('#serialNo').val(),
-           			no:$('#no').text(),
+           			no:$('#no').iCombogrid('getValue'),
+           			workSheetId:$('#workSheetId').val(),
            			workPieceCode:$('#workPieceCode').val(),
            			workPieceName:$('#workPieceName').val(),
            			unitType:$('#unitType').val(),
            			graphNumber:$('#graphNumber').val(),
            			version:$('#version').val(),
+           			processId:$('#processId').val(),
            			processCode:$('#processCode').val(),
            			processName:$('#processName').val(),
            			batchNumber:$('#batchNumber').val(),
-           			'deviceSiteId':$('#departmentTg').iTreegrid('getSelected').id,
-           			stoveNumber:$('#stoveNumber').val()
+           			'deviceSiteId':$('#departmentDg').iDatagrid('getSelected').deviceSiteId,
+           			deviceSiteCode:$('#departmentDg').iDatagrid('getSelected').deviceSiteCode,
+           			deviceSiteName:$('#departmentDg').iDatagrid('getSelected').deviceSiteName,
+           			stoveNumber:$('#stoveNumber').val(),
+           			status:$('#status').val()
            			},function(data){
            				if(data.success){
 	           				$('#departmentEditDialog').iDialog('close');

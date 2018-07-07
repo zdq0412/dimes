@@ -37,7 +37,9 @@ public abstract class CommonDaoImpl<T> implements ICommonDao<T> {
 	public SessionFactory getSessionFactory() {
 		return this.hibernateTemplate.getSessionFactory();
 	}
-
+	public void flush() {
+		this.getSessionFactory().getCurrentSession().flush();
+	}
 	@Override
 	public Serializable save(T t) {
 		return this.hibernateTemplate.save(t);

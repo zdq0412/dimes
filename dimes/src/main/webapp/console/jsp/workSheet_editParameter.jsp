@@ -50,23 +50,6 @@ $(function(){
            type:'datagrid',
            id:'workSheetDetailParameter'
        }">
-		<!-- <a href="javascript:void(0)" data-toggle="topjui-menubutton"
-			data-options="method:'openDialog',
-       extend: '#workSheetDetail-toolbar',
-       iconCls: 'fa fa-plus',
-       dialog:{
-           id:'productionUnitAddDialog',
-           width:1880,
-           height:850,
-           href:'console/jsp/workSheet_add.jsp',
-           buttons:[
-           	{text:'保存',handler:function(){
-           	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
-           	{text:'关闭',handler:function(){
-           		$('#productionUnitAddDialog').iDialog('close');
-           	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
-           ]}">新增</a> -->
-
 			<a href="javascript:void(0)" data-toggle="topjui-menubutton"
 			data-options="method:'doAjax',
        extend: '#workSheetDetailParameter-toolbar',

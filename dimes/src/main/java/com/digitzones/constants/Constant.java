@@ -52,6 +52,7 @@ public class Constant {
 	 */
 	public static class ProcessRecord{
 		public static final String NG = "ng";
+		public static final String OK = "ok";
 	}
 	/**
 	 * 参数类型

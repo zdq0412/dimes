@@ -1,4 +1,5 @@
 package com.digitzones.controllers;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.digitzones.constants.Constant;
 import com.digitzones.dto.WorkSheetDetailDto;
 import com.digitzones.model.DeviceSite;
@@ -127,10 +130,15 @@ public class WorkSheetController {
 			}
 
 			WorkSheetDetail d = null;
+			WorkSheetDetail exist  = null;
 			//删除工序中设备站点为空的项
 			for(WorkSheetDetail detail : Constant.workSheetDetail) {
-				if(detail.getProcessId().equals(processesId) && detail.getDeviceSiteId()==null) {
-					d = detail;
+				if(detail.getProcessId().equals(processesId) ) {
+					exist = detail;
+					if(detail.getDeviceSiteId()==null) {
+						d = detail;
+						break;
+					}
 				}
 			}
 
@@ -157,7 +165,7 @@ public class WorkSheetController {
 				detail.setProcessName(c.getName());
 				detail.setId(detailId++);
 
-				detail.setParameterRecords(d.getParameterRecords());
+				detail.setParameterRecords(exist!=null?exist.getParameterRecords():null);
 				Constant.workSheetDetail.add(detail);
 
 				modelMap.addAttribute("success",true);
@@ -178,12 +186,49 @@ public class WorkSheetController {
 	@ResponseBody
 	public ModelMap updateWorkSheet(String details,String workSheet) {
 		ModelMap modelMap = new ModelMap();
-		
-		System.out.println(details);
-		System.out.println("-----------------");
-		System.out.println(workSheet);
-		
-		
+
+		JSONArray jsonArray = JSONArray.parseArray(details);
+		JSONObject jsonObject = JSONObject.parseObject(workSheet);
+
+		WorkSheet ws = new WorkSheet();
+		ws.setId(jsonObject.getLong("id"));
+		ws.setBatchNumber(jsonObject.getString("batchNumber"));
+		ws.setProductCount(jsonObject.getIntValue("productCount"));
+		//ws.setStatus(jsonObject.getString("status"));
+		ws.setNote(jsonObject.getString("note"));
+		ws.setProductionUnitCode(jsonObject.getString("productionUnitCode"));
+		ws.setProductionUnitName(jsonObject.getString("productionUnitName"));
+		ws.setProductionUnitId(jsonObject.getLong("productionUnitId"));
+		ws.setStoveNumber(jsonObject.getString("stoveNumber"));
+		if(jsonObject.getString("manufactureDate")!=null &&!"".equals(jsonObject.getString("manufactureDate"))) {
+			try {
+				ws.setManufactureDate(sdf.parse(jsonObject.getString("manufactureDate")));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+
+
+		//构建工单 详情数组
+		List<WorkSheetDetail> detailsList = new ArrayList<>();
+		for(int i = 0;i<jsonArray.size();i++) {
+			JSONObject jo = jsonArray.getJSONObject(i);
+			WorkSheetDetail detail = new WorkSheetDetail();
+			detail.setId(jo.getLong("id"));
+			detail.setCompleteCount(jo.getIntValue("completeCount"));
+			detail.setStatus(jo.getString("status"));
+			detail.setNote(jo.getString("note"));
+			detail.setProductionCount(jo.getIntValue("productionCount"));
+			detail.setScrapCount(jo.getIntValue("scrapCount"));
+			detail.setRepairCount(jo.getIntValue("repairCount"));
+			detail.setReportCount(jo.getIntValue("reportCount"));
+			detail.setUnqualifiedCount(jo.getIntValue("unqualifiedCount"));
+			detail.setQualifiedCount(jo.getIntValue("qualifiedCount"));
+
+			detailsList.add(detail);
+		}
+
+		workSheetService.updateWorkSheetAndWorkSheetDetails(ws, detailsList);
 		modelMap.addAttribute("success",true);
 		modelMap.addAttribute("msg","操作完成!");
 		return modelMap;
@@ -209,6 +254,32 @@ public class WorkSheetController {
 		detail.setProductionCount(workSheetDetailDto.getProductionCount());
 
 		workSheetDetailService.updateObj(detail);
+		modelMap.addAttribute("success",true);
+		modelMap.addAttribute("msg","操作完成!");
+		return modelMap;
+	}
+	/**
+	 * 更新工单详情
+	 * @param workSheetDetail
+	 * @return
+	 */
+	@RequestMapping("/updateWorkSheetDetailInMemory.do")
+	@ResponseBody
+	public ModelMap updateWorkSheetDetailInMemory(WorkSheetDetailDto workSheetDetailDto) {
+		ModelMap modelMap = new ModelMap();
+		for(WorkSheetDetail detail:Constant.workSheetDetail) {
+			if(detail.getId() == workSheetDetailDto.getId()) {
+				detail.setRepairCount(workSheetDetailDto.getRepairCount());
+				detail.setReportCount(workSheetDetailDto.getReportCount());
+				detail.setQualifiedCount(workSheetDetailDto.getQualifiedCount());
+				detail.setUnqualifiedCount(workSheetDetailDto.getUnqualifiedCount());
+				detail.setScrapCount(workSheetDetailDto.getScrapCount());
+				detail.setStatus(workSheetDetailDto.getStatus());
+				detail.setNote(workSheetDetailDto.getNote());
+				detail.setCompleteCount(workSheetDetailDto.getCompleteCount());
+				detail.setProductionCount(workSheetDetailDto.getProductionCount());
+			}
+		}
 		modelMap.addAttribute("success",true);
 		modelMap.addAttribute("msg","操作完成!");
 		return modelMap;
@@ -288,6 +359,7 @@ public class WorkSheetController {
 		vo.setProcessId(detail.getProcessId());
 		vo.setProcessCode(detail.getProcessCode());
 		vo.setProcessName(detail.getProcessName());
+		vo.setParameterSource(detail.getParameterSource());
 		return vo;
 	}
 	/**
@@ -413,6 +485,32 @@ public class WorkSheetController {
 		record.setStandardValue(standardValue);
 		parameterRecordService.updateObj(record);
 	}
+	@RequestMapping("/deleteWorkSheetDetailInMemory.do")
+	@ResponseBody
+	public ModelMap deleteWorkSheetDetailInMemory(String id) {
+		ModelMap modelMap = new ModelMap();
+		if(id!=null && id.contains("'")) {
+			id = id.replace("'", "");
+		}
+		WorkSheetDetail wd = null;
+		for(WorkSheetDetail detail:Constant.workSheetDetail) {
+			if(detail.getId()==Long.valueOf(id)) {
+				wd = detail;
+				break;
+			}
+		}
+
+		if(wd!=null) {
+			Constant.workSheetDetail.remove(wd);
+		}
+
+		modelMap.addAttribute("success", true);
+		modelMap.addAttribute("statusCode", 200);
+		modelMap.addAttribute("title", "操作提示");
+		modelMap.addAttribute("message", "删除成功！");
+		return modelMap;
+	}
+
 	/**
 	 * 根据id删除工单详情
 	 * @param processId
@@ -447,12 +545,12 @@ public class WorkSheetController {
 				modelMap.addAttribute("message", "该记录不存在");
 			}else if((detail.getCompleteCount()!=null &&detail.getCompleteCount()!=0)
 					|| (detail.getRepairCount()!=null && detail.getRepairCount()!=0)
-				|| (detail.getReportCount()!=null && detail.getReportCount()!=0)
-				|| (detail.getProductionCount()!=null && detail.getProductionCount()!=0)
-				|| (detail.getQualifiedCount()!=null && detail.getQualifiedCount()!=0)
-				|| (detail.getUnqualifiedCount()!=null && detail.getUnqualifiedCount()!=0)
-				|| (detail.getScrapCount()!=null && detail.getScrapCount()!=0)){
-				
+					|| (detail.getReportCount()!=null && detail.getReportCount()!=0)
+					|| (detail.getProductionCount()!=null && detail.getProductionCount()!=0)
+					|| (detail.getQualifiedCount()!=null && detail.getQualifiedCount()!=0)
+					|| (detail.getUnqualifiedCount()!=null && detail.getUnqualifiedCount()!=0)
+					|| (detail.getScrapCount()!=null && detail.getScrapCount()!=0)){
+
 				modelMap.addAttribute("success", true);
 				modelMap.addAttribute("statusCode", 300);
 				modelMap.addAttribute("title", "操作提示");

@@ -30,7 +30,9 @@ public class ProcessRecord {
 	/**采集时间*/
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") 
 	private Date collectionDate;
-	/**生产序号*/
+	/**生产序号
+	 * 二维码
+	 * */
 	private String serialNo;
 	/**生产人员ID*/
 	private Long productUserId;
@@ -44,6 +46,8 @@ public class ProcessRecord {
 	private  String classesName;
 	/**工单编号*/
 	private String no;
+	/**工单id*/
+	private Long workSheetId;
 	/**生产日期*/
 	private Date manufactureDate;
 	/**制单人*/
@@ -80,6 +84,13 @@ public class ProcessRecord {
 	private Boolean deleted = false;
 	/**加工状态,NG,OK*/
 	private String status;
+	
+	public Long getWorkSheetId() {
+		return workSheetId;
+	}
+	public void setWorkSheetId(Long workSheetId) {
+		this.workSheetId = workSheetId;
+	}
 	public Long getClassesId() {
 		return classesId;
 	}
