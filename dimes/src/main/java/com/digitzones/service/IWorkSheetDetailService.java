@@ -35,4 +35,20 @@ public interface IWorkSheetDetailService extends ICommonService<WorkSheetDetail>
 	 * @return
 	 */
 	public Long queryCountByProcessId(Long processId,Long workSheetId);
+	
+	/**
+	 * 根据工单id和设备站点id查找工单详情
+	 * @param workSheetId
+	 * @param deviceSiteId
+	 * @return
+	 */
+	public List<WorkSheetDetail> queryWorkSheetDetailByWorkSheetIdAndDeviceSiteId(Long workSheetId,Long deviceSiteId);
+	/**
+	 * 根据工单id，站点id和工序代码查找工单详情
+	 * @param workSheetId
+	 * @param deviceSiteId
+	 * @param processCode
+	 * @return
+	 */
+	public List<WorkSheetDetail> queryWorkSheetDetailByWorkSheetIdAndDeviceSiteIdAndProccessId(Long workSheetId,Long deviceSiteId,String processCode);
 }

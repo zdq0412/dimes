@@ -283,7 +283,7 @@ public class ParameterController {
 		ModelMap modelMap = new ModelMap();
 		String hql = "select ds from Parameters ds where ds.id not in ("
 				+ "select pdm.parameters.id from ProcessesParametersMapping pdm where pdm.processes.id=?0) and ds.baseCode=?1";
-		Pager<Parameters> pager = parameterService.queryObjs(hql, page, rows, new Object[] {processId,Constant.ParameterType.DEVICE});
+		Pager<Parameters> pager = parameterService.queryObjs(hql, page, rows, new Object[] {processId,Constant.ParameterType.ART});
 		modelMap.addAttribute("total", pager.getTotalCount());
 		modelMap.addAttribute("rows", pager.getData());
 		return modelMap;

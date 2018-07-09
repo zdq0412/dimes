@@ -71,18 +71,18 @@ public class WorkSheetServiceImpl implements IWorkSheetService {
 	public List<WorkSheet> queryOtherWorkSheetByDeviceSiteId(Long deviceSiteId) {
 		String hql = "from WorkSheet ws where ws.id in "
 				+ "(select wsd.workSheet.id from WorkSheetDetail wsd where wsd.deviceSiteId=?0)"
-				+ " and ws.id not in (select pr.workSheetId from ProcessRecord pr where pr.deviceSiteId=?0)"
+				+ " and ws.id not in (select pr.workSheetId from ProcessRecord pr where pr.deviceSiteId=?0 and pr.deleted=?2)"
 				+ " and ws.deleted=?1";
-		return workSheetDao.findByHQL(hql, new Object[] {deviceSiteId,false});
+		return workSheetDao.findByHQL(hql, new Object[] {deviceSiteId,false,false});
 	}
 
 	public List<WorkSheet> queryOtherWorkSheetByDeviceSiteIdAndConditions(Long deviceSiteId,String q){
 		String hql = "from WorkSheet ws where ws.id in "
 				+ "(select wsd.workSheet.id from WorkSheetDetail wsd where wsd.deviceSiteId=?0)"
-				+ " and ws.id not in (select pr.workSheetId from ProcessRecord pr where pr.deviceSiteId=?0)"
+				+ " and ws.id not in (select pr.workSheetId from ProcessRecord pr where pr.deviceSiteId=?0 and pr.deleted=?3)"
 				+ " and ws.deleted=?1 and (ws.no like ?2 or ws.workPieceCode like ?2 or ws.customerGraphNumber like ?2"
 				+ " or ws.batchNumber like ?2 or ws.stoveNumber like ?2 or ws.productCount like ?2)";
-		return workSheetDao.findByHQL(hql, new Object[] {deviceSiteId,false,"%"+q+"%"});
+		return workSheetDao.findByHQL(hql, new Object[] {deviceSiteId,false,"%"+q+"%",false});
 	}
 	
 	@Override
@@ -147,5 +147,18 @@ public class WorkSheetServiceImpl implements IWorkSheetService {
 				workSheetDetailDao.update(d);
 			}
 		}
+	}
+
+	@Override
+	public List<WorkSheet> queryWorkSheetsByDeviceSiteId(Long deviceSiteId) {
+		String hql = "select ws from WorkSheetDetail wsd inner join wsd.workSheet ws  where wsd.deviceSiteId=?0 and ws.deleted=?1";
+		return workSheetDao.findByHQL(hql, new Object[] {deviceSiteId,false});
+	}
+	@Override
+	public List<WorkSheet> queryWorkSheetsByDeviceSiteIdAndConditions(Long deviceSiteId, String q) {
+		String hql = "select ws from WorkSheetDetail wsd inner join wsd.workSheet ws where wsd.deviceSiteId=?0 and ws.deleted=?1"
+				+ " and (ws.no like ?2 or ws.workPieceCode like ?2 or ws.customerGraphNumber like ?2" + 
+				" or ws.batchNumber like ?2 or ws.stoveNumber like ?2 or ws.productCount like ?2)";
+		return workSheetDao.findByHQL(hql, new Object[] {deviceSiteId,false,"%"+q+"%"});
 	}
 }

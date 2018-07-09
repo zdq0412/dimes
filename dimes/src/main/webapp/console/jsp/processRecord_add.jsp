@@ -2,6 +2,14 @@
 	pageEncoding="UTF-8"%>
 	<script>
 	$(function(){
+	/* 	$("#status").iCombobox({valueField: 'text',
+			textField: 'text',
+			data: [{
+			    text: 'OK'
+			},{
+			    text: 'NG'
+			}]}); */
+		
 		$('#no').iCombogrid({
 		    idField:'no',
 		    textField:'no',
@@ -159,7 +167,7 @@
 					<div class="topjui-col-sm12">
 						<label class="topjui-form-label">状态</label>
 						<div class="topjui-input-block">
-							<input type="text" name="status" data-toggle="topjui-combobox"
+							<input type="text" name="status" data-toggle="topjui-combobox" value="OK"
 								data-options="valueField: 'text',
 									textField: 'text',
 									data: [{

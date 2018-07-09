@@ -230,7 +230,6 @@ public class DeviceController {
 		vo.setId(device.getId());
 		vo.setCode(device.getCode());
 		vo.setName(device.getName());
-		vo.setGoalOee(device.getGoalOee());
 		vo.setInstallDate(device.getInstallDate());
 		vo.setInstallPosition(device.getInstallPosition());
 		vo.setDeviceType(device.getDeviceType());

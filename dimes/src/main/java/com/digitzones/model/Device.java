@@ -46,8 +46,6 @@ public class Device extends CommonModel {
 	private String installPosition;
 	/**是否为瓶颈设备*/
 	private Boolean bottleneck = false;
-	/**目标OEE*/
-	private Float goalOee;
 	/**参数取值
 	 * 固定值
 	 * 变动值
@@ -143,12 +141,6 @@ public class Device extends CommonModel {
 	}
 	public void setBottleneck(Boolean bottleneck) {
 		this.bottleneck = bottleneck;
-	}
-	public Float getGoalOee() {
-		return goalOee;
-	}
-	public void setGoalOee(Float goalOee) {
-		this.goalOee = goalOee;
 	}
 	public String getParameterValueType() {
 		return parameterValueType;

@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,5 +48,9 @@ public class ProcessesServiceImpl implements IProcessesService {
 	public void deleteObj(Long id) {
 		processesDao.deleteById(id);;
 	}
-
+	@Override
+	public List<Processes> queryProcessByWorkpieceIdAndDeviceSiteId(Long workpieceId, Long deviceSiteId) {
+		String hql = "select wpdsm.workpieceProcess.process from WorkpieceProcessDeviceSiteMapping wpdsm where wpdsm.workpieceProcess.workpiece.id=?0 and wpdsm.deviceSite.id=?1";
+		return processesDao.findByHQL(hql, new Object[] {workpieceId,deviceSiteId});
+	}
 }

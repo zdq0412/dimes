@@ -151,12 +151,14 @@ public class ModuleTest {
 		Module son28 = new Module();
 		son28.setParent(son2);
 		son28.setName("产量");
+		son28.setUrl("console/jsp/output.jsp");
 		son28.setLeaf(true);
 		moduleService.addModule(son28);
 		
 		Module son29 = new Module();
 		son29.setParent(son2);
 		son29.setName("一次性不合格率");
+		son29.setUrl("console/jsp/fractionDefective.jsp");
 		son29.setLeaf(true);
 		moduleService.addModule(son29);
 		
@@ -193,12 +195,14 @@ public class ModuleTest {
 		Module son32 = new Module();
 		son32.setParent(son3);
 		son32.setName("产量记录表");
+		son32.setUrl("console/jsp/output4ProductionUnit.jsp");
 		son32.setLeaf(true);
 		moduleService.addModule(son32);
 		
 		Module son33 = new Module();
 		son33.setParent(son3);
 		son33.setName("不合格记录表");
+		son33.setUrl("console/jsp/ngRecord4ProductionUnit.jsp");
 		son33.setLeaf(true);
 		moduleService.addModule(son33);
 		
@@ -250,6 +254,7 @@ public class ModuleTest {
 		Module son5 = new Module();
 		son5.setParent(m);
 		son5.setName("不合格品");
+		son5.setUrl("console/jsp/ngRecord.jsp");
 		son5.setLeaf(true);
 		moduleService.addModule(son5);
 		

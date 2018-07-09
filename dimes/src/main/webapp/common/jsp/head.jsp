@@ -31,6 +31,7 @@
    <!--  <script type="text/javascript" src="console/js/static/plugins/echarts/echarts.min.js"></script> -->
    
     <script type="text/javascript" src="common/js/echarts.js"></script>
+    <script type="text/javascript" src="common/js/echarts-gl.js"></script>
     <script type="text/javascript" src="console/js/static/plugins/jquery/jquery.cookie.js"></script>
     <!-- TopJUI框架配置 -->
     <script type="text/javascript" src="console/js/static/public/js/topjui.config.js"></script>

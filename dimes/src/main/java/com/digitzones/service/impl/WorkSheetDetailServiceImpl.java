@@ -136,4 +136,17 @@ public class WorkSheetDetailServiceImpl implements IWorkSheetDetailService {
 	public Long queryCountByProcessId(Long processId,Long workSheetId) {
 		return workSheetDetailDao.queryCountByProcessIdAndWorkSheetId(processId, workSheetId);
 	}
+
+	@Override
+	public List<WorkSheetDetail> queryWorkSheetDetailByWorkSheetIdAndDeviceSiteId(Long workSheetId, Long deviceSiteId) {
+		String hql = "from WorkSheetDetail wsd where wsd.workSheet.id=?0 and wsd.deviceSiteId=?1";
+		return workSheetDetailDao.findByHQL(hql, new Object[] {workSheetId,deviceSiteId});
+	}
+
+	@Override
+	public List<WorkSheetDetail> queryWorkSheetDetailByWorkSheetIdAndDeviceSiteIdAndProccessId(Long workSheetId,
+			Long deviceSiteId, String processCode) {
+		String hql = "from WorkSheetDetail wsd where wsd.workSheet.id=?0 and wsd.deviceSiteId=?1 and wsd.processCode=?2";
+		return workSheetDetailDao.findByHQL(hql, new Object[] {workSheetId,deviceSiteId,processCode});
+	}
 }

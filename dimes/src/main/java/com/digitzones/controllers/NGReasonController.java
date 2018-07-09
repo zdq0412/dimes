@@ -1,4 +1,6 @@
 package com.digitzones.controllers;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -36,11 +38,7 @@ public class NGReasonController {
 	@ResponseBody
 	public ModelMap queryNGReasonsByNGReasonTypeId(@RequestParam(value="ngReasonTypeId",required=false)Long parameterTypeId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
 		Pager<Object[]> pager = null;
-		if(parameterTypeId==null) {
-			pager = ngReasonService.queryObjs("select p from NGReason p inner join p.ngReasonType pt ", page, rows, new Object[] {});
-		}else {
-			pager = ngReasonService.queryObjs("select p from NGReason p inner join p.ngReasonType pt  where pt.id=?0", page, rows, new Object[] {parameterTypeId});
-		}
+		pager = ngReasonService.queryObjs("select p from NGReason p inner join p.ngReasonType pt  where pt.id=?0", page, rows, new Object[] {parameterTypeId});
 		ModelMap mm = new ModelMap();
 		mm.addAttribute("rows",pager.getData());
 		mm.addAttribute("total", pager.getTotalCount());
@@ -112,5 +110,15 @@ public class NGReasonController {
 		modelMap.addAttribute("title", "操作提示");
 		modelMap.addAttribute("message", "成功删除!");
 		return modelMap;
+	}
+	/**
+	 * 根据不良原因类型查找不良原因
+	 * @param ngReasonTypeId
+	 * @return
+	 */
+	@RequestMapping("/queryNGReasonsByNGReasonTypeIdNoPager.do")
+	@ResponseBody
+	public List<NGReason> queryNGReasonsByNGReasonTypeIdNoPager(Long ngReasonTypeId){
+		return ngReasonService.queryNGReasonsByNGReasonTypeId(ngReasonTypeId);
 	}
 } 

@@ -1,4 +1,6 @@
 package com.digitzones.controllers;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -339,6 +341,15 @@ public class ProcessesController {
 		modelMap.addAttribute("title", "操作提示");
 		return modelMap;
 	}
-	
-	
+	/**
+	 * 根据工件id和设备站点id查找工序
+	 * @param workpieceId
+	 * @param deviceSiteId
+	 * @return
+	 */
+	@RequestMapping("/queryProcessByWorkpieceIdAndDeviceSiteId.do")
+	@ResponseBody
+	public List<Processes> queryProcessByWorkpieceIdAndDeviceSiteId(Long workpieceId,Long deviceSiteId){
+		return processesService.queryProcessByWorkpieceIdAndDeviceSiteId(workpieceId, deviceSiteId);
+	}
 } 

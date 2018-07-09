@@ -51,4 +51,39 @@ public interface IProcessRecordDao extends ICommonDao<ProcessRecord> {
 	 * @return
 	 */
 	public List<Long[]> queryByDay(Long deviceSiteId,String status,Date day);
+	/**
+	 * 查找当前月下的人员产量
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public Object[] queryOutput4EmployeePerMonth(int year,int month);
+	/**
+	 * 查找当前月下的工序产量
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public Object[] queryOutput4ProcessPerMonth(int year,int month);
+	/**
+	 * 查找当前月下的设备站点产量
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public Object[] queryOutput4DeviceSitePerMonth(int year,int month);
+	/**
+	 * 查找当前月 下的不合格数
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public Long queryWorkSheetNGCountPerMonth(int year,int month);
+	/**
+	 * 查找当前月下的合格数
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public Long queryWorkSHeetNotNGCountPerMonth(int year,int month);
 }

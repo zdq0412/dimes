@@ -23,9 +23,17 @@ public class DeviceSite extends CommonModel {
 	 * 2：待机
 	 * */
 	private String status;
+	/**目标oee*/
+	private Float goalOee;
 	/**是否在参数状态中显示*/
 	private Boolean show = false;
 	
+	public Float getGoalOee() {
+		return goalOee;
+	}
+	public void setGoalOee(Float goalOee) {
+		this.goalOee = goalOee;
+	}
 	public Boolean getShow() {
 		return show;
 	}

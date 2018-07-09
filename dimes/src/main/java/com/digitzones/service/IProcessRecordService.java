@@ -51,4 +51,34 @@ public interface IProcessRecordService extends ICommonService<ProcessRecord> {
 	 * @return
 	 */
 	public List<Long[]> queryByDay(Long deviceSiteId, String status, Date now) ;
+	/**
+	 * 查找当前月份的人员产量
+	 * @param date
+	 * @return
+	 */
+	public Object[] queryOutput4EmployeePerMonth(Date date);
+	/**
+	 * 查找当前月下的工序产量
+	 * @param date
+	 * @return
+	 */
+	public Object[] queryOutput4ProcessPerMonth(Date date);
+	/**
+	 * 查找当前月下的站点产量
+	 * @param date
+	 * @return
+	 */
+	public Object[] queryOutput4DeviceSitePerMonth(Date date);
+	/**
+	 * 查找当前月 下的不合格数
+	 * @param date
+	 * @return
+	 */
+	public Long queryWorkSheetNGCountPerMonth(Date date);
+	/**
+	 * 查找当前月下的合格数
+	 * @param date
+	 * @return
+	 */
+	public Long queryWorkSHeetNotNGCountPerMonth(Date date);
 }

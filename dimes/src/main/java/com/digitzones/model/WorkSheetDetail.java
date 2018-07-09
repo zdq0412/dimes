@@ -1,8 +1,6 @@
 package com.digitzones.model;
-
 import java.util.Date;
 import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -68,8 +66,17 @@ public class WorkSheetDetail {
 	private Integer reportCount = 0;
 	/**生产数量*/
 	private Integer productionCount=0;
+	/**让步接收数量*/
+	private Integer compromiseCount = 0;
 	/**删除标识*/
 	private Boolean deleted = false;
+	
+	public Integer getCompromiseCount() {
+		return compromiseCount;
+	}
+	public void setCompromiseCount(Integer compromiseCount) {
+		this.compromiseCount = compromiseCount;
+	}
 	public Boolean getDeleted() {
 		return deleted;
 	}

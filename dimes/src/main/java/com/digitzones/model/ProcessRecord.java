@@ -27,7 +27,7 @@ public class ProcessRecord {
 	private String deviceSiteCode;
 	/**设备站点名称*/
 	private String deviceSiteName;
-	/**采集时间*/
+	/**采集时间,实际的生产时间*/
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") 
 	private Date collectionDate;
 	/**生产序号
@@ -36,6 +36,8 @@ public class ProcessRecord {
 	private String serialNo;
 	/**生产人员ID*/
 	private Long productUserId;
+	/**生产人员员工编号*/
+	private String productUserCode;
 	/**生产人员姓名*/
 	private String productUserName;
 	/**班次代码*/
@@ -68,7 +70,7 @@ public class ProcessRecord {
 	private String graphNumber;
 	/**版本号*/
 	private String version;
-	/**生产数量*/
+	/**生产数量,目前未使用:2018-7-9*/
 	private int productCount;
 	/**批号*/
 	private String batchNumber;
@@ -141,6 +143,12 @@ public class ProcessRecord {
 	}
 	public String getNo() {
 		return no;
+	}
+	public String getProductUserCode() {
+		return productUserCode;
+	}
+	public void setProductUserCode(String productUserCode) {
+		this.productUserCode = productUserCode;
 	}
 	public void setNo(String no) {
 		this.no = no;

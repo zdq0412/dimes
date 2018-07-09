@@ -29,6 +29,18 @@ public final class DateStringUtil {
 		sdf = new SimpleDateFormat(this.pattern);
 	}
 	/**
+	 * 日期转换到月份(MM)
+	 * @param date
+	 * @return
+	 */
+	public String date2MonthOnly(Date date) {
+		String pat = this.pattern;
+		setPattern("MM");
+		String month = sdf.format(date);
+		setPattern(pat);
+		return month;
+	}
+	/**
 	 * 字符串转日期
 	 * @param dateString
 	 * @return
@@ -76,6 +88,30 @@ public final class DateStringUtil {
 		return month;
 	}
 	/**
+	 * 产生当前年的十二个月
+	 * @param date 
+	 * @return
+	 */
+	public List<Date> generateOneYearMonth(Date date){
+		String pat = this.pattern;
+		setPattern("yyyy");
+		String year = sdf.format(date);
+		List<Date> months = new ArrayList<>();
+		setPattern("yyyy-MM");
+		for(int i = 1;i<=12;i++) {
+			String d = year + "-"+(i<10?("0"+i):i);
+			try {
+				months.add(sdf.parse(d));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		setPattern(pat);
+		return months;
+	}
+	
+	/**
 	 * 根据当前年月产生一个月的日期对象
 	 * @param currentMonth yyyy-MM格式的字符串
 	 * @return List<Date>
@@ -108,5 +144,8 @@ public final class DateStringUtil {
 	public static void main(String[] args) {
 		List<Date> dates = new DateStringUtil().generateOneMonthDay("2016-02");
 		System.out.println(dates);
+		
+		List<Date> list = new DateStringUtil().generateOneYearMonth(new Date());
+		System.out.println(list);
 	}
 }

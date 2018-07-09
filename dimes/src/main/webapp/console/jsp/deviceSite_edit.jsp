@@ -51,6 +51,15 @@
 							</div>
 						</div>
 					</div>
+					<div class="topjui-row">
+						<div class="topjui-col-sm12">
+							<label class="topjui-form-label">OEE目标</label>
+							<div class="topjui-input-block">
+								<input type="number" name="goalOee" data-toggle="topjui-textbox"
+									id="goalOee">
+							</div>
+						</div>
+					</div>
 				<div class="topjui-row">
 					<div class="topjui-col-sm12">
 						<label class="topjui-form-label">备注</label>

@@ -63,4 +63,9 @@ public class ProductionUnitServiceImpl implements IProductionUnitService {
 	public List<ProductionUnit> queryAllProductionUnits() {
 		return this.productionUnitDao.findByHQL("from ProductionUnit pu where pu.parent!=null", new Object[] {});
 	}
+
+	@Override
+	public Integer queryGoalOutputByProductionUnitId(Long productionUnitId) {
+		return productionUnitDao.queryGoalOutputByProductionUnitId(productionUnitId);
+	}
 }

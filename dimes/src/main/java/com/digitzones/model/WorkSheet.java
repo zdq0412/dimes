@@ -59,6 +59,10 @@ public class WorkSheet {
 	private String status;
 	/**完成时间*/
 	private Date completeTime;
+	/**工单类型：普通工单、返修工单*/
+	private String workSheetType;
+	/**返修单号*/
+	private String repairWorkSheetNo;
 	/**是否被删除*/
 	private Boolean deleted = false;
 	public Long getProductionUnitId() {
@@ -96,6 +100,19 @@ public class WorkSheet {
 	}
 	public String getDocumentMaker() {
 		return documentMaker;
+	}
+	
+	public String getWorkSheetType() {
+		return workSheetType;
+	}
+	public void setWorkSheetType(String workSheetType) {
+		this.workSheetType = workSheetType;
+	}
+	public String getRepairWorkSheetNo() {
+		return repairWorkSheetNo;
+	}
+	public void setRepairWorkSheetNo(String repairWorkSheetNo) {
+		this.repairWorkSheetNo = repairWorkSheetNo;
 	}
 	public void setDocumentMaker(String documentMaker) {
 		this.documentMaker = documentMaker;

@@ -26,4 +26,10 @@ public interface IProductionUnitService extends ICommonService<ProductionUnit>{
 	 * @return
 	 */
 	public List<ProductionUnit> queryAllProductionUnits();
+	/**
+	 * 根据产线id查找目标产量
+	 * @param productionUnitId
+	 * @return
+	 */
+	public Integer queryGoalOutputByProductionUnitId(Long productionUnitId);
 }

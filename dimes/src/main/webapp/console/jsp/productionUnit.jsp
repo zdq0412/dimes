@@ -217,6 +217,7 @@
            			code:productionUnitCode,
            			name:productionUnitName,
            			'parent.id':$('#productionUnitTg').iTreegrid('getSelected').id,
+           			goalOutput:$('#goalOutput').val(),
            			note:$('#productionUnitNote').val()
            			},function(data){
            				if(data.success){
@@ -254,6 +255,7 @@
            			code:productionUnitCode,
            			name:productionUnitName,
            			'parent.id':$('#productionUnitTg').iTreegrid('getSelected').id,
+           			goalOutput:$('#goalOutput').val(),
            			note:$('#productionUnitNote_edit').val()
            			},function(data){
            				if(data.success){

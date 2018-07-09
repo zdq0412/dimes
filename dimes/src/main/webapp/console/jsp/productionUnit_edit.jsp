@@ -25,26 +25,15 @@
 						</div>
 					</div>
 				</div>
-				<!-- <div class="topjui-row">
+				<div class="topjui-row">
 					<div class="topjui-col-sm8">
-						<label class="topjui-form-label">父部门</label>
+						<label class="topjui-form-label">目标产量</label>
 						<div class="topjui-input-block">
-							<input type="text" name="parent.name" id="parentId_edit" data-toggle="topjui-combobox"
-								data-options="required:false,
-                       valueField:'id',
-                       textField:'name',
-                       url:'department/queryAllDepartments.do'">
+						<input type="text" name="goalOutput"
+								data-toggle="topjui-textarea" id="goalOutput">
 						</div>
 					</div>
-				</div> -->
-				<!-- <div class="topjui-row">
-					<div class="topjui-col-sm8">
-						<label class="topjui-form-label">父部门</label>
-						<div class="topjui-input-block">
-							<label class="topjui-form-label" id="parentLabel">父部门</label>
-						</div>
-					</div>
-				</div> -->
+				</div>
 				<div class="topjui-row">
 					<div class="topjui-col-sm12">
 						<label class="topjui-form-label">描述</label>

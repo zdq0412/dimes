@@ -28,6 +28,8 @@ public class ProductionUnit extends CommonModel {
 	private Set<ProductionUnit> children;
 	/**设备*/
 	private List<Device> devices;
+	/**目标产量*/
+	private Integer goalOutput;
 	@OneToMany(mappedBy="productionUnit",fetch=FetchType.EAGER)
 	@OrderBy("ID DESC")
 	@JsonIgnore
@@ -47,6 +49,14 @@ public class ProductionUnit extends CommonModel {
 
 	public void setChildren(Set<ProductionUnit> children) {
 		this.children = children;
+	}
+
+	public Integer getGoalOutput() {
+		return goalOutput;
+	}
+
+	public void setGoalOutput(Integer goalOutput) {
+		this.goalOutput = goalOutput;
 	}
 
 	@ManyToOne

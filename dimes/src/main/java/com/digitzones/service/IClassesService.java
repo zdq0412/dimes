@@ -1,5 +1,6 @@
 package com.digitzones.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.digitzones.model.Classes;
@@ -19,4 +20,10 @@ public interface IClassesService extends ICommonService<Classes> {
 	 * @return
 	 */
 	public List<Classes> queryAllClasses();
+	/**
+	 * 根据时间查找班次信息
+	 * @param date
+	 * @return
+	 */
+	public Classes queryClassesByTime(Date date);
 }

@@ -1,13 +1,13 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.digitzones.constants.Constant;
 import com.digitzones.dao.IProcessRecordDao;
 import com.digitzones.dao.IWorkSheetDetailDao;
 import com.digitzones.model.Pager;
@@ -35,8 +35,8 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 	}
 	@Override
 	public void updateObj(ProcessRecord obj) {
-		ProcessRecord pr = processRecordDao.findById(obj.getId());
-		if(!pr.getStatus().equals(obj.getStatus())) {
+		//ProcessRecord pr = processRecordDao.findById(obj.getId());
+		/*if(!pr.getStatus().equals(obj.getStatus())) {
 			//根据工单id，工序id，站点id更新工单详情信息
 			String status = obj.getStatus();
 			Object[] values = {obj.getWorkSheetId(),obj.getProcessId(),obj.getDeviceSiteId()};
@@ -72,7 +72,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 					workSheetDetailDao.update(d);
 				}
 			}
-		}
+		}*/
 		processRecordDao.update(obj);
 	}
 
@@ -84,10 +84,10 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 	@Override
 	public Serializable addObj(ProcessRecord obj) {
 		//根据工单id，工序id，站点id更新工单详情信息
-		String status = obj.getStatus();
+		//String status = obj.getStatus();
 		Object[] values = {obj.getWorkSheetId(),obj.getProcessId(),obj.getDeviceSiteId()};
 		//不合格品增1
-		if(Constant.ProcessRecord.NG.equals(status)) {
+		/*if(Constant.ProcessRecord.NG.equals(status)) {
 			List<WorkSheetDetail> details = workSheetDetailDao.findByHQL("from WorkSheetDetail wsd where wsd.workSheet.id=?0 and wsd.processId=?1 and wsd.deviceSiteId=?2", values);
 			for(WorkSheetDetail d : details) {
 				d.setUnqualifiedCount(d.getUnqualifiedCount()+1);
@@ -101,7 +101,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 				d.setQualifiedCount(d.getQualifiedCount()+1);
 				workSheetDetailDao.update(d);
 			}
-		}
+		}*/
 		//完工数增1 
 		List<WorkSheetDetail> details = workSheetDetailDao.findByHQL("from WorkSheetDetail wsd where wsd.workSheet.id=?0 and wsd.processId=?1 and wsd.deviceSiteId=?2", values);
 		for(WorkSheetDetail d : details) {
@@ -149,5 +149,39 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 	@Override
 	public List<Long[]> queryByDay(Long deviceSiteId, String status, Date now) {
 		return processRecordDao.queryByDay(deviceSiteId, status, now);
+	}
+	@Override
+	public Object[] queryOutput4EmployeePerMonth(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		return processRecordDao.queryOutput4EmployeePerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
+	}
+
+	@Override
+	public Object[] queryOutput4ProcessPerMonth(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		return processRecordDao.queryOutput4ProcessPerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
+	}
+
+	@Override
+	public Object[] queryOutput4DeviceSitePerMonth(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		return processRecordDao.queryOutput4DeviceSitePerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
+	}
+
+	@Override
+	public Long queryWorkSheetNGCountPerMonth(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		return processRecordDao.queryWorkSheetNGCountPerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
+	}
+
+	@Override
+	public Long queryWorkSHeetNotNGCountPerMonth(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		return processRecordDao.queryWorkSHeetNotNGCountPerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
 	}
 }

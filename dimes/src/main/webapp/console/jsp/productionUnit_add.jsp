@@ -38,14 +38,16 @@
 						</div>
 					</div>
 				</div> -->
-				<!-- <div class="topjui-row">
+				<div class="topjui-row">
 					<div class="topjui-col-sm8">
-						<label class="topjui-form-label">父部门</label>
+						<label class="topjui-form-label">目标产量</label>
 						<div class="topjui-input-block">
-							<label class="topjui-form-label" id="parentLabel">父部门</label>
+						<input type="text" name="goalOutput"
+								data-toggle="topjui-textarea" id="goalOutput">
 						</div>
 					</div>
-				</div> -->
+				</div>
+				
 				<div class="topjui-row">
 					<div class="topjui-col-sm12">
 						<label class="topjui-form-label">描述</label>

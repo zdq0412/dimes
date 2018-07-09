@@ -100,7 +100,6 @@
                         		return 'N';
                         	}
                         }"></th>
-								<th data-options="field:'goalOee',title:'目标OEE',sortable:false"></th>
 								<th
 									data-options="field:'parameterValueType',title:'参数取值',sortable:false"></th>
 								<!--  <th data-options="field:'photo',title:'图片',sortable:false"></th> -->
@@ -156,6 +155,7 @@
 									}
 										}"></th>
 										<th data-options="field:'note',title:'备注',sortable:false"></th>
+										<th data-options="field:'goalOee',title:' 目标oee',sortable:false"></th>
 										<th
 											data-options="field:'disabled',title:'停用',sortable:false,formatter:function(value,rows,index){
 									if(value){
@@ -331,7 +331,6 @@
            			outFactoryDate:$('#outFactoryDate').val(),
            			outFactoryCode:$('#outFactoryCode').val(),
            			installPosition:$('#installPosition').val(),
-           			goalOee:$('#goalOee').val(),
            			photo:$('#photo').val(),
            			parameterValueType:$('#parameterValueType').val(),
            			bottleneck:$('input[name=bottleneck]:checked').val()
@@ -379,7 +378,6 @@
            			outFactoryDate:$('#outFactoryDate').val(),
            			outFactoryCode:$('#outFactoryCode').val(),
            			installPosition:$('#installPosition').val(),
-           			goalOee:$('#goalOee').val(),
            			photo:$('#photo').val(),
            			parameterValueType:$('#parameterValueType').val(),
            			bottleneck:$('input[name=bottleneck]:checked').val()
@@ -445,6 +443,7 @@
            			code:code,
            			name:name,
            			show:$('#show').val(),
+           			goalOee:$('#goalOee').val(),
            			status:$('#status').val(),
            			'device.id':$('#deviceDg').iDatagrid('getSelected').id,
            			note:$('#note').val(),
@@ -486,6 +485,7 @@
 		           			name:name,
 		           			show:$('#show').val(),
 		           			status:$('#status').val(),
+		           			goalOee:$('#goalOee').val(),
 		           			'device.id':$('#deviceDg').iDatagrid('getSelected').id,
 		           			'barCodeAddress':$('#barCodeAddress').val(),
 		           			note:$('#note').val()

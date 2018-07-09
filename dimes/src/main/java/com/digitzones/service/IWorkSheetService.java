@@ -17,6 +17,19 @@ public interface IWorkSheetService extends ICommonService<WorkSheet> {
 	 */
 	public List<WorkSheet> queryOtherWorkSheetByDeviceSiteId(Long deviceSiteId);
 	/**
+	 * 根据站点id查找工单信息
+	 * @param deviceSiteId
+	 * @return
+	 */
+	public List<WorkSheet> queryWorkSheetsByDeviceSiteId(Long deviceSiteId);
+	/**
+	 * 根据站点id和条件查询工单
+	 * @param deviceSiteId
+	 * @param q
+	 * @return
+	 */
+	public List<WorkSheet> queryWorkSheetsByDeviceSiteIdAndConditions(Long deviceSiteId,String q);
+	/**
 	 * 根据设备站点id及 条件查询工单
 	 * @param deviceSiteId
 	 * @param q

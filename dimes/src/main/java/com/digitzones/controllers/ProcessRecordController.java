@@ -1,10 +1,14 @@
 package com.digitzones.controllers;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,11 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.constants.Constant;
+import com.digitzones.model.Classes;
 import com.digitzones.model.DeviceSite;
+import com.digitzones.model.Employee;
 import com.digitzones.model.Pager;
 import com.digitzones.model.ProcessRecord;
+import com.digitzones.model.User;
 import com.digitzones.model.WorkSheet;
 import com.digitzones.model.WorkSheetDetail;
+import com.digitzones.service.IClassesService;
 import com.digitzones.service.IDeviceSiteService;
 import com.digitzones.service.IProcessRecordService;
 import com.digitzones.service.IWorkSheetDetailService;
@@ -29,6 +38,11 @@ public class ProcessRecordController {
 	private IDeviceSiteService deviceSiteService;
 	private IWorkSheetService workSheetService;
 	private IWorkSheetDetailService workSheetDetailService;
+	private IClassesService classService;
+	@Autowired
+	public void setClassService(IClassesService classService) {
+		this.classService = classService;
+	}
 	@Autowired
 	public void setWorkSheetDetailService(IWorkSheetDetailService workSheetDetailService) {
 		this.workSheetDetailService = workSheetDetailService;
@@ -69,7 +83,7 @@ public class ProcessRecordController {
 	 */
 	@RequestMapping("/addProcessRecord.do")
 	@ResponseBody
-	public ModelMap addProcessRecord(ProcessRecord processRecord) {
+	public ModelMap addProcessRecord(ProcessRecord processRecord,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
 		DeviceSite ds = deviceSiteService.queryObjById(processRecord.getDeviceSiteId());
 		if(ds==null) {
@@ -83,6 +97,24 @@ public class ProcessRecordController {
 			modelMap.addAttribute("success", false);
 			modelMap.addAttribute("msg", "生产序号已被使用");
 		}else  {
+			HttpSession session = request.getSession();
+			User user = (User) session.getAttribute(Constant.User.LOGIN_USER);
+			if(user!=null) {
+				Employee employee = user.getEmployee();
+				if(employee!=null) {
+					processRecord.setProductUserId(employee.getId());
+					processRecord.setProductUserCode(employee.getCode());
+					processRecord.setProductUserName(employee.getName());
+				}
+			}
+			//根据采集时间(生产时间)查找班次信息
+			Date collectionDate = processRecord.getCollectionDate();
+			Classes c = classService.queryClassesByTime(collectionDate);
+			if(c!=null) {
+				processRecord.setClassesCode(c.getCode());
+				processRecord.setClassesId(c.getId());
+				processRecord.setClassesName(c.getName());
+			}
 			processRecordService.addObj(processRecord);
 			modelMap.addAttribute("success", true);
 			modelMap.addAttribute("msg", "添加成功!");
@@ -103,6 +135,23 @@ public class ProcessRecordController {
 			modelMap.addAttribute("success", false);
 			modelMap.addAttribute("msg", "生产序号已被使用");
 		}else  {
+			ProcessRecord pr = processRecordService.queryObjById(processRecord.getId());
+			pr.setBatchNumber(processRecord.getBatchNumber());
+			pr.setCollectionDate(processRecord.getCollectionDate());
+			pr.setCustomerGraphNumber(processRecord.getCustomerGraphNumber());
+			pr.setGraphNumber(processRecord.getGraphNumber());
+			pr.setNo(processRecord.getNo());
+			pr.setWorkSheetId(processRecord.getWorkSheetId());
+			pr.setSerialNo(processRecord.getSerialNo());
+			pr.setWorkPieceCode(processRecord.getWorkPieceCode());
+			pr.setWorkPieceId(processRecord.getWorkPieceId());
+			pr.setWorkPieceName(processRecord.getWorkPieceName());
+			pr.setVersion(processRecord.getVersion());
+			pr.setUnitType(processRecord.getUnitType());
+			pr.setProcessCode(processRecord.getProcessCode());
+			pr.setProcessId(processRecord.getProcessId());
+			pr.setStoveNumber(processRecord.getStoveNumber());
+			pr.setStatus(processRecord.getStatus());
 			processRecordService.updateObj(processRecord);
 			modelMap.addAttribute("success", true);
 			modelMap.addAttribute("msg", "添加成功!");

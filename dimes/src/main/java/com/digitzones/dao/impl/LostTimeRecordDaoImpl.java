@@ -37,81 +37,80 @@ public class LostTimeRecordDaoImpl extends CommonDaoImpl<LostTimeRecord> impleme
 		calendar.setTime(date);
 		Calendar c2 = Calendar.getInstance();
 		Calendar c3 = Calendar.getInstance();
-		
-		
-		if(c.getStartTime().getTime()>c.getEndTime().getTime()) {
-			c2.setTime(c.getStartTime());
-			c2.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-			c2.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
-			c2.set(Calendar.DATE,calendar.get(Calendar.DATE)-1);
-			
-			
-		}else {
-			c2.setTime(c.getStartTime());
-			c2.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-			c2.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
-			c2.set(Calendar.DATE,calendar.get(Calendar.DATE));
-		}
-		Date begin = c2.getTime();
-		c3.setTime(c.getEndTime());
-		c3.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-		c3.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
-		c3.set(Calendar.DATE,calendar.get(Calendar.DATE));
-		
-		Date end = c3.getTime();
-		String hql = "select sum(sumOfLostTime) from LostTimeRecord ltr where ltr.sumOfLostTime!=null and ltr.beginTime>=?0 and ltr.endTime<=?1"
-				+ " and ltr.deviceSite.id=?2";
-		return (Double) this.getHibernateTemplate().find(hql, new Object[] {begin,end,deviceSiteId}).get(0);
-	}
-	@SuppressWarnings("deprecation")
-	@Override
-	public Double queryLostTime4PerDay(Classes c,Long deviceSiteId,Date date) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		calendar.set(Calendar.HOUR_OF_DAY,23);
-		calendar.set(Calendar.MINUTE,59);
-		
-		date = calendar.getTime();
-		Calendar c2 = Calendar.getInstance();
-		if(c.getStartTime().getTime()>c.getEndTime().getTime()) {
-			c2.setTime(c.getStartTime());
-			c2.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-			c2.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
-			c2.set(Calendar.DATE,calendar.get(Calendar.DATE)-1);
-		}else {
-			c2.setTime(c.getStartTime());
-			c2.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-			c2.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
-			c2.set(Calendar.DATE,calendar.get(Calendar.DATE));
-		}
-		Date begin = c2.getTime();
-		
-		String hql = "select sum(sumOfLostTime) from LostTimeRecord ltr where ltr.sumOfLostTime!=null and ltr.beginTime>=?0 and ltr.endTime<=?1"
-				+ " and ltr.deviceSite.id=?2";
-		Double result = (Double) this.getHibernateTemplate().find(hql, new Object[] {begin,date,deviceSiteId}).get(0);
-		return result;
-	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public Double queryPlanHaltTime(Classes c, Long deviceSiteId ,Date now) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(now);
-		Calendar c2 = Calendar.getInstance();
-		if(c.getStartTime().getTime()>c.getEndTime().getTime()) {
-			c2.setTime(c.getStartTime());
-			c2.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-			c2.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
-			c2.set(Calendar.DATE,calendar.get(Calendar.DATE)-1);
-		}else {
-			c2.setTime(c.getStartTime());
-			c2.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-			c2.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
-			c2.set(Calendar.DATE,calendar.get(Calendar.DATE));
-		}
-		Date begin = c2.getTime();
-		String hql = "select sum(sumOfLostTime) from LostTimeRecord ltr where ltr.sumOfLostTime!=null and ltr.beginTime>?0 and ltr.endTime<=?1"
-				+ " and ltr.deviceSite.id=?2 and planHalt=?3";
-		return (Double) this.getHibernateTemplate().find(hql, new Object[] {begin,now,deviceSiteId,true}).get(0);
+		if(c!=null &&c.getStartTime()!=null) {
+			if(c.getStartTime().getTime()>c.getEndTime().getTime()) {
+				c2.setTime(c.getStartTime());
+				c2.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+				c2.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
+				c2.set(Calendar.DATE,calendar.get(Calendar.DATE)-1);
+			}else {
+				c2.setTime(c.getStartTime());
+				c2.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+				c2.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
+				c2.set(Calendar.DATE,calendar.get(Calendar.DATE));
+			}
 	}
+	Date begin = c2.getTime();
+	c3.setTime(c.getEndTime());
+	c3.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+	c3.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
+	c3.set(Calendar.DATE,calendar.get(Calendar.DATE));
+
+	Date end = c3.getTime();
+	String hql = "select sum(sumOfLostTime) from LostTimeRecord ltr where ltr.sumOfLostTime!=null and ltr.beginTime>=?0 and ltr.endTime<=?1"
+			+ " and ltr.deviceSite.id=?2";
+	return (Double) this.getHibernateTemplate().find(hql, new Object[] {begin,end,deviceSiteId}).get(0);
+}
+@SuppressWarnings("deprecation")
+@Override
+public Double queryLostTime4PerDay(Classes c,Long deviceSiteId,Date date) {
+	Calendar calendar = Calendar.getInstance();
+	calendar.setTime(date);
+	calendar.set(Calendar.HOUR_OF_DAY,23);
+	calendar.set(Calendar.MINUTE,59);
+
+	date = calendar.getTime();
+	Calendar c2 = Calendar.getInstance();
+	if(c.getStartTime().getTime()>c.getEndTime().getTime()) {
+		c2.setTime(c.getStartTime());
+		c2.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+		c2.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
+		c2.set(Calendar.DATE,calendar.get(Calendar.DATE)-1);
+	}else {
+		c2.setTime(c.getStartTime());
+		c2.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+		c2.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
+		c2.set(Calendar.DATE,calendar.get(Calendar.DATE));
+	}
+	Date begin = c2.getTime();
+
+	String hql = "select sum(sumOfLostTime) from LostTimeRecord ltr where ltr.sumOfLostTime!=null and ltr.beginTime>=?0 and ltr.endTime<=?1"
+			+ " and ltr.deviceSite.id=?2";
+	Double result = (Double) this.getHibernateTemplate().find(hql, new Object[] {begin,date,deviceSiteId}).get(0);
+	return result;
+}
+
+@SuppressWarnings("deprecation")
+@Override
+public Double queryPlanHaltTime(Classes c, Long deviceSiteId ,Date now) {
+	Calendar calendar = Calendar.getInstance();
+	calendar.setTime(now);
+	Calendar c2 = Calendar.getInstance();
+	if(c.getStartTime().getTime()>c.getEndTime().getTime()) {
+		c2.setTime(c.getStartTime());
+		c2.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+		c2.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
+		c2.set(Calendar.DATE,calendar.get(Calendar.DATE)-1);
+	}else {
+		c2.setTime(c.getStartTime());
+		c2.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+		c2.set(Calendar.MONTH,calendar.get(Calendar.MONTH));
+		c2.set(Calendar.DATE,calendar.get(Calendar.DATE));
+	}
+	Date begin = c2.getTime();
+	String hql = "select sum(sumOfLostTime) from LostTimeRecord ltr where ltr.sumOfLostTime!=null and ltr.beginTime>?0 and ltr.endTime<=?1"
+			+ " and ltr.deviceSite.id=?2 and planHalt=?3";
+	return (Double) this.getHibernateTemplate().find(hql, new Object[] {begin,now,deviceSiteId,true}).get(0);
+}
 }

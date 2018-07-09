@@ -1,5 +1,7 @@
 package com.digitzones.dao;
 
+import java.util.Date;
+
 import com.digitzones.model.Classes;
 /**
  * 班次数据访问接口
@@ -12,4 +14,10 @@ public interface IClassesDao extends ICommonDao<Classes> {
 	 * @return
 	 */
 	public Classes queryCurrentClasses();
+	/**
+	 * 根据时间查找班次信息
+	 * @param date
+	 * @return
+	 */
+	public Classes queryClassesByTime(Date date);
 }

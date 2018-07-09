@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,5 +58,10 @@ public class ClassesServiceImpl implements IClassesService {
 	@Override
 	public List<Classes> queryAllClasses() {
 		return classesDao.findAll();
+	}
+
+	@Override
+	public Classes queryClassesByTime(Date date) {
+		return classesDao.queryClassesByTime(date);
 	}
 }

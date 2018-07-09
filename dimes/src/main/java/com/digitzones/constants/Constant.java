@@ -51,8 +51,16 @@ public class Constant {
 	 * 2018年6月25日
 	 */
 	public static class ProcessRecord{
+		/**不良品*/
 		public static final String NG = "ng";
 		public static final String OK = "ok";
+		/**返修*/
+		public static final String REPAIR = "repair";
+		/**报废*/
+		public static final String SCRAP = "scrap";
+		/**让步接收*/
+		public static final String COMPROMISE = "compromise";
+		
 	}
 	/**
 	 * 参数类型

@@ -565,4 +565,30 @@ public class WorkSheetController {
 		}
 		return modelMap;
 	}
+	/**
+	 * 根据站点id查找工单
+	 * @param deviceSiteId
+	 * @return
+	 */
+	@RequestMapping("/queryWorkSheetByDeviceSiteId.do")
+	@ResponseBody
+	public List<WorkSheet> queryWorkSheetByDeviceSiteId(Long deviceSiteId,String q){
+		if(q==null ||"".equals(q.trim())) {
+			return workSheetService.queryWorkSheetsByDeviceSiteId(deviceSiteId);
+		}else {
+			return workSheetService.queryWorkSheetsByDeviceSiteIdAndConditions(deviceSiteId, q);
+		}
+	}
+	
+	/**
+	 * 根据工单id和设备站点id查找工单详情
+	 * @param workSheetId
+	 * @param deviceSiteId
+	 * @return
+	 */
+	@RequestMapping("/queryWorkSheetDetailByWorkSheetIdAndDeviceSiteId.do")
+	@ResponseBody
+	public List<WorkSheetDetail> queryWorkSheetDetailByWorkSheetIdAndDeviceSiteId(Long workSheetId,Long deviceSiteId){
+		return workSheetDetailService.queryWorkSheetDetailByWorkSheetIdAndDeviceSiteId(workSheetId, deviceSiteId);
+	}
 } 

@@ -2,10 +2,44 @@
 	pageEncoding="UTF-8"%>
 <script>
 	$(function() {
+		$('#barCode').iDatagrid({
+		    url:'',
+		    columns:[[
+		        {field:'id',title:'id',checkbox:false,hidden:true,width:200},
+		        {field:'deviceSiteCode',title:'设备站点代码',width:200},
+		        {field:'deviceSiteName',title:'设备站点名称',width:200},
+		        {field:'collectionDate',title:'采集时间',width:80,formatter:function(value,row,index){
+					if(value){
+	    				var date = new Date(value);
+	                    var month = date.getMonth()+1;
+	                    var monthStr = ((month>=10)?month:('0' + month));
+	                    
+	                    var day = date.getDate();
+	                    var dayStr = ((day>=10)?day:('0'+day));
+	                    var hour = date.getHours();
+	                    var hourStr = ((hour>=10)?hour:('0' + hour));
+	                    
+	                    var minute = date.getMinutes();
+	                    var minuteStr = ((minute>=10)?minute:('0' +minute));
+	                    
+	                    var second = date.getSeconds();
+	                    var secondStr = ((second>=10)?second:('0' +second));
+	                    
+	                    var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr  + 
+	                    				' ' + hourStr + ':' + minuteStr + ':' + secondStr; 
+	                      return dateStr;
+	                    	}else{
+	                    		return '';
+	                    	}
+						}
+		        },
+		        {field:'serialNo',title:'二维码',width:200}
+		    ]]
+		});
 		//查询所有工件
 		$('#workPieceCode').iCombogrid(
 				{
-					idField : 'id',
+					idField : 'code',
 					textField : 'name',
 					delay : 500,
 					mode : 'remote',
@@ -303,84 +337,9 @@
 				</table>
 			</div>
 			<div title="条码信息" data-options="id:'tab1',iconCls:'fa fa-th'">
-				<table data-toggle="topjui-datagrid"
-					data-options="id:'relateDoc',
-                               initCreate: false,
-                               fitColumns:true,
-						       url:'workpiece/queryWorkpieceProcessDeviceSiteMappingsByWorkpieceId.do'">
-					<thead>
-						<tr>
-							<th
-								data-options="field:'id',title:'id',checkbox:false,hidden:true,width:80"></th>
-							<th
-								data-options="field:'processTypeName',title:'工序类别',width:80,formatter:function(value,row,index){
-											if(row.workpieceProcess.process){
-												return row.workpieceProcess.process.processType.name;
-											}else{
-												return '';
-											}
-										}"></th>
-							<th
-								data-options="field:'processCode',title:'工序代码',width:80,formatter:function(value,row,index){
-											if(row.workpieceProcess.process){
-												return row.workpieceProcess.process.code;
-											}else{
-												return '';
-											}
-										}"></th>
-							<th
-								data-options="field:'processName',title:'工序名称',width:80,formatter:function(value,row,index){
-											if(row.workpieceProcess.process){
-												return row.workpieceProcess.process.name;
-											}else{
-												return '';
-											}
-										}"></th>
-							<th
-								data-options="field:'deviceCode',title:'设备代码',width:80,formatter:function(value,row,index){
-											if(row.deviceSite){
-												return row.deviceSite.device.code;
-											}else{
-												return '';
-											}
-										}"></th>
-							<th
-								data-options="field:'deviceName',title:'设备名称',width:80,formatter:function(value,row,index){
-											if(row.deviceSite){
-												return row.deviceSite.device.name;
-											}else{
-												return '';
-											}
-										}"></th>
-							<th
-								data-options="field:'deviceUnitType',title:'规格型号',width:80,formatter:function(value,row,index){
-											if(row.deviceSite){
-												return row.deviceSite.device.unitType;
-											}else{
-												return '';
-											}
-										}"></th>
-							<th
-								data-options="field:'deviceSite.code',title:'站点代码',width:80,formatter:function(value,row,index){
-											if(row.deviceSite){
-												return row.deviceSite.code;
-											}else{
-												return '';
-											}
-										}"></th>
-							<th
-								data-options="field:'deviceSite.name',title:'站点名称',formatter:function(value,row,index){
-											if(row.deviceSite){
-												return row.deviceSite.name;
-											}else{
-												return '';
-											}
-										}"></th>
-							<th
-								data-options="field:'processingBeat',title:'加工节拍(s)',width:80,sortable:false"></th>
-						</tr>
-					</thead>
-				</table>
+				<div title="条码信息" data-options="id:'tab1',iconCls:'fa fa-th'">
+				<table id="barCode"></table>
+			</div>
 			</div>
 		</div>
 	</div>

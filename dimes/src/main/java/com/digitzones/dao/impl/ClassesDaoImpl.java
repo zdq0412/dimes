@@ -22,4 +22,16 @@ public class ClassesDaoImpl extends CommonDaoImpl<Classes> implements IClassesDa
 				.list();
 		return (list!=null && list.size()>0)?list.get(0):null;
 	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Classes queryClassesByTime(Date date) {
+		String sql = "select * from Classes c where "
+				+ " CONVERT(varchar(100),?0,108) >=CONVERT(varchar(100),c.beginTime,108) and CONVERT(varchar(100),?0,108)<=CONVERT(varchar(100),c.endTime,108)";
+		@SuppressWarnings("unchecked")
+		List<Classes> list =  getSession().createSQLQuery(sql)
+				.setParameter(0, new Date()).addEntity(Classes.class)
+				.list();
+		return (list!=null && list.size()>0)?list.get(0):null;
+	}
 }

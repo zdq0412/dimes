@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,10 @@ public class NGReasonServiceImpl implements INGReasonService {
 	@Override
 	public void deleteObj(Long id) {
 		ngReasonDao.deleteById(id);
+	}
+
+	@Override
+	public List<NGReason> queryNGReasonsByNGReasonTypeId(Long ngReasonTypeId) {
+		return ngReasonDao.findByHQL("from NGReason reason where reason.ngReasonType.id=?0", new Object[] {ngReasonTypeId});
 	}
 }
