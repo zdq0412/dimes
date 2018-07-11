@@ -426,7 +426,7 @@
        dialog:{
            id:'deviceSiteAddDialog',
             width:600,
-           height:400,
+           height:600,
            href:'console/jsp/deviceSite_add.jsp',
            buttons:[
            	{text:'保存',handler:function(){

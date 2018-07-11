@@ -59,4 +59,8 @@ public class NGReasonTypeServiceImpl implements INGReasonTypeService {
 		return  ngReasonTypeDao.findByHQL("from NGReasonType p where p.parent is null", new Object[] {});
 	}
 
+	@Override
+	public List<NGReasonType> queryAllNGReasonTypes() {
+		return ngReasonTypeDao.findByHQL("from NGReasonType p where p.parent is not null",  new Object[] {});
+	}
 }

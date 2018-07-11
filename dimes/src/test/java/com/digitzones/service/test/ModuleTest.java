@@ -165,12 +165,14 @@ public class ModuleTest {
 		Module son210 = new Module();
 		son210.setParent(son2);
 		son210.setName("报废率");
+		son210.setUrl("console/jsp/scraprate.jsp");
 		son210.setLeaf(true);
 		moduleService.addModule(son210);
 		
 		Module son211 = new Module();
 		son211.setParent(son2);
 		son211.setName("报废状态");
+		son211.setUrl("console/jsp/scrapStatus.jsp");
 		son211.setLeaf(true);
 		moduleService.addModule(son211);
 		

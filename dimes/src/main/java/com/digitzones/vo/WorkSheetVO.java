@@ -43,10 +43,27 @@ public class WorkSheetVO {
 	private String note;
 	/**工单状态*/
 	private String status;
+	/**工单类型：普通工单、返修工单*/
+	private String workSheetType;
+	/**返修单号*/
+	private String repairWorkSheetNo;
 	/**完成时间*/
 	private String completeTime;
 	/**是否被删除*/
 	private String deleted ;
+	
+	public String getWorkSheetType() {
+		return workSheetType;
+	}
+	public void setWorkSheetType(String workSheetType) {
+		this.workSheetType = workSheetType;
+	}
+	public String getRepairWorkSheetNo() {
+		return repairWorkSheetNo;
+	}
+	public void setRepairWorkSheetNo(String repairWorkSheetNo) {
+		this.repairWorkSheetNo = repairWorkSheetNo;
+	}
 	public Long getId() {
 		return id;
 	}

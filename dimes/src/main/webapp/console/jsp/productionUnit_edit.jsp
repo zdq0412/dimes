@@ -29,8 +29,8 @@
 					<div class="topjui-col-sm8">
 						<label class="topjui-form-label">目标产量</label>
 						<div class="topjui-input-block">
-						<input type="text" name="goalOutput"
-								data-toggle="topjui-textarea" id="goalOutput">
+						<input type="number" name="goalOutput" data-options="required:true"
+								data-toggle="topjui-textbox" id="goalOutput">
 						</div>
 					</div>
 				</div>

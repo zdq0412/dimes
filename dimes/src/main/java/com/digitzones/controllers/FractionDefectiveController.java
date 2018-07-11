@@ -24,7 +24,7 @@ public class FractionDefectiveController {
 		this.processRecordService = processRecordService;
 	}
 	/**
-	 * 查询一次性不合格率
+	 * 查询一次性不合格率：工厂级
 	 * @return
 	 */
 	@RequestMapping("/queryFractionDefective.do")
@@ -65,11 +65,11 @@ public class FractionDefectiveController {
 			//查找合格品数量
 			long notNgCount = processRecordService.queryWorkSHeetNotNGCountPerMonth(today);
 			double ppm = 0;
-			if(notNgCount!=0 || ngCount != 0) {
+			if(notNgCount!=0) {
 				//计算ppm
 				ppm = (ngCount*1.0/(notNgCount+ngCount))*1000000;
 			}else {
-				ppm = 1000000;
+				ppm = 0;
 			}
 			thisMonthList.add(util.date2DayOfMonth(today));
 			thisPPMList.add(format.format(ppm));
@@ -80,4 +80,5 @@ public class FractionDefectiveController {
 		modelMap.addAttribute("thisPPMList", thisPPMList);
 		return modelMap;
 	}
+
 } 

@@ -73,7 +73,17 @@
 								<th
 									data-options="field:'ngReason',title:'原因',sortable:false"></th>
 								<th
-									data-options="field:'processingMethod',title:'处理方法',sortable:false"></th>
+									data-options="field:'processingMethod',title:'处理方法',sortable:false,formatter:function(value,row,index){
+		                         if (value) {
+		                                       switch(value){
+		                                       	case 'scrap':return '报废';
+		                                       	case 'repair':return '返修';
+		                                       	case 'compromise':return '让步接收';
+		                                       }
+		                                    }else{
+		                                    	return '';
+		                                    }
+		                        }"></th>
 								<th data-options="field:'inputUsername',title:'录入人',sortable:false"></th>
 																<th
 									data-options="field:'inputDate',title:'录入时间',align:'center',formatter:function(value,row,index){
@@ -194,110 +204,34 @@
                      parentGrid:{
                          type:'datagrid',
                          id:'departmentDg',
-                         param:'id:id'
+                         param:'ngRecordId:id'
                      }">
-						<!--  <div title="岗位信息" data-options="id:'tab0',iconCls:'fa fa-th'">
-                        datagrid表格
+						 <div title="不合格详情" data-options="id:'tab0',iconCls:'fa fa-th'">
                         <table 
                          data-toggle="topjui-datagrid"
                                data-options="id:'position',
                                initCreate: false,
                                fitColumns:true,
-						       url:'position/queryPositionsByDepartmentId.do'">
+						       url:'ngProcessMethod/queryNGProcessMethodsByNGRecordId.do'">
                             <thead>
                             <tr>
-                                <th data-options="field:'id',title:'id',checkbox:true"></th>
-                                <th data-options="field:'code',title:'岗位代码',sortable:true"></th>
-                                <th data-options="field:'name',title:'岗位名称',sortable:true"></th>
-                                <th data-options="field:'note',title:'备注',sortable:true"></th>
-                                <th data-options="field:'deptCode',title:'部门代码',sortable:true,
-                                formatter:function(value,row,index){
-                                    if (row.department) {
-                                        return row.department.code;
-                                    }else {
-                                        return '';
-                                    }
-                                }"></th>
-                                <th data-options="field:'deptName',title:'部门名称',sortable:true,
-                                formatter:function(value,row,index){
-                                    if (row.department) {
-                                        return row.department.name;
-                                    }else {
-                                        return '';
-                                    }
-                                }"></th>
-                                <th data-options="field:'disabled',title:'停用',sortable:true,
-		                        formatter:function(value,row,index){
-		                        	if(value){
-		                        		return 'Y';
-		                        	}else{
-		                        		return 'N';
-		                        	}
-                        		}"></th>
+                                <th data-options="field:'id',title:'id',hidden:true"></th>
+                                <th data-options="field:'processMethod',title:'处理方法',sortable:false,width:'200px',formatter:function(value,row,index){
+		                         if (value) {
+		                                       switch(value){
+		                                       	case 'scrap':return '报废';
+		                                       	case 'repair':return '返修';
+		                                       	case 'compromise':return '让步接收';
+		                                       }
+		                                    }else{
+		                                    	return '';
+		                                    }
+		                        }"></th>
+                                <th data-options="field:'ngCount',title:'数量',sortable:false,width:'200px'"></th>
                             </tr>
                             </thead>
                         </table>
-                    </div> -->
-						<div title="相关文档" data-options="id:'tab1',iconCls:'fa fa-th'">
-							<!-- datagrid表格 -->
-							<table data-toggle="topjui-datagrid"
-								data-options="id:'relateDoc',
-                               initCreate: false,
-                               fitColumns:true,
-						       url:'department/queryRaletedDocuments.do'">
-								<thead>
-									<tr>
-										<th data-options="field:'id',title:'id',checkbox:true"></th>
-										<th
-											data-options="field:'documentName',title:'文档名称',sortable:false"></th>
-										<th data-options="field:'note',title:'文档说明',sortable:false"></th>
-										<!-- <th data-options="field:'sex',title:'性别',sortable:true,
-                                formatter:function(value,row,index){
-                                    if (value == '1') {
-                                        return '男';
-                                    } else if (value == '2') {
-                                        return '女';
-                                    } else {
-                                        return '';
-                                    }
-                                }"></th> -->
-										<th
-											data-options="field:'relatedCode',title:'关联代码',sortable:false"></th>
-										<th
-											data-options="field:'relatedName',title:'关联名称',sortable:false"></th>
-										<th
-											data-options="field:'uploadUsername',title:'上传人员',sortable:false"></th>
-										<th
-											data-options="field:'uploadDate',title:'上传时间',sortable:false,
-                                 formatter:function(value,row,index){
-                                    if (value) {
-                                        var date = new Date(value);
-                                        var month = date.getMonth()+1;
-                                        var monthStr = ((month>=10)?month:('0' + month));
-                                        
-                                        var day = date.getDate();
-                                        var dayStr = ((day>=10)?day:('0'+day));
-                                        
-                                        var hour = date.getHours();
-                                        var hourStr = ((hour>=10)?hour:('0' + hour));
-                                        
-                                        var minute = date.getMinutes();
-                                        var minuteStr = ((minute>=10)?minute:('0' +minute));
-                                        
-                                        var second = date.getSeconds();
-                                        var secondStr = ((second>=10)?second:('0' +second));
-                                        
-                                        var dateStr = date.getFullYear() + '-' + monthStr + '-' + dayStr  + 
-                                        				' ' + hourStr + ':' + minuteStr + ':' + secondStr;
-                                        return dateStr;
-                                    }else{
-                                    	return '';
-                                    }
-                                }"></th>
-									</tr>
-								</thead>
-							</table>
-						</div>
+                    </div>
 					</div>
 				</div>
 			</div>
@@ -445,54 +379,6 @@
            id:'position'
        }">
 		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
-			data-options="method:'openDialog',
-       extend: '#position-toolbar',
-       iconCls: 'fa fa-plus',
-       parentGrid:{
-       	type:'datagrid',
-       	id:'departmentDg'
-       },
-       dialog:{
-           id:'positionAddDialog',
-            width:600,
-           height:400,
-           href:'console/jsp/position_add.jsp',
-           buttons:[
-           	{text:'保存',handler:function(){
-           		if($('#departmentDg').iDatagrid('getSelected')){
-           			var positionCode = $('#positionCode').val();
-           			if(positionCode==null || ''===$.trim(positionCode)){
-           				return false;
-           			}
-           			
-           			var positionName = $('#positionName').val();
-           			if(positionName==null || ''===$.trim(positionName)){
-           				return false;
-           			}
-           			$.get('position/addPosition.do',{
-           			code:positionCode,
-           			name:positionName,
-           			'department.id':$('#departmentDg').iDatagrid('getSelected').id,
-           			note:$('#positionNote').val()
-           			},function(data){
-           				if(data.success){
-	           				$('#positionAddDialog').iDialog('close');
-	           				$('#position').iDatagrid('reload');
-           				}else{
-           					alert(data.msg);
-           				}
-           			});
-           		}else{
-           			alert('请选择部门');
-           			$('#positionAddDialog').iDialog('close');
-           		}
-           	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
-           	{text:'关闭',handler:function(){
-           		$('#positionAddDialog').iDialog('close');
-           	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
-           ]
-       }">新增</a>
-		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
 			data-options="method: 'openDialog',
             extend: '#position-toolbar',
             iconCls: 'fa fa-pencil',
@@ -500,21 +386,17 @@
             	id:'positionEditDialog',
                 width: 600,
                 height: 400,
-                href: 'console/jsp/position_edit.jsp',
-                url:'position/queryPositionById.do?id={id}',
+                href: 'console/jsp/ngProcessMethod_edit.jsp',
+                url:'ngProcessMethod/queryNGProcessMethodById.do?id={id}',
                  buttons:[
            	{text:'编辑',handler:function(){
-           			var positionCode = $('#positionCode_edit').val();
-           			var positionName = $('#positionName_edit').val();
-           			if(positionName==null || ''===$.trim(positionName)){
+           			var ngCount = $('#ngCount').val();
+           			if(ngCount==null || ''===$.trim(ngCount)){
            				return false;
            			}
-           			$.get('position/updatePosition.do',{
+           			$.get('ngProcessMethod/updateNGProcessMethod.do',{
            			id:$('#position').iDatagrid('getSelected').id,
-           			code:positionCode,
-           			name:positionName,
-           			'department.id':$('#departmentDg').iDatagrid('getSelected').id,
-           			note:$('#positionNote_edit').val()
+           			ngCount:ngCount
            			},function(data){
            				if(data.success){
 	           				$('#positionEditDialog').iDialog('close');
@@ -529,18 +411,6 @@
            	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
            ]
             }">编辑</a>
-		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
-			data-options="method:'doAjax',
-       extend: '#position-toolbar',
-       iconCls:'fa fa-trash',
-       url:'position/deletePosition.do',
-       grid: {uncheckedMsg:'请先勾选要删除的数据',id:'position',param:'id:id'}">删除</a>
-		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
-			data-options="method:'doAjax',
-       extend: '#departmentDg-toolbar',
-       iconCls:'fa fa-stop',
-       url:'position/disabledPosition.do',
-       grid: {uncheckedMsg:'请选择要停用的职位',id:'position',param:'id:id'}">停用</a>
 	</div>
 	<!-- 相关文档表格工具栏结束 -->
 </body>

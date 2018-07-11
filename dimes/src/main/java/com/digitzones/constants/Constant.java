@@ -95,4 +95,15 @@ public class Constant {
 		/**计数型*/
 		public static final String COUNTING = "COUNTING";
 	}
+	/**
+	 *  工单常量类
+	 * @author zdq
+	 * 2018年7月10日
+	 */
+	public static class WorkSheet{
+		/**普通工单*/
+		public static final String COMMON = "common";
+		/**返修工单*/
+		public static final String REPAIR = "repair";
+	}
 }

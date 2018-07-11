@@ -377,7 +377,6 @@ public class WorkSheetController {
 		if(workSheet == null) {
 			return null;
 		}
-
 		WorkSheetVO vo = new WorkSheetVO();
 		vo.setId(workSheet.getId());
 		vo.setCustomerGraphNumber(workSheet.getCustomerGraphNumber());
@@ -385,6 +384,8 @@ public class WorkSheetController {
 		vo.setNo(workSheet.getNo());
 		vo.setBatchNumber(workSheet.getBatchNumber());
 		vo.setNote(workSheet.getNote());
+		vo.setWorkSheetType(workSheet.getWorkSheetType());
+		vo.setRepairWorkSheetNo(workSheet.getRepairWorkSheetNo());
 		if(workSheet.getCompleteTime()!=null) {
 			vo.setCompleteTime(sdf.format(workSheet.getCompleteTime()));
 		}

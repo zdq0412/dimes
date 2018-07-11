@@ -29,7 +29,13 @@ public class ProductionUnit extends CommonModel {
 	/**设备*/
 	private List<Device> devices;
 	/**目标产量*/
-	private Integer goalOutput;
+	private Integer goalOutput = 0;
+	/**产线目标oee*/
+	private Float goalOee=0f;
+	/**产线损时目标 */
+	private Float goalLostTime=0f;
+	/**产线不合格目标 */
+	private Float goalNg=0f;
 	@OneToMany(mappedBy="productionUnit",fetch=FetchType.EAGER)
 	@OrderBy("ID DESC")
 	@JsonIgnore
@@ -69,4 +75,29 @@ public class ProductionUnit extends CommonModel {
 	public void setParent(ProductionUnit parent) {
 		this.parent = parent;
 	}
+
+	public Float getGoalOee() {
+		return goalOee;
+	}
+
+	public void setGoalOee(Float goalOee) {
+		this.goalOee = goalOee;
+	}
+
+	public Float getGoalLostTime() {
+		return goalLostTime;
+	}
+
+	public void setGoalLostTime(Float goalLostTime) {
+		this.goalLostTime = goalLostTime;
+	}
+
+	public Float getGoalNg() {
+		return goalNg;
+	}
+
+	public void setGoalNg(Float goalNg) {
+		this.goalNg = goalNg;
+	}
+	
 }

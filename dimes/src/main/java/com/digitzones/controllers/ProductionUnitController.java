@@ -140,6 +140,7 @@ public class ProductionUnitController {
 			vo.setCode(son.getCode());
 			vo.setDisabled(son.getDisabled());
 			vo.setNote(son.getNote());
+			vo.setGoalOutput(son.getGoalOutput());
 			productionUnitVOs.add(vo);
 		}
 	}

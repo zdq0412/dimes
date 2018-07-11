@@ -152,61 +152,197 @@ public class ProcessRecordDaoImpl extends CommonDaoImpl<ProcessRecord> implement
 				.list();
 	}
 	@Override
-	public Object[] queryOutput4EmployeePerMonth(int year,int month) {
-		String hql = "select  workPieceCode,processCode,productUserCode,productUserName,COUNT(id) from ProcessRecord pr "
-				+ "where year(pr.manufactureDate)=?0 and month(pr.manufactureDate)=?1  group by workPieceCode,processCode,productUserCode,productUserName";
-		@SuppressWarnings("rawtypes")
-		List list = getSession().createQuery(hql).setParameter(0, year).setParameter(1, month).list();
+	public Integer queryOutput4EmployeePerMonth(int year,int month,Long empId) {
+		String hql = "select  COUNT(id) from ProcessRecord pr "
+				+ "where year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1  and pr.productUserId=?2";
+		@SuppressWarnings({ "rawtypes", "deprecation" })
+		List list = getSession().createSQLQuery(hql)
+					.setParameter(0, year)
+					.setParameter(1, month)
+					.setParameter(2, empId)
+					.list();
 		if(list!=null&&list.size()>0) {
-			return (Object[]) list.get(0);
+			return  (Integer) list.get(0);
 		}
-		return null;
+		return 0;
 	}
 	@Override
-	public Object[] queryOutput4ProcessPerMonth(int year, int month) {
-		String hql = "select  workPieceCode,processCode,COUNT(id) from ProcessRecord pr "
-				+ "where year(pr.manufactureDate)=?0 and month(pr.manufactureDate)=?1  group by workPieceCode,processCode";
-		@SuppressWarnings("rawtypes")
-		List list = getSession().createQuery(hql).setParameter(0, year).setParameter(1, month).list();
+	public Integer queryOutput4ProcessPerMonth(int year, int month,Long processId) {
+		String hql = "select  COUNT(id) from ProcessRecord pr "
+				+ "where year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1 and pr.processId=?2";
+		@SuppressWarnings({ "rawtypes", "deprecation" })
+		List list = getSession().createSQLQuery(hql)
+					.setParameter(0, year)
+					.setParameter(1, month)
+					.setParameter(2,processId)
+					.list();
 		if(list!=null&&list.size()>0) {
-			return (Object[]) list.get(0);
+			return  ((Integer) list.get(0)).intValue();
 		}
-		return null;
+		return 0;
 	}
 	@Override
-	public Object[] queryOutput4DeviceSitePerMonth(int year, int month) {
-		String hql = "select  workPieceCode,processCode,deviceSiteName,COUNT(id) from ProcessRecord pr "
-				+ "where year(pr.manufactureDate)=?0 and month(pr.manufactureDate)=?1  group by workPieceCode,processCode,deviceSiteCode,deviceSiteName";
-		@SuppressWarnings("rawtypes")
-		List list = getSession().createQuery(hql).setParameter(0, year).setParameter(1, month).list();
+	public Integer queryOutput4DeviceSitePerMonth(int year, int month,Long deviceSiteId) {
+		String hql = "select COUNT(id) from ProcessRecord pr "
+				+ "where year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1 and pr.deviceSiteId=?2";
+		@SuppressWarnings({ "rawtypes", "deprecation" })
+		List list = getSession().createSQLQuery(hql)
+								.setParameter(0, year)
+								.setParameter(1, month)
+								.setParameter(2, deviceSiteId)
+								.list();
 		if(list!=null&&list.size()>0) {
-			return (Object[]) list.get(0);
+			return (Integer) list.get(0);
 		}
-		return null;
+		return 0;
 	}
 	@SuppressWarnings("deprecation")
 	@Override
-	public Long queryWorkSheetNGCountPerMonth(int year, int month) {
-		String sql = "select COUNT(pr.id) from PROCESSRECORD pr inner join NGRECORD ng  on pr.no = ng.no inner join WORKSHEET ws on pr.no = ws.no "
-				+ " where year(pr.manufactureDate)=?0 and month(pr.manufactureDate)=?1  group by pr.workPieceCode,pr.processCode";
+	public Integer queryWorkSheetNGCountPerMonth(int year, int month) {
+		String sql = "select sum(method.ngCount) from PROCESSRECORD pr inner join NGRECORD ng  on pr.no = ng.no"
+				+ " inner join NGPROCESSMETHOD method on method.NGRECORD_ID=ng.id "
+				+ " inner join WORKSHEET ws on pr.no = ws.no "
+				+ " where year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1";
 		@SuppressWarnings("rawtypes")
-		List list = getSession().createSQLQuery(sql).setParameter(0, year).setParameter(1, month).list();
+		List list = getSession().createSQLQuery(sql)
+								.setParameter(0, year)
+								.setParameter(1, month)
+								.list();
 		if(list!=null&&list.size()>0) {
-			return ((Integer) list.get(0)).longValue();
+			return (Integer) list.get(0);
 		}
-		return 0l;
+		return 0;
 	}
 	@SuppressWarnings("deprecation")
 	@Override
-	public Long queryWorkSHeetNotNGCountPerMonth(int year, int month) {
-		String sql = "select COUNT(pr.id) from PROCESSRECORD pr inner join WORKSHEET ws on pr.no = ws.no where ws.workSheetType='common' and pr.no not in " + 
+	public Integer queryWorkSHeetNotNGCountPerMonth(int year, int month) {
+		String sql = "select COUNT(pr.id) from PROCESSRECORD pr inner join WORKSHEET ws on pr.no = ws.no "
+				+ " where ws.workSheetType=?2 and pr.no not in " + 
 				" (select no from NGRECORD)"
-				+ " and year(pr.manufactureDate)=?0 and month(pr.manufactureDate)=?1  group by pr.workPieceCode,pr.processCode";
+				+ " and year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1";
 		@SuppressWarnings("rawtypes")
-		List list = getSession().createSQLQuery(sql).setParameter(0, year).setParameter(1, month).list();
+		List list = getSession().createSQLQuery(sql)
+								.setParameter(0, year)
+								.setParameter(1, month)
+								.setParameter(2, Constant.WorkSheet.COMMON)
+								.list();
 		if(list!=null&&list.size()>0) {
-			return ((Integer) list.get(0)).longValue();
+			return (Integer) list.get(0);
 		}
-		return 0l;
+		return 0;
+	}
+	@Override
+	public Integer queryCountByClassesIdAndDay(Long classesId, Date day,Long productionUnitId) {
+		Calendar c = Calendar.getInstance() ;
+		c.setTime(day);
+		String sql = "select COUNT(pr.id) from PROCESSRECORD pr inner join DEVICESITE site on pr.deviceSiteId=site.id"
+				+ " inner join Device d on site.device_id = d.id "
+				+ " inner join PRODUCTIONUNIT p on d.productionUnit_Id=p.id "
+				+ " where year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1"
+				+ " and day(pr.collectionDate)=?2 and pr.classesId=?3 and p.id=?4";
+		
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH)+1;
+		int date = c.get(Calendar.DAY_OF_MONTH);
+		@SuppressWarnings({ "rawtypes", "deprecation" })
+		List list = getSession().createSQLQuery(sql)
+								.setParameter(0, year)
+								.setParameter(1, month)
+								.setParameter(2, date)
+								.setParameter(3,classesId)
+								.setParameter(4, productionUnitId)
+								.list();
+		if(list!=null&&list.size()>0) {
+			return (Integer) list.get(0);
+		}
+		return 0;
+	}
+	@Override
+	public Integer queryWorkSheetNGCountPerClasses4ProductionUnit(int year, int month, int day, Long classId,
+			Long productionUnitId) {
+		String sql = "select sum(method.ngCount) from PROCESSRECORD pr inner join NGRECORD ng on pr.no = ng.no "
+				+ " inner join NGPROCESSMETHOD method on method.NGRECORD_ID=ng.id "
+				+ " inner join DEVICESITE ds on pr.deviceSiteCode=ds.code "
+				+ " inner join DEVICE d on ds.DEVICE_ID=d.id "
+				+ " inner join PRODUCTIONUNIT p on d.PRODUCTIONUNIT_ID=p.id "  
+				+ " where year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1"
+				+ " and day(pr.collectionDate)=?2 and pr.classesId=?3 and p.id=?4";
+		
+		@SuppressWarnings({ "rawtypes", "deprecation" })
+		List list = getSession().createSQLQuery(sql)
+								.setParameter(0, year)
+								.setParameter(1, month)
+								.setParameter(2, day)
+								.setParameter(3,classId)
+								.setParameter(4, productionUnitId)
+								.list();
+		if(list!=null&&list.size()>0) {
+			return (Integer) list.get(0);
+		}
+		return 0;
+	}
+	@Override
+	public Integer queryWorkSHeetNotNGCountPerClasses4ProductionUnit(int year, int month, int day, Long classId,
+			Long productionUnitId) {
+		String sql = "select COUNT(*) from PROCESSRECORD pr  inner join worksheet ws on pr.no=ws.no "
+				+ " inner join DEVICESITE ds on pr.deviceSiteCode=ds.code "
+				+ " inner join DEVICE d on ds.DEVICE_ID=d.id "
+				+ " inner join PRODUCTIONUNIT p on d.PRODUCTIONUNIT_ID=p.id "  
+				+ " where year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1"
+				+ " and day(pr.collectionDate)=?2 and pr.classesId=?3 and p.id=?4 and ws.worksheettype=?5"
+				+ " and pr.no not in (select ng.no  from ngrecord ng)";
+		
+		@SuppressWarnings({ "rawtypes", "deprecation" })
+		List list = getSession().createSQLQuery(sql)
+								.setParameter(0, year)
+								.setParameter(1, month)
+								.setParameter(2, day)
+								.setParameter(3,classId)
+								.setParameter(4, productionUnitId)
+								.setParameter(5, Constant.WorkSheet.COMMON)
+								.list();
+		if(list!=null&&list.size()>0) {
+			return (Integer) list.get(0);
+		}
+		return 0;
+	}
+	@SuppressWarnings("deprecation")
+	@Override
+	public Integer queryWorkSheetScrapCountPerMonth(int year, int month,Long ngTypeId) {
+		String sql = "select sum(method.ngCount) from PROCESSRECORD pr inner join NGRECORD ng  on pr.no = ng.no "
+				+ " inner join NGPROCESSMETHOD method on method.NGRECORD_ID=ng.id "
+				+ " inner join WORKSHEET ws on pr.no = ws.no "
+				+ " where year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1 "
+				+ " and method.processMethod=?2 and ng.ngTypeId=?3";
+		@SuppressWarnings("rawtypes")
+		List list = getSession().createSQLQuery(sql)
+								.setParameter(0, year)
+								.setParameter(1, month)
+								.setParameter(2,Constant.ProcessRecord.SCRAP)
+								.setParameter(3,ngTypeId)
+								.list();
+		if(list!=null&&list.size()>0) {
+			return (Integer) list.get(0);
+		}
+		return 0;
+	}
+	@SuppressWarnings("deprecation")
+	@Override
+	public Integer queryWorkSheetScrapCountPerMonth(int year, int month) {
+		String sql = "select sum(method.ngCount) from PROCESSRECORD pr inner join NGRECORD ng  on pr.no = ng.no "
+				+ " inner join NGPROCESSMETHOD method on method.NGRECORD_ID=ng.id "
+				+ " inner join WORKSHEET ws on pr.no = ws.no "
+				+ " where year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1 "
+				+ " and method.processMethod=?2";
+		@SuppressWarnings("rawtypes")
+		List list = getSession().createSQLQuery(sql)
+								.setParameter(0, year)
+								.setParameter(1, month)
+								.setParameter(2,Constant.ProcessRecord.SCRAP)
+								.list();
+		if(list!=null&&list.size()>0) {
+			return (Integer) list.get(0);
+		}
+		return 0;
 	}
 }

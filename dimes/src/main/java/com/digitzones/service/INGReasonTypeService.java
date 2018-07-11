@@ -21,4 +21,9 @@ public interface INGReasonTypeService extends ICommonService<NGReasonType> {
 	 * @return
 	 */
 	public List<NGReasonType> queryTopNGReasonType();
+	/**
+	 * 查找所有ng原因类型
+	 * @return
+	 */
+	public List<NGReasonType> queryAllNGReasonTypes();
 }

@@ -1,5 +1,7 @@
 package com.digitzones.service;
 
+import java.util.Date;
+
 import com.digitzones.model.NGRecord;
 /**
  * 不合格记录service
@@ -12,4 +14,12 @@ public interface INGRecordService extends ICommonService<NGRecord> {
 	 * @param record
 	 */
 	public void auditNGRecord(NGRecord record);
+	
+	/**
+	 * 根据工序id和日期（天）查找报废品数量 
+	 * @param date
+	 * @param processId
+	 * @return
+	 */
+	public Integer queryScrapCountByDateAndProcessId(Date date,Long processId);
 }

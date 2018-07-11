@@ -55,35 +55,73 @@ public interface IProcessRecordDao extends ICommonDao<ProcessRecord> {
 	 * 查找当前月下的人员产量
 	 * @param year
 	 * @param month
+	 * @param empId
 	 * @return
 	 */
-	public Object[] queryOutput4EmployeePerMonth(int year,int month);
+	public Integer queryOutput4EmployeePerMonth(int year,int month,Long empId);
 	/**
 	 * 查找当前月下的工序产量
 	 * @param year
 	 * @param month
+	 * @param processId
 	 * @return
 	 */
-	public Object[] queryOutput4ProcessPerMonth(int year,int month);
+	public Integer queryOutput4ProcessPerMonth(int year,int month,Long processId);
 	/**
 	 * 查找当前月下的设备站点产量
 	 * @param year
 	 * @param month
 	 * @return
 	 */
-	public Object[] queryOutput4DeviceSitePerMonth(int year,int month);
+	public Integer queryOutput4DeviceSitePerMonth(int year,int month,Long deviceSiteId);
 	/**
 	 * 查找当前月 下的不合格数
 	 * @param year
 	 * @param month
 	 * @return
 	 */
-	public Long queryWorkSheetNGCountPerMonth(int year,int month);
+	public Integer queryWorkSheetNGCountPerMonth(int year,int month);
+	/**
+	 * 查找报废品数量
+	 * @param year
+	 * @param month
+	 * @param ngTypeId
+	 * @return
+	 */
+	public Integer queryWorkSheetScrapCountPerMonth(int year,int month,Long ngTypeId);
+	/**
+	 * 查找当月所有类别的报废数量
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public Integer queryWorkSheetScrapCountPerMonth(int year,int month);
 	/**
 	 * 查找当前月下的合格数
 	 * @param year
 	 * @param month
 	 * @return
 	 */
-	public Long queryWorkSHeetNotNGCountPerMonth(int year,int month);
+	public Integer queryWorkSHeetNotNGCountPerMonth(int year,int month);
+	/**
+	 * 查找当前天，当前班次的不合格数
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public Integer queryWorkSheetNGCountPerClasses4ProductionUnit(int year,int month,int day,Long classId,Long productionUnitId);
+	/**
+	 * 查找当天当前班次的合格数
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public Integer queryWorkSHeetNotNGCountPerClasses4ProductionUnit(int year,int month,int day,Long classId,Long productionUnitId);
+	/**
+	 * 根据班次id和日查找产量
+	 * @param classesId
+	 * @param day
+	 * @return
+	 */
+	public Integer queryCountByClassesIdAndDay(Long classesId,Date day,Long productionUnitId);
 }

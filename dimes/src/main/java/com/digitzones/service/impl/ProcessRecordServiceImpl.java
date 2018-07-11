@@ -151,37 +151,77 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 		return processRecordDao.queryByDay(deviceSiteId, status, now);
 	}
 	@Override
-	public Object[] queryOutput4EmployeePerMonth(Date date) {
+	public Integer queryOutput4EmployeePerMonth(Date date,Long empId) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
-		return processRecordDao.queryOutput4EmployeePerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
+		return processRecordDao.queryOutput4EmployeePerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1,empId);
 	}
 
 	@Override
-	public Object[] queryOutput4ProcessPerMonth(Date date) {
+	public Integer queryOutput4ProcessPerMonth(Date date,Long processId) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
-		return processRecordDao.queryOutput4ProcessPerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
+		return processRecordDao.queryOutput4ProcessPerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1,processId);
 	}
 
 	@Override
-	public Object[] queryOutput4DeviceSitePerMonth(Date date) {
+	public int queryOutput4DeviceSitePerMonth(Date date,Long deviceSiteId) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
-		return processRecordDao.queryOutput4DeviceSitePerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
+		return processRecordDao.queryOutput4DeviceSitePerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1,deviceSiteId);
 	}
 
 	@Override
-	public Long queryWorkSheetNGCountPerMonth(Date date) {
+	public Integer queryWorkSheetNGCountPerMonth(Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
-		return processRecordDao.queryWorkSheetNGCountPerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
+		Integer result = processRecordDao.queryWorkSheetNGCountPerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
+		return result==null?0:result;
 	}
 
 	@Override
-	public Long queryWorkSHeetNotNGCountPerMonth(Date date) {
+	public Integer queryWorkSHeetNotNGCountPerMonth(Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
-		return processRecordDao.queryWorkSHeetNotNGCountPerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
+		Integer result = processRecordDao.queryWorkSHeetNotNGCountPerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
+		return result==null?0:result;
+	}
+
+	@Override
+	public Integer queryCountByClassesIdAndDay(Long classesId, Date day,Long productionUnitId) {
+		Integer result = processRecordDao.queryCountByClassesIdAndDay(classesId, day,productionUnitId);
+		return result==null?0:result;
+	}
+
+	@Override
+	public Integer queryWorkSheetNGCountPerClasses4ProductionUnit(Date date, Long classId, Long productionUnitId) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		Integer result = processRecordDao.queryWorkSheetNGCountPerClasses4ProductionUnit(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1,c.get(Calendar.DATE), classId, productionUnitId);
+		return result==null?0:result;
+	}
+
+	@Override
+	public Integer queryWorkSHeetNotNGCountPerClasses4ProductionUnit(Date date, Long classId, Long productionUnitId) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		Integer result = processRecordDao.queryWorkSHeetNotNGCountPerClasses4ProductionUnit(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1,c.get(Calendar.DATE), classId, productionUnitId);
+		return result==null?0:result;
+	}
+
+	@Override
+	public Integer queryWorkSheetScrapCountPerMonth(Date date,Long ngTypeId) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		Integer result = processRecordDao.queryWorkSheetScrapCountPerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1,ngTypeId);
+		return result==null?0:result;
+	}
+
+	@Override
+	public Integer queryWorkSheetScrapCountPerMonth(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		Integer result = processRecordDao.queryWorkSheetScrapCountPerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
+		return result==null?0:result;
 	}
 }

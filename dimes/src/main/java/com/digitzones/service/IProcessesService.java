@@ -16,5 +16,9 @@ public interface IProcessesService extends ICommonService<Processes> {
 	 * @return
 	 */
 	public List<Processes> queryProcessByWorkpieceIdAndDeviceSiteId(Long workpieceId,Long deviceSiteId);
-
+	/**
+	 * 查找所有工序
+	 * @return
+	 */
+	public List<Processes> queryAllProcesses();
 }

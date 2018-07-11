@@ -2,68 +2,104 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="../../common/jsp/head.jsp"%>
 <script>
-	$(function(){
-		$.get("output/queryOutput4EmployeePerMonth.do",function(data){
-			output(data,'employeeOutput');
+	function requestNGRecord(productionUnitId) {
+		$.get("ngRecord/queryNGRecord4ProductionUnit.do", {
+			productionUnitId : productionUnitId
+		}, function(result) {
+			ngRecord(result);
 		});
-		 $.get("output/queryOutput4ProcessPerMonth.do",function(data){
-			output(data,'processOutput');
-		});
-		$.get("output/queryOutput4DeviceSitePerMonth.do",function(data){
-			output(data,'deviceSiteOutput');
-		}); 
-	});
-	
-	function output(data,id){
-		var myChart = echarts.init(document.getElementById(id));
-		 option = {
-			        grid3D: {},
-			        tooltip: {},
-			        xAxis3D: {
-			            type: 'category'
-			        },
-			        yAxis3D: {
-			            type: 'category'
-			        },
-			        zAxis3D: {
-			        	 type: 'category'
-			        },
-			        visualMap: {
-			            max: 1e8,
-			            dimension: '产量'
-			        },
-			        dataset: {
-			            dimensions:data[0],
-			            source: data 
-			        }, 
-			        series: [
-			            {
-			                type: 'bar3D',
-			                shading: 'lambert',
-			                encode: {
-			                    x: data[0][0],
-			                    y: data[0][1],
-			                    z: data[0][2]
-			                }
-			            }
-			        ]
-			    };
-			    myChart.setOption(option);
+	}
+	//不合格记录:产线级
+	function ngRecord(data) {
+		var arr = new Array();
+		for (var i = 0; i < data.classNameList.length; i++) {
+			var className = data.classNameList[i];
+			//不合格数
+			var ngCount = {
+				name : className,
+				type : 'bar',
+				stack : data.classNameList[0],
+				data : data.ngCountMap[className]
+			};
+			//ppm
+			var ppm = {
+				name : className,
+				type : 'line',
+				data : data.ppmMap[className]
+			};
+			arr.push(ngCount);
+			arr.push(ppm);
+		}
+		var goalNg = {
+				name : '目标',
+				type : 'line',
+				yAxisIndex:1,
+				data : data.ngGoalList
+			};
+		
+		arr.push(goalNg);
+		var myChart = echarts
+				.init(document.getElementById("ngRecordGraphBody"));
+		option = {
+			tooltip : {
+				trigger : 'axis',
+				axisPointer : {
+					type : 'cross',
+					crossStyle : {
+						color : '#999'
+					}
+				}
+			},
+			legend : {
+				data : data.classNameList
+			},
+			xAxis : [ {
+				type : 'category',
+				data : data.thisMonth,
+				axisPointer : {
+					type : 'shadow'
+				}
+			} ],
+			yAxis : [ {
+				type : 'value',
+				name : 'PPM',
+				position:'right',
+				axisLabel : {
+					formatter : '{value}'
+				}
+			}, {
+				type : 'value',
+				name : 'NG数',
+				position:'left',
+				axisLabel : {
+					formatter : '{value}'
+				}
+			} ],
+			series : arr
+		};
+
+		myChart.setOption(option);
 	}
 </script>
 <style>
-.main{
-	height:100%;
+.main {
+	height: 100%;
 	width: 33%;
-	float:left;
+	float: left;
 }
 </style>
 </head>
 <body>
-	<div id="main" style="width:1700px;height:800px;">
-		<div id="employeeOutput" class="main"></div>
-		<div id="processOutput" class="main"></div>
-		<div id="deviceSiteOutput" class="main"></div>
+	<div style="width: 50%; margin: auto auto;">
+		<input id="cc1" data-toggle="topjui-combobox"
+			data-options="
+        valueField: 'id',
+        textField: 'name',
+        url: 'productionUnit/queryAllProductionUnits.do',
+        onSelect: function(rec){
+        	requestNGRecord(rec.id);
+        }">
 	</div>
+	<div id="ngRecordGraphBody" style="width: 1800px; height: 800px;"></div>
 </body>
 </html>

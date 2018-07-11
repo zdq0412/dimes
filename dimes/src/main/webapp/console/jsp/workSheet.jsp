@@ -51,6 +51,18 @@
 							<tr>
 								<th data-options="field:'id',title:'id',checkbox:false"></th>
 								<th data-options="field:'no',title:'单号',sortable:false"></th>
+								<th	data-options="field:'workSheetType',title:'工单类型',sortable:false,formatter:function(value,row,index){
+									if(value){
+										if(value=='common'){
+											return '普通工单';
+										}
+										if(value=='repair'){
+											return '返修工单';
+										}
+									}else{
+										return '';
+									}
+								}"></th>
 								<th
 									data-options="field:'manufactureDate',title:'生产日期',sortable:false, formatter:function(value,row,index){
                                     if (value) {
@@ -76,10 +88,9 @@
                                     	return '';
                                     }
                                 }"></th>
-								<th
-									data-options="field:'workPieceCode',title:'工件代码',sortable:false"></th>
-								<th
-									data-options="field:'workPieceName',title:'工件名称',sortable:false"></th>
+								<th data-options="field:'workPieceCode',title:'工件代码',sortable:false"></th>
+								<th data-options="field:'workPieceName',title:'工件名称',sortable:false"></th>
+								
 								<th data-options="field:'unitType',title:'规格型号',sortable:false"></th>
 								<th data-options="field:'graphNumber',title:'图号',sortable:false"></th>
 								<th
@@ -214,6 +225,7 @@
 					           			productionUnitId:$('#productionUnitId').val(),
 					           			productionUnitName:$('#productionUnitName').val(),
 					           			productionUnitCode:$('#productionUnitCode').val(),
+					           			workSheetType:$('#workSheetType').val(),
 					           			note:$('#note').val(),
 					           			workPieceCode:$('#workPieceCode').val()
 					           			},function(data){
@@ -241,6 +253,7 @@
 					           			productionUnitId:$('#productionUnitId').val(),
 					           			productionUnitName:$('#productionUnitName').val(),
 					           			productionUnitCode:$('#productionUnitCode').val(),
+					           			workSheetType:$('#workSheetType').val(),
 					           			note:$('#note').val(),
 					           			workPieceCode:$('#workPieceCode').val()
 					           			},function(data){
@@ -327,6 +340,7 @@
            			productionUnitId:$('#productionUnitId').val(),
            			productionUnitName:$('#productionUnitName').val(),
            			productionUnitCode:$('#productionUnitCode').val(),
+           			workSheetType:$('#workSheetType').val(),
            			note:$('#note').val(),
            			workPieceCode:$('#workPieceCode').val()
            			});

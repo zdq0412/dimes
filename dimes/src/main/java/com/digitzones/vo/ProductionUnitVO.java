@@ -21,6 +21,14 @@ public class ProductionUnitVO {
 	private String code;
 	private Boolean disabled;
 	private String note;
+	/**目标产量*/
+	private Integer goalOutput;
+	public Integer getGoalOutput() {
+		return goalOutput;
+	}
+	public void setGoalOutput(Integer goalOutput) {
+		this.goalOutput = goalOutput;
+	}
 	public String getNote() {
 		return note;
 	}

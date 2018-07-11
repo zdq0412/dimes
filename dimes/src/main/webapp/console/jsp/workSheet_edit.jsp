@@ -267,6 +267,22 @@
 						</div>
 					</div>
 					<div class="topjui-row">
+						<div class="topjui-col-sm3">
+							<label class="topjui-form-label">工单类型</label>
+							<div class="topjui-input-block">
+								<input type="text" name="workSheetType" data-toggle="topjui-combobox"
+									data-options="
+										valueField: 'value',
+										textField: 'text',
+										data: [{
+										    value: 'common',
+										    text: '普通工单'
+										},{
+										    value: 'repair',
+										    text: '返修工单'
+										}]" id="workSheetType">
+							</div>
+						</div>
 						<div class="topjui-col-sm6">
 							<label class="topjui-form-label">备注</label>
 							<div class="topjui-input-block">

@@ -53,4 +53,9 @@ public class ProcessesServiceImpl implements IProcessesService {
 		String hql = "select wpdsm.workpieceProcess.process from WorkpieceProcessDeviceSiteMapping wpdsm where wpdsm.workpieceProcess.workpiece.id=?0 and wpdsm.deviceSite.id=?1";
 		return processesDao.findByHQL(hql, new Object[] {workpieceId,deviceSiteId});
 	}
+
+	@Override
+	public List<Processes> queryAllProcesses() {
+		return processesDao.findAll();
+	}
 }

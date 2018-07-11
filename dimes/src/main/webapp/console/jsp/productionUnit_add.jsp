@@ -26,24 +26,12 @@
 						</div>
 					</div>
 				</div>
-				<!-- <div class="topjui-row">
-					<div class="topjui-col-sm8">
-						<label class="topjui-form-label">父部门</label>
-						<div class="topjui-input-block">
-							<input type="text" name="degree" data-toggle="topjui-combobox"
-								data-options="required:false,
-                       valueField:'id',
-                       textField:'name',
-                       url:'department/queryAllDepartments.do'">
-						</div>
-					</div>
-				</div> -->
 				<div class="topjui-row">
 					<div class="topjui-col-sm8">
 						<label class="topjui-form-label">目标产量</label>
 						<div class="topjui-input-block">
-						<input type="text" name="goalOutput"
-								data-toggle="topjui-textarea" id="goalOutput">
+						<input type="number" name="goalOutput" data-options="required:true"
+								data-toggle="topjui-textbox" id="goalOutput">
 						</div>
 					</div>
 				</div>

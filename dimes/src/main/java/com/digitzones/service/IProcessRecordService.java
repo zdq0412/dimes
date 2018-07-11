@@ -54,31 +54,71 @@ public interface IProcessRecordService extends ICommonService<ProcessRecord> {
 	/**
 	 * 查找当前月份的人员产量
 	 * @param date
+	 * @param empId
 	 * @return
 	 */
-	public Object[] queryOutput4EmployeePerMonth(Date date);
+	public Integer queryOutput4EmployeePerMonth(Date date,Long empId);
 	/**
 	 * 查找当前月下的工序产量
 	 * @param date
+	 * @param processId
 	 * @return
 	 */
-	public Object[] queryOutput4ProcessPerMonth(Date date);
+	public Integer queryOutput4ProcessPerMonth(Date date,Long processId);
 	/**
 	 * 查找当前月下的站点产量
 	 * @param date
 	 * @return
 	 */
-	public Object[] queryOutput4DeviceSitePerMonth(Date date);
+	public int queryOutput4DeviceSitePerMonth(Date date,Long deviceSiteId);
 	/**
 	 * 查找当前月 下的不合格数
 	 * @param date
 	 * @return
 	 */
-	public Long queryWorkSheetNGCountPerMonth(Date date);
+	public Integer queryWorkSheetNGCountPerMonth(Date date);
+	/**
+	 * 查找报废品数量
+	 * @param year
+	 * @param month
+	 * @param ngTypeId
+	 * @return
+	 */
+	public Integer queryWorkSheetScrapCountPerMonth(Date date,Long ngTypeId);
+	/**
+	 * 查找当月所有的报废数量
+	 * @param date
+	 * @return
+	 */
+	public Integer queryWorkSheetScrapCountPerMonth(Date date);
+	
+	/**
+	 * 查找当前天，当前班次的不合格数：产线级
+	 * @param date
+	 * @param classId
+	 * @param productionUnitId
+	 * @return
+	 */
+	public Integer queryWorkSheetNGCountPerClasses4ProductionUnit(Date date,Long classId,Long productionUnitId);
 	/**
 	 * 查找当前月下的合格数
 	 * @param date
 	 * @return
 	 */
-	public Long queryWorkSHeetNotNGCountPerMonth(Date date);
+	public Integer queryWorkSHeetNotNGCountPerMonth(Date date);
+	/**
+	 * 查找当前天，当前班次的合格数：产线级
+	 * @param date
+	 * @param classId
+	 * @param productionUnitId
+	 * @return
+	 */
+	public Integer queryWorkSHeetNotNGCountPerClasses4ProductionUnit(Date date,Long classId,Long productionUnitId);
+	/**
+	 * 根据班次id和日查找产量
+	 * @param classesId
+	 * @param day
+	 * @return
+	 */
+	public Integer queryCountByClassesIdAndDay(Long classesId,Date day,Long productionUnitId);
 }

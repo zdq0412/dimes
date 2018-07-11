@@ -2,14 +2,6 @@
 	pageEncoding="UTF-8"%>
 	<script>
 	$(function(){
-	/* 	$("#status").iCombobox({valueField: 'text',
-			textField: 'text',
-			data: [{
-			    text: 'OK'
-			},{
-			    text: 'NG'
-			}]}); */
-		
 		$('#no').iCombogrid({
 		    idField:'no',
 		    textField:'no',
@@ -54,7 +46,7 @@
 						<label class="topjui-form-label">生产时间</label>
 						<div class="topjui-input-block">
 							<input type="text" name="collectionDate" data-toggle="topjui-datetimebox"
-								data-options="required:false" id="collectionDate">
+								data-options="required:true" id="collectionDate">
 						</div>
 					</div>
 				</div>

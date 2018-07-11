@@ -54,6 +54,7 @@
 								<th
 									data-options="field:'code',title:'生产单元代码',width:'180px',align:'center'"></th>
 								<th data-options="field:'name',title:'生产单元名称',sortable:false"></th>
+								<th data-options="field:'goalOutput',title:'产量目标',sortable:false"></th>
 								<th data-options="field:'note',title:'备注',sortable:true"></th>
 								<th
 									data-options="field:'parentCode',title:'上级单元代码',sortable:true,

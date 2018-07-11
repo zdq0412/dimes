@@ -133,7 +133,7 @@
 	           			},function(data){
 	           				if(data.success){
 	           					$('#processesDeviceSiteTable').iDatagrid('reload');
-	           					$('#workSheetDetail').iEdatagrid('reload',{workpieceId:$('#workPieceCode').iCombogrid("getValue")});
+	           					$('#workSheetDetail').iEdatagrid('reload',{workpieceId:$('#workPieceCode').iCombogrid("grid").datagrid('getSelected').id});
 	           				}else{
 	           					alert(data.msg);
 	           				}
@@ -161,6 +161,7 @@
 									data-options="required:true" id="no">
 							</div>
 						</div>
+						
 						<div class="topjui-col-sm3">
 							<label class="topjui-form-label">生产日期</label>
 							<div class="topjui-input-block">
@@ -272,6 +273,22 @@
 						</div>
 					</div>
 					<div class="topjui-row">
+					<div class="topjui-col-sm3">
+							<label class="topjui-form-label">工单类型</label>
+							<div class="topjui-input-block">
+								<input type="text" name="workSheetType" data-toggle="topjui-combobox" value="common"
+									data-options="
+										valueField: 'value',
+										textField: 'text',
+										data: [{
+										    value: 'common',
+										    text: '普通工单'
+										},{
+										    value: 'repair',
+										    text: '返修工单'
+										}]" id="workSheetType">
+							</div>
+						</div>
 						<div class="topjui-col-sm6">
 							<label class="topjui-form-label">备注</label>
 							<div class="topjui-input-block">
