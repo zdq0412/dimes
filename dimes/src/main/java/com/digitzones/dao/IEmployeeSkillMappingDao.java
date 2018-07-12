@@ -7,5 +7,5 @@ import com.digitzones.model.EmployeeSkillMapping;
  * 2018年6月11日
  */
 public interface IEmployeeSkillMappingDao extends ICommonDao<EmployeeSkillMapping> {
-
+	
 }

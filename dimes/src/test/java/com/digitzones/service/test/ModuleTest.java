@@ -16,7 +16,9 @@ import com.digitzones.model.Module;
 import com.digitzones.model.NGReasonType;
 import com.digitzones.model.ParameterType;
 import com.digitzones.model.PressLightType;
+import com.digitzones.model.ProcessType;
 import com.digitzones.model.ProductionUnit;
+import com.digitzones.model.SkillLevel;
 import com.digitzones.model.WorkpieceType;
 import com.digitzones.service.IDepartmentService;
 import com.digitzones.service.IEquipmentTypeService;
@@ -24,7 +26,9 @@ import com.digitzones.service.IModuleService;
 import com.digitzones.service.INGReasonTypeService;
 import com.digitzones.service.IParameterTypeService;
 import com.digitzones.service.IPressLightTypeService;
+import com.digitzones.service.IProcessTypeService;
 import com.digitzones.service.IProductionUnitService;
+import com.digitzones.service.ISkillLevelService;
 import com.digitzones.service.IWorkpieceTypeService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations= {"classpath*:springContext-*.xml"})
@@ -37,6 +41,16 @@ public class ModuleTest {
 	private IPressLightTypeService  pressLightTypeService;
 	private IWorkpieceTypeService workpieceTypeService;
 	private IEquipmentTypeService equipmentTypeService;
+	private ISkillLevelService skillLevelService;
+	private IProcessTypeService processTypeService;
+	@Autowired
+	public void setProcessTypeService(IProcessTypeService processTypeService) {
+		this.processTypeService = processTypeService;
+	}
+	@Autowired
+	public void setSkillLevelService(ISkillLevelService skillLevelService) {
+		this.skillLevelService = skillLevelService;
+	}
 	@Autowired
 	public void setEquipmentTypeService(IEquipmentTypeService equipmentTypeService) {
 		this.equipmentTypeService = equipmentTypeService;
@@ -111,6 +125,7 @@ public class ModuleTest {
 		son22.setParent(son2);
 		son22.setName("人员技能");
 		son22.setLeaf(true);
+		son22.setUrl("console/jsp/employeeSkill.jsp");
 		moduleService.addModule(son22);
 		
 		Module son23 = new Module();
@@ -349,6 +364,7 @@ public class ModuleTest {
 		Module basicSon130 = new Module();
 		basicSon130.setParent(basicSon1);
 		basicSon130.setName("人员技能");
+		basicSon130.setUrl("console/jsp/skill.jsp");
 		basicSon130.setLeaf(true);
 		moduleService.addModule(basicSon130);
 		
@@ -472,6 +488,15 @@ public class ModuleTest {
 		moduleService.addModule(sysSetChild);
 		
 		
+		Module skillLevel = new Module();
+		skillLevel.setName("技能等级");
+		skillLevel.setParent(sysSetChild);
+		skillLevel.setUrl("console/jsp/skillLevel.jsp");
+		skillLevel.setLeaf(true);
+		skillLevel.setDisabled(false);
+		moduleService.addModule(skillLevel);
+		
+		
 		Module user = new Module();
 		user.setName("用户管理");
 		user.setParent(sysSetChild);
@@ -559,5 +584,54 @@ public class ModuleTest {
 		measuringtool.setName("量具");
 		
 		equipmentTypeService.addObj(measuringtool);
+		
+		
+		//技能等级维护
+		SkillLevel I = new SkillLevel();
+		I.setCode("I");
+		I.setDisabled(false);
+		I.setName("I");
+		I.setNote("");
+		
+		skillLevelService.addObj(I);
+		
+		SkillLevel L = new SkillLevel();
+		L.setCode("L");
+		L.setDisabled(false);
+		L.setName("L");
+		L.setNote("");
+		
+		skillLevelService.addObj(L);
+		
+		SkillLevel O = new SkillLevel();
+		O.setCode("O");
+		O.setDisabled(false);
+		O.setName("O");
+		O.setNote("");
+		
+		skillLevelService.addObj(O);
+		
+		SkillLevel U = new SkillLevel();
+		U.setCode("U");
+		U.setDisabled(false);
+		U.setName("U");
+		U.setNote("");
+		
+		skillLevelService.addObj(U);
+		
+		//初始化工序根类别
+		ProcessType rootProcessType = new ProcessType();
+		rootProcessType.setCode("root");
+		rootProcessType.setName("工序");
+		
+		processTypeService.addObj(rootProcessType);
+	}
+	@Test
+	public void add() {
+		ProcessType rootProcessType = new ProcessType();
+		rootProcessType.setCode("root");
+		rootProcessType.setName("工序");
+		
+		processTypeService.addObj(rootProcessType);
 	}
 }

@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,10 @@ public class SkillLevelServiceImpl implements ISkillLevelService {
 	@Override
 	public void deleteObj(Long id) {
 		skillLevelDao.deleteById(id);
+	}
+
+	@Override
+	public List<SkillLevel> queryAllSkillLevels() {
+		return skillLevelDao.findAll();
 	}
 }

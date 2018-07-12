@@ -9,6 +9,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * 部门实体
@@ -26,6 +29,7 @@ public class Department extends CommonModel {
 	 */
 	private List<Department> children;
 	@OneToMany(fetch=FetchType.EAGER,mappedBy="parent")
+	@Fetch(FetchMode.SUBSELECT)
 	public List<Department> getChildren() {
 		return children;
 	}

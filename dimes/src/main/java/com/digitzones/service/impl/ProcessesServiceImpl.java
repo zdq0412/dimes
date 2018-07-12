@@ -58,4 +58,23 @@ public class ProcessesServiceImpl implements IProcessesService {
 	public List<Processes> queryAllProcesses() {
 		return processesDao.findAll();
 	}
+
+	@Override
+	public List<Processes> queryOtherProcessesByEmployeeId(Long employeeId) {
+		String hql = "select d from Processes d where d.id not in (select cdm.process.id from EmployeeProcessMapping cdm"
+				+ "  where  cdm.employee.id=?0)";
+		return processesDao.findByHQL(hql, new Object[] {employeeId});
+	}
+
+	@Override
+	public List<Processes> queryOtherProcessesByEmployeeIdAndCondition(Long employeeId, String q) {
+		String hql = "select d from Processes d where d.id not in (select cdm.process.id from EmployeeProcessMapping cdm"
+				+ "  where  cdm.employee.id=?0 and (d.code like ?1 or d.name like ?1 or d.processType.name like ?1))";
+		return processesDao.findByHQL(hql, new Object[] {employeeId,"%" + q + "%"});
+	}
+
+	@Override
+	public List<Processes> queryProcessesByTypeId(Long processTypeId) {
+		return processesDao.findByHQL("from Processes p where p.processType.id=?0", new Object[] {processTypeId});
+	}
 }

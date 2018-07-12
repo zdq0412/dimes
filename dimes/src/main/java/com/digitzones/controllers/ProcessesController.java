@@ -1,4 +1,6 @@
 package com.digitzones.controllers;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +11,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.digitzones.model.DeviceSite;
+import com.digitzones.model.EmployeeProcessMapping;
 import com.digitzones.model.Pager;
 import com.digitzones.model.Parameters;
 import com.digitzones.model.ProcessDeviceSiteMapping;
 import com.digitzones.model.ProcessType;
 import com.digitzones.model.Processes;
 import com.digitzones.model.ProcessesParametersMapping;
+import com.digitzones.service.IEmployeeProcessMappingService;
 import com.digitzones.service.IProcessDeviceSiteMappingService;
 import com.digitzones.service.IProcessTypeService;
 import com.digitzones.service.IProcessesParametersMappingService;
 import com.digitzones.service.IProcessesService;
+import com.digitzones.vo.Node;
 import com.digitzones.vo.ProcessesVO;
 /**
  * 工序管理控制器
@@ -32,6 +37,11 @@ public class ProcessesController {
 	private IProcessTypeService processTypeService;
 	private IProcessDeviceSiteMappingService processDeviceSiteMappingService;
 	private IProcessesParametersMappingService processesParametersMappingService;
+	private IEmployeeProcessMappingService employeeProcessMappingService;
+	@Autowired
+	public void setEmployeeProcessMappingService(IEmployeeProcessMappingService employeeProcessMappingService) {
+		this.employeeProcessMappingService = employeeProcessMappingService;
+	}
 	@Autowired
 	public void setProcessesParametersMappingService(IProcessesParametersMappingService processesParametersMappingService) {
 		this.processesParametersMappingService = processesParametersMappingService;
@@ -351,5 +361,65 @@ public class ProcessesController {
 	@ResponseBody
 	public List<Processes> queryProcessByWorkpieceIdAndDeviceSiteId(Long workpieceId,Long deviceSiteId){
 		return processesService.queryProcessByWorkpieceIdAndDeviceSiteId(workpieceId, deviceSiteId);
+	}
+	
+	/**
+	 * 根据员工id查找员工技能
+	 * @param employeeId
+	 * @param rows
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping("/queryProcessByEmployeeId.do")
+	@ResponseBody
+	public ModelMap queryProcessByEmployeeId(Long employeeId,Integer rows,Integer page) {
+		ModelMap modelMap = new ModelMap();
+		String hql = "from EmployeeProcessMapping esm where esm.employee.id=?0";
+		@SuppressWarnings("unchecked")
+		Pager<EmployeeProcessMapping> objPager = employeeProcessMappingService.queryObjs(hql, page, rows, new Object[] {employeeId});
+		modelMap.addAttribute("rows", objPager.getData());
+		modelMap.addAttribute("total", objPager.getTotalCount());
+		return modelMap;
+	}
+	
+	/**
+	 * 查找工序树，结构为工序类型-->工序
+	 * @return
+	 */
+	@RequestMapping("/queryProcessTree.do")
+	@ResponseBody
+	public List<Node> queryProcessTree() {
+		//查找生产单元树形结构
+		List<ProcessType> pus = processTypeService.queryTopProcessTypes();
+		List<Node> nodes = new ArrayList<>();
+		objList2NodeList(nodes, pus);
+		return nodes;
+	}
+	/**
+	 * 构建树形结构，结构为：工序类型-->工序
+	 * @param nodes
+	 * @param pus
+	 */
+	private void objList2NodeList(List<Node> nodes,Collection<ProcessType> pus) {
+		for(ProcessType pu : pus) {
+			Node node = new Node();
+			node.setId(pu.getId());
+			node.setName(pu.getName());
+			nodes.add(node);
+			List<Node> nodeList = new ArrayList<Node>();
+			node.setChildren(nodeList);
+			if(pu.getChildren()!=null &&pu.getChildren().size()>0) {
+				objList2NodeList(nodeList, pu.getChildren());
+			}else {
+				//根据工序类别id查询工序
+				List<Processes> processes = processesService.queryProcessesByTypeId(pu.getId());
+				for(Processes d : processes) {
+					Node no = new Node();
+					no.setId(d.getId());
+					no.setName(d.getName());
+					nodeList.add(no);
+				}
+			}
+		}
 	}
 } 

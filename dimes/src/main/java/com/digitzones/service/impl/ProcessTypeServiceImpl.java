@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,10 @@ public class ProcessTypeServiceImpl implements IProcessTypeService {
 	@Override
 	public void deleteObj(Long id) {
 		processTypeDao.deleteById(id);
+	}
+
+	@Override
+	public List<ProcessType> queryTopProcessTypes() {
+		return processTypeDao.findByHQL("from ProcessType pt where pt.parent is null", new Object[] {});
 	}
 }

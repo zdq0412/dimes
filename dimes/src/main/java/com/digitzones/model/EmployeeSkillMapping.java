@@ -21,7 +21,7 @@ public class EmployeeSkillMapping {
 	private Employee employee;
 	private Skill skill;
 	private Date updateDate;
-	private SkillLevel skillLevel;
+	private ProcessSkillLevel skillLevel;
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
@@ -32,10 +32,10 @@ public class EmployeeSkillMapping {
 	}
 	@ManyToOne
 	@JoinColumn(name="SKILLLEVEL_ID")
-	public SkillLevel getSkillLevel() {
+	public ProcessSkillLevel getSkillLevel() {
 		return skillLevel;
 	}
-	public void setSkillLevel(SkillLevel skillLevel) {
+	public void setSkillLevel(ProcessSkillLevel skillLevel) {
 		this.skillLevel = skillLevel;
 	}
 	@ManyToOne

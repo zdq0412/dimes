@@ -11,15 +11,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.digitzones.model.Department;
 import com.digitzones.model.Employee;
+import com.digitzones.model.EmployeeProcessMapping;
 import com.digitzones.model.Pager;
 import com.digitzones.model.Position;
+import com.digitzones.model.Processes;
+import com.digitzones.service.IEmployeeProcessMappingService;
 import com.digitzones.service.IEmployeeService;
+import com.digitzones.service.IProcessesService;
 import com.digitzones.vo.EmployeeVO;
 
 @Controller
 @RequestMapping("/employee")
 public class EmployeeController {
 	private IEmployeeService employeeService;
+	private IEmployeeProcessMappingService employeeProcessMappingService;
+	private IProcessesService processesService;
+	@Autowired
+	public void setProcessesService(IProcessesService processesService) {
+		this.processesService = processesService;
+	}
+	@Autowired
+	public void setEmployeeProcessMappingService(IEmployeeProcessMappingService employeeProcessMappingService) {
+		this.employeeProcessMappingService = employeeProcessMappingService;
+	}
 	@Autowired
 	public void setEmployeeService(IEmployeeService employeeService) {
 		this.employeeService = employeeService;
@@ -175,5 +189,35 @@ public class EmployeeController {
 		return modelMap;
 	}
 	
+	/**
+	 * 添加非当前员工的工序
+	 * @param employeeId
+	 * @param rows
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping("/queryOtherProcesses.do")
+	@ResponseBody
+	public List<Processes> queryOtherProcesses(Long employeeId,String q) {
+		if(q==null||"".equals(q.trim())) {
+			return processesService.queryOtherProcessesByEmployeeId(employeeId);
+		}else {
+			return processesService.queryOtherProcessesByEmployeeIdAndCondition(employeeId, q);
+		}
+	}
 	
+	/**
+	 * 为员工添加技能
+	 * @param esm
+	 * @return
+	 */
+	@RequestMapping("/addProcess4Employee.do")
+	@ResponseBody
+	public ModelMap addSkill4Employee(EmployeeProcessMapping esm) {
+		ModelMap modelMap = new ModelMap();
+		employeeProcessMappingService.addObj(esm);
+		modelMap.addAttribute("success", true);
+		modelMap.addAttribute("msg", "添加成功！");
+		return modelMap;
+	}
 }

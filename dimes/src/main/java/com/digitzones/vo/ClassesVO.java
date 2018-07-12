@@ -1,8 +1,5 @@
 package com.digitzones.vo;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import com.digitzones.model.ClassType;
 import com.digitzones.model.CommonModel;
 
@@ -11,8 +8,6 @@ import com.digitzones.model.CommonModel;
  * @author zdq
  * 2018年6月3日
  */
-@Entity
-@Table(name="CLASSES")
 public class ClassesVO extends CommonModel {
 	private static final long serialVersionUID = 1L;
 	/**开始时间*/
