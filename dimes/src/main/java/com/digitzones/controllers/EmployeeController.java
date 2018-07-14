@@ -15,6 +15,7 @@ import com.digitzones.model.EmployeeProcessMapping;
 import com.digitzones.model.Pager;
 import com.digitzones.model.Position;
 import com.digitzones.model.Processes;
+import com.digitzones.model.ProductionUnit;
 import com.digitzones.service.IEmployeeProcessMappingService;
 import com.digitzones.service.IEmployeeService;
 import com.digitzones.service.IProcessesService;
@@ -120,9 +121,36 @@ public class EmployeeController {
 	 */
 	@RequestMapping("/queryEmployeeById.do")
 	@ResponseBody
-	public Employee queryEmployeeById(Long id) {
+	public EmployeeVO queryEmployeeById(Long id) {
 		Employee e = employeeService.queryObjById(id);
-		return e;
+		return model2vo(e);
+	}
+
+	private EmployeeVO model2vo(Employee e) {
+		if(e == null) {
+			return null;
+		}
+
+		EmployeeVO vo = new EmployeeVO();
+		vo.setId(e.getId());
+		vo.setName(e.getName());
+		vo.setNote(e.getNote());
+		vo.setPhoto(e.getPhoto());
+		vo.setCode(e.getCode());
+		vo.setDisabled(e.getDisabled());
+
+		if(e.getPosition()!=null) {
+			Position p = (Position)e.getPosition();
+			vo.setPositionId(p.getId());
+			vo.setPositionCode(p.getCode());
+			vo.setPositionName(p.getName());
+		}
+		if(e.getProductionUnit()!=null) {
+			ProductionUnit pu = e.getProductionUnit();
+			vo.setProductionUnitId(pu.getId());
+			vo.setProductionUnitName(pu.getName());
+		}
+		return vo;
 	}
 	/**
 	 * 查询所有员工对象
@@ -188,7 +216,7 @@ public class EmployeeController {
 		modelMap.addAttribute("title", "操作提示!");
 		return modelMap;
 	}
-	
+
 	/**
 	 * 添加非当前员工的工序
 	 * @param employeeId
@@ -205,7 +233,7 @@ public class EmployeeController {
 			return processesService.queryOtherProcessesByEmployeeIdAndCondition(employeeId, q);
 		}
 	}
-	
+
 	/**
 	 * 为员工添加技能
 	 * @param esm

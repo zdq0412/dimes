@@ -22,11 +22,8 @@ public class ProcessSkillLevelDaoImpl extends CommonDaoImpl<ProcessSkillLevel> i
 	}
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
-	public List<Object[]> queryCount4ProcessBySkillLevelCode() {
-		String sql = "select p.name,p.code,COUNT(distinct p.id) from PROCESSES p "
-				+ " left join SKILL s on p.id = s.process_id "
-				+ " inner join processskilllevel psl on s.id = psl.skill_Id  "
-				+ " group by p.name,p.code";
-		return getSession().createSQLQuery(sql).list();
+	public List<Object[]> queryCount4ProcessBySkillLevelCode(String skillLevelCode) {
+		String sql = "select p.code,p.name,COUNT(*) from SKILL s inner join PROCESSES p on s.PROCESS_ID=p.id inner join PROCESSSKILLLEVEL psl on s.id=psl.SKILL_ID where psl.code=?0 group by p.name,p.code";
+		return getSession().createSQLQuery(sql).setParameter(0, skillLevelCode).list();
 	}
 }

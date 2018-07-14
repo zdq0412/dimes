@@ -248,7 +248,8 @@
            			code:employeeCode,
            			'position.id':$('#employeePosition').val(),
            			name:employeeName,
-           			note:$('#employeeNote').val()
+           			note:$('#employeeNote').val(),
+           			'productionUnit.id':$('#productionUnitId').val()
            			},function(data){
            				if(data.success){
 	           				$('#employeeAddDialog').iDialog('close');
@@ -294,7 +295,8 @@
            			code:employeeCode,
            			name:employeeName,
            			'position.id':$('#positionId_edit').val(),
-           			note:$('#employeeNote_edit').val()
+           			note:$('#employeeNote_edit').val(),
+           			'productionUnit.id':$('#productionUnitId').val()
            			},function(data){
            				if(data.success){
 	           				$('#employeeEditDialog').iDialog('close');

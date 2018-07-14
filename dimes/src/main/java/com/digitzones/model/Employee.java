@@ -17,6 +17,16 @@ public class Employee extends CommonModel {
 	private String photo;
 	/**员工所在岗位*/
 	private Position position;
+	/**员工所在生产单元*/
+	private ProductionUnit productionUnit;
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="PRODUCTIONUNIT_ID")
+	public ProductionUnit getProductionUnit() {
+		return productionUnit;
+	}
+	public void setProductionUnit(ProductionUnit productionUnit) {
+		this.productionUnit = productionUnit;
+	}
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="POSITION_ID")
 	public Position getPosition() {

@@ -15,11 +15,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.model.Employee;
+import com.digitzones.model.Processes;
+import com.digitzones.service.IEmployeeService;
+import com.digitzones.service.IEmployeeSkillMappingService;
 import com.digitzones.service.IProcessSkillLevelService;
+import com.digitzones.service.IProcessesService;
 @Controller
 @RequestMapping("/employeeSkill")
 public class EmployeeSkillController {
 	private IProcessSkillLevelService processSkillLevelService;
+	private IEmployeeService employeeService;
+	private IEmployeeSkillMappingService employeeSkillMappingService;
+	private IProcessesService processService;
+	@Autowired
+	public void setProcessService(IProcessesService processService) {
+		this.processService = processService;
+	}
+	@Autowired
+	public void setEmployeeSkillMappingService(IEmployeeSkillMappingService employeeSkillMappingService) {
+		this.employeeSkillMappingService = employeeSkillMappingService;
+	}
+	@Autowired
+	public void setEmployeeService(IEmployeeService employeeService) {
+		this.employeeService = employeeService;
+	}
 	@Autowired
 	public void setProcessSkillLevelService(IProcessSkillLevelService processSkillLevelService) {
 		this.processSkillLevelService = processSkillLevelService;
@@ -36,38 +56,132 @@ public class EmployeeSkillController {
 		List<Map<String,Object>> inner = new ArrayList<Map<String,Object>>();
 		List<Map<String,Object>> outer = new ArrayList<Map<String,Object>>();
 		List<String> names = new ArrayList<>();
+		//查询所有工序
+		List<Processes> pList = processService.queryAllProcesses();
 		
-		//查询所有的技能等级，技能编码及名称，每个等级下的工序数
+		//查询所有的技能等级，技能编码及名称
 		List<Object[]> skillLevelList = processSkillLevelService.queryCount4SkillLevel();
 		
 		for(int i = 0;i< skillLevelList.size();i++) {
-			Object[] oa = skillLevelList.get(i);
+			Object[] skillLevel = skillLevelList.get(i);
+			//根据等级编码查询工序数
+			List<Object[]> processList = processSkillLevelService.queryCount4ProcessBySkillLevelCode(skillLevel[0]+"");
+			for(Object[] oa : processList) {
+				Map<String,Object> map = new HashMap<>();
+				map.put("name", oa[1]);
+				map.put("value", oa[2]);
+				outer.add(map);
+			}
 			Map<String,Object> map = new HashMap<>();
-			map.put("name", oa[1]);
-			map.put("value", oa[2]);
+			map.put("name", skillLevel[1]);
+			map.put("value", skillLevel[2]);
 			if(i == 0) {
 				map.put("selected",true);
 			}
 			inner.add(map);
 			
-			names.add(oa[1]+"");
+			names.add(skillLevel[1]+"");
 		}
 		
-		//每道工序下的等级数
-		List<Object[]> processList = processSkillLevelService.queryCount4ProcessBySkillLevelCode();
-		for(Object[] oa : processList) {
-			Map<String,Object> map = new HashMap<>();
-			map.put("name", oa[0]);
-			map.put("value", oa[2]);
-			
-			outer.add(map);
-			
-			names.add(oa[0]+"");
+		for(Processes p : pList) {
+			names.add(p.getName());
 		}
-		
 		modelMap.addAttribute("inner", inner);
 		modelMap.addAttribute("outer", outer);
 		modelMap.addAttribute("names", names);
+		return modelMap;
+	}
+	/**
+	 * 人员技能：工厂级
+	 * 每个员工每个技能等级下的技能数
+	 * @return
+	 */
+	@RequestMapping("/queryEmployeeSkill4emp.do")
+	@ResponseBody
+	public ModelMap queryEmployeeSkill4emp() {
+		ModelMap modelMap = new ModelMap();
+		List<String> skillLevels = new ArrayList<>();
+		List<String> empList = new ArrayList<>();
+		List<List<Object>> data = new ArrayList<>();
+		
+		//查询所有技能等级
+		//查询所有的技能等级，技能编码及名称，每个等级下的工序数
+		List<Object[]> skillLevelList = processSkillLevelService.queryCount4SkillLevel();
+		//查询所有员工
+		List<Employee> emps = employeeService.queryAllEmployees();
+		int i = 0;
+		//查询每个等级，每个员工下的技能数
+		for(Object[] oa : skillLevelList) {
+			skillLevels.add(oa[1]+"");
+			int j =0;
+			for(Employee e : emps) {
+				//根据技能id和员工id查找技能数
+				Integer count = employeeSkillMappingService.queryCountBySkillLevelIdAndEmployeeId(e.getId(), oa[0]+"");
+				List<Object> list = new ArrayList<>();
+				list.add(j);
+				list.add(i);
+				list.add(count);
+				j++;
+				
+				data.add(list);
+			}
+			i++;
+		}
+		
+		for(Employee e : emps) {
+			empList.add(e.getName()+"-"+e.getCode());
+		}
+		
+		modelMap.addAttribute("skillLevels", skillLevels);
+		modelMap.addAttribute("emps", empList);
+		modelMap.addAttribute("data", data);
+		
+		return modelMap;
+	}
+	@RequestMapping("/queryEmployeeSkill4empByProductionUnitId.do")
+	@ResponseBody
+	public ModelMap queryEmployeeSkill4empByProductionUnitId(Long productionUnitId) {
+		if(productionUnitId==null) {
+			productionUnitId = 0l;
+		}
+		
+		ModelMap modelMap = new ModelMap();
+		List<String> skillLevels = new ArrayList<>();
+		List<String> empList = new ArrayList<>();
+		List<List<Object>> data = new ArrayList<>();
+		
+		//查询所有技能等级
+		//查询所有的技能等级，技能编码及名称，每个等级下的工序数
+		List<Object[]> skillLevelList = processSkillLevelService.queryCount4SkillLevel();
+		//查询所有员工
+		List<Employee> emps = employeeService.queryAllEmployees();
+		int i = 0;
+		//查询每个等级，每个员工下的技能数
+		for(Object[] oa : skillLevelList) {
+			skillLevels.add(oa[1]+"");
+			int j =0;
+			for(Employee e : emps) {
+				//根据技能id、员工id和产线id查找技能数
+				Integer count = employeeSkillMappingService.queryCountBySkillLevelIdAndEmployeeIdAndProductionUnitId(e.getId(), oa[0]+"",productionUnitId);
+				List<Object> list = new ArrayList<>();
+				list.add(j);
+				list.add(i);
+				list.add(count);
+				j++;
+				
+				data.add(list);
+			}
+			i++;
+		}
+		
+		for(Employee e : emps) {
+			empList.add(e.getName()+"-"+e.getCode());
+		}
+		
+		modelMap.addAttribute("skillLevels", skillLevels);
+		modelMap.addAttribute("emps", empList);
+		modelMap.addAttribute("data", data);
+		
 		return modelMap;
 	}
 } 

@@ -18,6 +18,20 @@ public class EmployeeVO  {
 	private Long positionId;
 	private String positionCode;
 	private String positionName;
+	private Long productionUnitId;
+	private String productionUnitName;
+	public Long getProductionUnitId() {
+		return productionUnitId;
+	}
+	public void setProductionUnitId(Long productionUnitId) {
+		this.productionUnitId = productionUnitId;
+	}
+	public String getProductionUnitName() {
+		return productionUnitName;
+	}
+	public void setProductionUnitName(String productionUnitName) {
+		this.productionUnitName = productionUnitName;
+	}
 	public Long getDepartmentId() {
 		return departmentId;
 	}

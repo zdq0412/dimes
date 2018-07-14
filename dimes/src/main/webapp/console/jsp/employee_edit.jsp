@@ -37,6 +37,23 @@
 					</div>
 				</div>
 				<div class="topjui-row">
+						<div class="topjui-col-sm8">
+							<label class="topjui-form-label">生产单元</label>
+							<div class="topjui-input-block">
+								<input type="text" id="productionUnitName"  name="productionUnitName" data-toggle="topjui-combobox"
+								data-options="required:false,
+                       valueField:'id',
+                       textField:'name',
+                       url:'productionUnit/queryAllProductionUnits.do',
+                       onSelect: function(rec){
+                       	$('#productionUnitId').val(rec.id);
+                       }
+                       ">
+                       <input type="hidden" name="productionUnitId" id="productionUnitId" />
+							</div>
+						</div>
+					</div>
+				<div class="topjui-row">
 					<div class="topjui-col-sm12">
 						<label class="topjui-form-label">描述</label>
 						<div class="topjui-input-block">

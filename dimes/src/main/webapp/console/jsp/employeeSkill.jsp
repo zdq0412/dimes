@@ -4,12 +4,77 @@
 <script>
 	$(function(){
 		$.get("employeeSkill/queryEmployeeSkill.do",function(data){
-			employeeSkill(data);
+			process(data);
+		});
+		$.get("employeeSkill/queryEmployeeSkill4emp.do",function(data){
+			emp(data);
 		});
 	});
 	
-	function employeeSkill(data){
-		var myChart = echarts.init(document.getElementById("main"));
+	//人员技能：人员
+	function emp(data){
+		var myChart = echarts.init(document.getElementById("emp"));
+
+		var d = data.data;
+
+		d = d.map(function (item) {
+		    return [item[1], item[0], item[2] || '-'];
+		});
+
+		option = {
+		    tooltip: {
+		        position: 'top'
+		    },
+		    animation: false,
+		    grid: {
+		        height: '50%',
+		        y: '10%'
+		    },
+		    xAxis: {
+		        type: 'category',
+		        data: data.emps,
+		        splitArea: {
+		            show: true
+		        }
+		    },
+		    yAxis: {
+		        type: 'category',
+		        data: data.skillLevels,
+		        splitArea: {
+		            show: true
+		        }
+		    },
+		    visualMap: {
+		        min: 0,
+		        max: 10,
+		        calculable: true,
+		        orient: 'horizontal',
+		        left: 'center',
+		        bottom: '15%'
+		    },
+		    series: [{
+		        name: 'Punch Card',
+		        type: 'heatmap',
+		        data: d,
+		        label: {
+		            normal: {
+		                show: true
+		            }
+		        },
+		        itemStyle: {
+		            emphasis: {
+		                shadowBlur: 10,
+		                shadowColor: 'rgba(0, 0, 0, 0.5)'
+		            }
+		        }
+		    }]
+		};
+		 myChart.setOption(option);
+	}
+	
+	//人员技能：工序
+	function process(data){
+		var myChart = echarts.init(document.getElementById("process"));
 
 		option = {
 		    tooltip: {
@@ -85,7 +150,9 @@
 </script>
 </head>
 <body>
-	<div id="main" style="width:900px;height:800px;">
+	<div id="main" style="width: 900px; height: 800px;">
+		<div id="process" style="height: 50%;"></div>
+		<div id="emp" style="height: 50%;"></div>
 	</div>
 </body>
 </html>

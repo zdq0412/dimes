@@ -48,4 +48,15 @@ public class EmployeeSkillMappingServiceImpl implements IEmployeeSkillMappingSer
 		employeeSkillMappingDao.deleteById(id);
 	}
 
+	@Override
+	public Integer queryCountBySkillLevelIdAndEmployeeId(Long employeeId, String skillLevelCode) {
+		return employeeSkillMappingDao.queryCountBySkillLevelIdAndEmployeeId(employeeId, skillLevelCode);
+	}
+
+	@Override
+	public Integer queryCountBySkillLevelIdAndEmployeeIdAndProductionUnitId(Long employeeId, String skillLevelCode,
+			Long productionUnitId) {
+		return employeeSkillMappingDao.queryCountBySkillLevelIdAndEmployeeIdAndProductionUnitId(employeeId, skillLevelCode, productionUnitId);
+	}
+
 }

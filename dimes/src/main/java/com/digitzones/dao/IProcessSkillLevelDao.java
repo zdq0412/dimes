@@ -19,5 +19,7 @@ public interface IProcessSkillLevelDao extends ICommonDao<ProcessSkillLevel> {
 	 * @param skillLevelCode
 	 * @return
 	 */
-	public List<Object[]> queryCount4ProcessBySkillLevelCode();
+	public List<Object[]> queryCount4ProcessBySkillLevelCode(String skillLevelCode);
+	
+	
 }

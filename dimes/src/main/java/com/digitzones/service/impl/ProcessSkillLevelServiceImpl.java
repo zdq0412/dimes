@@ -61,7 +61,7 @@ public class ProcessSkillLevelServiceImpl implements IProcessSkillLevelService {
 	}
 
 	@Override
-	public List<Object[]> queryCount4ProcessBySkillLevelCode() {
-		return processSkillLevelDao.queryCount4ProcessBySkillLevelCode();
+	public List<Object[]> queryCount4ProcessBySkillLevelCode(String skillLevelCode) {
+		return processSkillLevelDao.queryCount4ProcessBySkillLevelCode(skillLevelCode);
 	}
 }

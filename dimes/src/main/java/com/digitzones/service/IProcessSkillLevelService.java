@@ -26,5 +26,5 @@ public interface IProcessSkillLevelService extends ICommonService<ProcessSkillLe
 	 * @param skillLevelCode
 	 * @return
 	 */
-	public List<Object[]> queryCount4ProcessBySkillLevelCode();
+	public List<Object[]> queryCount4ProcessBySkillLevelCode(String skillLevelCode);
 }

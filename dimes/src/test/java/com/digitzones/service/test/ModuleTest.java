@@ -227,6 +227,7 @@ public class ModuleTest {
 		son34.setParent(son3);
 		son34.setName("人员技能");
 		son34.setLeaf(true);
+		son34.setUrl("console/jsp/employeeSkill4ProductionUnit.jsp");
 		moduleService.addModule(son34);
 		
 		Module son35 = new Module();
