@@ -32,7 +32,9 @@
 								data-options="required:false,
                        valueField:'id',
                        textField:'name',
-                       url:'position/queryPositions.do?deptid={departmentId}'">
+                       url:'position/queryPositions.do?deptid={departmentId}'" name="positionName">
+                       
+                       <input type="hidden" name="positionId" />
 						</div>
 					</div>
 				</div>

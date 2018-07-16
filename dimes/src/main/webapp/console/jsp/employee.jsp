@@ -1,12 +1,35 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="../../common/jsp/head.jsp"%>
+<script type="text/javascript">
+ 	function openWindow(){
+		//获取所有被选中的员工
+		var employeesArray = $("#employeeDg").iDatagrid("getChecked");
+		if(employeesArray.length>0){
+			var ids = "";
+			for(var i = 0;i<employeesArray.length;i++){
+				var employee = employeesArray[i];
+				ids += employee.id +",";
+			}
+			
+			ids = ids.substring(0,ids.length-1);
+			$("#ids").val(ids);
+ 			var newWin = window.open("console/jsp/employee_print.jsp"); 
+ 			newWin.onload=function(){
+ 				//newWin.document.getElementById("ids").value=ids;
+ 			}
+		}else{
+			alert("请选择要打印二维码的员工信息!");
+			return false;
+		}
+	} 
+</script>
 </head>
 <body>
+	<input type="hidden" id="ids" />
 	<div data-toggle="topjui-layout" data-options="fit:true">
 		<div
 			data-options="region:'west',title:'',split:true,border:false,width:'15%',iconCls:'fa fa-sitemap',headerCls:'border_right',bodyCls:'border_right'">
-			<!-- treegrid表格 -->
 			<table data-toggle="topjui-treegrid"
 				data-options="id:'departmentTg',
 			   idField:'id',
@@ -39,9 +62,11 @@
 					<table data-toggle="topjui-datagrid"
 						data-options="id:'employeeDg',
                        url:'employee/queryEmployeesByDepartmentId.do',
-                       singleSelect:true,
                        fitColumns:true,
                        pagination:true,
+                       singleSelect:true,
+						selectOnCheck:false,
+						checkOnSelect:false,
                        parentGrid:{
                            type:'treegrid',
                            id:'departmentTg'
@@ -50,7 +75,7 @@
 						<thead>
 							<tr>
 								<th
-									data-options="field:'id',title:'id',checkbox:false,width:'80px'"></th>
+									data-options="field:'id',title:'id',checkbox:true,width:'80px'"></th>
 								<th
 									data-options="field:'code',title:'员工代码',width:'180px',align:'center'"></th>
 								<th data-options="field:'name',title:'员工名称',sortable:false"></th>
@@ -284,7 +309,6 @@
                 url:'employee/queryEmployeeById.do?id={id}',
                  buttons:[
            			{text:'编辑',handler:function(){
-           		
            			var employeeCode = $('#employeeCode_edit').val();
            			var employeeName = $('#employeeName_edit').val();
            			if(employeeName==null || ''===$.trim(employeeName)){
@@ -316,13 +340,22 @@
        extend: '#employeeDg-toolbar',
        iconCls:'fa fa-trash',
        url:'employee/deleteEmployee.do',
-       grid: {uncheckedMsg:'请先勾选要删除的数据',id:'employeeDg',param:'id:id'}">删除</a>
+       grid: {uncheckedMsg:'请先勾选要删除的数据',id:'employeeDg',param:'ids:id'}">删除</a>
 		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
 			data-options="method:'doAjax',
        extend: '#employeeDg-toolbar',
        iconCls:'fa fa-stop',
        url:'employee/disabledEmployee.do',
-       grid: {uncheckedMsg:'请选择要停用的部门',id:'employeeDg',param:'id:id'}">停用</a>
+       grid: {uncheckedMsg:'请选择要停用的员工',id:'employeeDg',param:'id:id'}">停用</a>
+      <a href="javascript:void(0)" data-toggle="topjui-menubutton"
+			data-options="iconCls: 'fa fa-pencil',
+            modal:true,
+            parentGrid:{
+		       	type:'treegrid',
+		       	id:'departmentTg',
+		       	param:'departmentId:id'
+		      }" onClick="openWindow()">打印二维码</a>
+       <!-- 二维码按钮 -->
 	</div>
 	<!-- 员工表格工具栏结束 -->
 	<!-- 职位表格工具栏开始 -->

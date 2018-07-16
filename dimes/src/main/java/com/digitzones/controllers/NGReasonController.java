@@ -46,6 +46,19 @@ public class NGReasonController {
 		mm.addAttribute("msg", "");
 		return mm;
 	}
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/queryNGReasonsByProcessId.do")
+	@ResponseBody
+	public ModelMap queryNGReasonsByProcessId(@RequestParam(value="processId",required=false)Long processId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
+		Pager<NGReason> pager = null;
+		pager = ngReasonService.queryObjs("select p from NGReason p where p.process.id=?0", page, rows, new Object[] {processId});
+		ModelMap mm = new ModelMap();
+		mm.addAttribute("rows",pager.getData());
+		mm.addAttribute("total", pager.getTotalCount());
+		mm.addAttribute("code", "0");
+		mm.addAttribute("msg", "");
+		return mm;
+	}
 
 	/**
 	 * 添加不良原因

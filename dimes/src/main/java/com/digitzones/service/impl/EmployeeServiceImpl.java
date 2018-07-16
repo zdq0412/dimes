@@ -9,10 +9,18 @@ import org.springframework.stereotype.Service;
 import com.digitzones.dao.IEmployeeDao;
 import com.digitzones.model.Employee;
 import com.digitzones.model.Pager;
+import com.digitzones.model.User;
 import com.digitzones.service.IEmployeeService;
+import com.digitzones.service.IUserService;
 @Service
 public class EmployeeServiceImpl implements IEmployeeService {
 	private IEmployeeDao employeeDao;
+	private IUserService userService;
+	@Autowired
+	public void setUserService(IUserService userService) {
+		this.userService = userService;
+	}
+
 	@Autowired
 	public void setEmployeeDao(IEmployeeDao employeeDao) {
 		this.employeeDao = employeeDao;
@@ -54,4 +62,16 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		return employeeDao.findAll();
 	}
 
+	@Override
+	public boolean deleteEmployees(String[] ids) {
+		for(int i = 0;i<ids.length;i++) {
+			Long id = Long .valueOf(ids[i]);
+			List<User> users = userService.queryUsersByEmployeeId(id);
+			if(users!=null&&users.size()>0) {
+				return false;
+			}
+			employeeDao.deleteById(id);
+		}
+		return true; 
+	}
 }

@@ -3,12 +3,15 @@ package com.digitzones.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.config.QRConfig;
 import com.digitzones.model.Department;
 import com.digitzones.model.Employee;
 import com.digitzones.model.EmployeeProcessMapping;
@@ -19,14 +22,21 @@ import com.digitzones.model.ProductionUnit;
 import com.digitzones.service.IEmployeeProcessMappingService;
 import com.digitzones.service.IEmployeeService;
 import com.digitzones.service.IProcessesService;
+import com.digitzones.util.QREncoder;
 import com.digitzones.vo.EmployeeVO;
 
 @Controller
 @RequestMapping("/employee")
 public class EmployeeController {
+	private QRConfig config ;
+	@Autowired
+	public void setConfig(QRConfig config) {
+		this.config = config;
+	}
 	private IEmployeeService employeeService;
 	private IEmployeeProcessMappingService employeeProcessMappingService;
 	private IProcessesService processesService;
+	private QREncoder qrEncoder = new QREncoder();
 	@Autowired
 	public void setProcessesService(IProcessesService processesService) {
 		this.processesService = processesService;
@@ -144,12 +154,21 @@ public class EmployeeController {
 			vo.setPositionId(p.getId());
 			vo.setPositionCode(p.getCode());
 			vo.setPositionName(p.getName());
+			
+			if(p.getDepartment()!=null) {
+				vo.setDepartmentCode(p.getDepartment().getCode());
+				vo.setDepartmentId(p.getDepartment().getId());
+				vo.setDepartmentName(p.getDepartment().getName());
+			}
 		}
+		
+		
 		if(e.getProductionUnit()!=null) {
 			ProductionUnit pu = e.getProductionUnit();
 			vo.setProductionUnitId(pu.getId());
 			vo.setProductionUnitName(pu.getName());
 		}
+		
 		return vo;
 	}
 	/**
@@ -182,17 +201,25 @@ public class EmployeeController {
 	 */
 	@RequestMapping("/deleteEmployee.do")
 	@ResponseBody
-	public ModelMap deleteEmployee(String id) {
-		if(id!=null && id.contains("'")) {
-			id = id.replace("'", "");
+	public ModelMap deleteEmployee(String ids) {
+		
+		if(ids!=null && ids.contains("'")) {
+			ids = ids.replace("'", "");
 		}
 		ModelMap modelMap = new ModelMap();
-		employeeService.deleteObj(Long.valueOf(id));
-		modelMap.addAttribute("success", true);
-		modelMap.addAttribute("statusCode", 200);
-		modelMap.addAttribute("title", "操作提示");
-		modelMap.addAttribute("msg", "成功删除!");
-		modelMap.addAttribute("message", "成功删除!");
+		if(employeeService.deleteEmployees(ids.split(","))) {
+			modelMap.addAttribute("success", true);
+			modelMap.addAttribute("statusCode", 200);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("msg", "成功删除!");
+			modelMap.addAttribute("message", "成功删除!");
+		}else {
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("msg", "操作失败,存在关联用户的员工!");
+			modelMap.addAttribute("message", "操作失败,存在关联用户的员工!");
+		}
 		return modelMap;
 	}
 	/**
@@ -233,7 +260,7 @@ public class EmployeeController {
 			return processesService.queryOtherProcessesByEmployeeIdAndCondition(employeeId, q);
 		}
 	}
-
+	
 	/**
 	 * 为员工添加技能
 	 * @param esm
@@ -247,5 +274,25 @@ public class EmployeeController {
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("msg", "添加成功！");
 		return modelMap;
+	}
+	/**
+	 * 打印员工的二维码
+	 * @param ids 员工id字符串
+	 * @return
+	 */
+	@RequestMapping("/printQr.do")
+	@ResponseBody
+	public List<EmployeeVO> printQr(String ids,HttpServletRequest request) {
+		String dir = request.getServletContext().getRealPath("/");
+		List<EmployeeVO> vos = new ArrayList<>();
+		String[] idStr = ids.split(",");
+		for(int i = 0 ;i<idStr.length;i++) {
+			String id = idStr[i];
+			Employee e = employeeService.queryObjById(Long.valueOf(id));
+			EmployeeVO vo = model2vo(e);
+			vo.setQrPath(qrEncoder.generatePR(e.getCode(),dir , config.getQrPath()));
+			vos.add(vo);
+		}
+		return vos;
 	}
 }

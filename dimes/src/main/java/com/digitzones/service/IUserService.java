@@ -32,4 +32,10 @@ public interface IUserService extends ICommonService<User> {
 	 * @return
 	 */
 	public List<User> queryAllUsers();
+	/**
+	 * 根据员工id查找用户信息
+	 * @param employeeId
+	 * @return
+	 */
+	public List<User> queryUsersByEmployeeId(Long employeeId);
 }

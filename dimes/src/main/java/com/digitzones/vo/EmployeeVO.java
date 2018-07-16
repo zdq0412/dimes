@@ -20,6 +20,14 @@ public class EmployeeVO  {
 	private String positionName;
 	private Long productionUnitId;
 	private String productionUnitName;
+	/**二维码路径*/
+	private String qrPath;
+	public String getQrPath() {
+		return qrPath;
+	}
+	public void setQrPath(String qrPath) {
+		this.qrPath = qrPath;
+	}
 	public Long getProductionUnitId() {
 		return productionUnitId;
 	}

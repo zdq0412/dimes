@@ -8,5 +8,5 @@ import com.digitzones.model.Employee;
  * 2018年6月10日
  */
 public interface IEmployeeDao extends ICommonDao<Employee> {
-
+	
 }

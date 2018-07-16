@@ -12,8 +12,11 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 	<!-- 配置扫描包 -->
 	<context:component-scan
-		base-package="com.digitzones.controllers" />
-
+		base-package="com.digitzones.controllers
+		com.digitzones.config
+		" />
+	<context:property-placeholder
+		location="classpath:function.properties" />
 	<mvc:annotation-driven />
 	<!-- 配置视图解析器 -->
 	<bean
@@ -49,7 +52,7 @@
 	</bean>
 	<!-- 使用web3.0实现文件上传 -->
 	<bean id="multipartResolver"
-        class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
-</bean>
+		class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+	</bean>
 </beans>
 

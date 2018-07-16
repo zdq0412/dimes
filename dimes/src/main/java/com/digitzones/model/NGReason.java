@@ -1,5 +1,6 @@
 package com.digitzones.model;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +26,9 @@ public class NGReason {
 	/**处理方法*/
 	private String processingMethod;
 	/**类型*/
-	private NGReasonType ngReasonType;
+	//private NGReasonType ngReasonType;
+	/**工序*/
+	private Processes process;
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
@@ -33,6 +36,14 @@ public class NGReason {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="PROCESS_ID")
+	public Processes getProcess() {
+		return process;
+	}
+	public void setProcess(Processes process) {
+		this.process = process;
 	}
 	public String getNgCode() {
 		return ngCode;
@@ -58,12 +69,12 @@ public class NGReason {
 	public void setProcessingMethod(String processingMethod) {
 		this.processingMethod = processingMethod;
 	}
-	@ManyToOne
+/*	@ManyToOne
 	@JoinColumn(name="NGREASONTYPE_ID")
 	public NGReasonType getNgReasonType() {
 		return ngReasonType;
 	}
 	public void setNgReasonType(NGReasonType ngReasonType) {
 		this.ngReasonType = ngReasonType;
-	}
+	}*/
 }

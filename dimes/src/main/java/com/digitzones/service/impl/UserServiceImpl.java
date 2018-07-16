@@ -69,4 +69,9 @@ public class UserServiceImpl implements IUserService {
 	public List<User> queryAllUsers() {
 		return userDao.findAll();
 	}
+
+	@Override
+	public List<User> queryUsersByEmployeeId(Long employeeId) {
+		return userDao.findByHQL("from User u where u.employee.id=?0", new Object[] {employeeId});
+	}
 }
