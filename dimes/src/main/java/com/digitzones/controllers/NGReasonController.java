@@ -1,17 +1,22 @@
 package com.digitzones.controllers;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.config.QRConfig;
 import com.digitzones.model.NGReason;
 import com.digitzones.model.Pager;
 import com.digitzones.service.INGReasonService;
+import com.digitzones.util.QREncoder;
+import com.digitzones.vo.NGReasonVO;
 /**
  * 不良原因管理控制器
  * @author zdq
@@ -20,6 +25,12 @@ import com.digitzones.service.INGReasonService;
 @Controller
 @RequestMapping("/ngReason")
 public class NGReasonController {
+	private QRConfig config ;
+	@Autowired
+	public void setConfig(QRConfig config) {
+		this.config = config;
+	}
+	private QREncoder qrEncoder = new QREncoder();
 	private INGReasonService ngReasonService;
 	@Autowired
 	public void setNgReasonService(INGReasonService ngReasonService) {
@@ -133,5 +144,36 @@ public class NGReasonController {
 	@ResponseBody
 	public List<NGReason> queryNGReasonsByNGReasonTypeIdNoPager(Long ngReasonTypeId){
 		return ngReasonService.queryNGReasonsByNGReasonTypeId(ngReasonTypeId);
+	}
+	/**
+	 * 打印ng的二维码
+	 * @param ids 设备id字符串
+	 * @return
+	 */
+	@RequestMapping("/printQr.do")
+	@ResponseBody
+	public List<NGReasonVO> printQr(String ids,HttpServletRequest request) {
+		String dir = request.getServletContext().getRealPath("/");
+		List<NGReasonVO> vos = new ArrayList<>();
+		String[] idStr = ids.split(",");
+		for(int i = 0 ;i<idStr.length;i++) {
+			String id = idStr[i];
+			NGReason e = ngReasonService.queryObjById(Long.valueOf(id));
+			NGReasonVO vo = model2VO(e);
+			vo.setQrPath(qrEncoder.generatePR(e.getNgCode(),dir , config.getQrPath()));
+			vos.add(vo);
+		}
+		return vos;
+	}
+	
+	private NGReasonVO model2VO(NGReason ng) {
+		if(ng == null) {
+			return null;
+		}
+		NGReasonVO vo = new NGReasonVO();
+		vo.setId(ng.getId());
+		vo.setNgCode(ng.getNgCode());
+		vo.setNgReason(ng.getNgReason());
+		return vo;
 	}
 } 

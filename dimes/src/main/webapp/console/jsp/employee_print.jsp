@@ -23,44 +23,78 @@
 				while(i<data.length){
 					var employee1 = data[i++];
 					var $row = $("<div class='topjui-row'>");
-					var $col1 = $('<div class="topjui-col-sm4 topjui-col-xs4 col">');
-					//列里的div
-					var $innerDiv1 = $("<div class='innerDiv'>");
-					$col1.append($innerDiv1);
-					
-					var $innerTop = $("<div class='innerTop'>");
-					var $innerBottom = $("<div class='innerBottom'>");
-					
-					$innerDiv1.append($innerTop);
-					$innerDiv1.append($innerBottom);
-					
-					var $innerBottomLeft = $("<div class='innerBottomLeft'>");
-					var $innerBottomRight = $("<div class='innerBottomRight'>");
-					
-					$innerBottom.append($innerBottomLeft);
-					$innerBottom.append($innerBottomRight);
-					
-					var code = content('工号',employee1.code);
-					var name = content('姓名',employee1.name);
-					var dept = content('部门',employee1.departmentName);
-					$innerBottomLeft.append(code);
-					$innerBottomLeft.append(name);
-					$innerBottomLeft.append(dept);
-					
-					$innerBottomRight.append("<img src='<%=basePath%>/" + employee1.qrPath+"' />");
-					
+					if(employee1!=undefined){
+						var $col1 = $('<div class="topjui-col-sm4 topjui-col-xs4 col">');
+						//列里的div
+						var $innerDiv1 = $("<div class='innerDiv'>");
+						$col1.append($innerDiv1);
+						
+						var $innerTop = $("<div class='innerTop'>");
+						var $innerBottom = $("<div class='innerBottom'>");
+						
+						$innerDiv1.append($innerTop);
+						$innerDiv1.append($innerBottom);
+						
+						var $innerBottomLeft = $("<div class='innerBottomLeft'>");
+						var $innerBottomRight = $("<div class='innerBottomRight'>");
+						
+						$innerBottom.append($innerBottomLeft);
+						$innerBottom.append($innerBottomRight);
+						
+						var code = content('工号',employee1.code);
+						var name = content('姓名',employee1.name);
+						var dept = content('部门',employee1.departmentName);
+						$innerBottomLeft.append(code);
+						$innerBottomLeft.append(name);
+						$innerBottomLeft.append(dept);
+						
+						$innerBottomRight.append("<img src='<%=basePath%>/" + employee1.qrPath+"' />");
+						
+						$row.append($col1);
+					}
 					
 					var employee2 = data[i++];
-					 var $col2 = $('<div class="topjui-col-sm4 topjui-col-xs4 col">');
-					//列里的div
-						var $innerDiv2 = $("<div class='innerDiv'>");
-						$col2.append($innerDiv2);
+					if(employee2!=undefined){
+						 var $col2 = $('<div class="topjui-col-sm4 topjui-col-xs4 col">');
+						//列里的div
+							var $innerDiv2 = $("<div class='innerDiv'>");
+							$col2.append($innerDiv2);
+							
+							 $innerTop = $("<div class='innerTop'>");
+							 $innerBottom = $("<div class='innerBottom'>");
+							
+							$innerDiv2.append($innerTop);
+							$innerDiv2.append($innerBottom);
+							
+							 $innerBottomLeft = $("<div class='innerBottomLeft'>");
+							 $innerBottomRight = $("<div class='innerBottomRight'>");
+							
+							$innerBottom.append($innerBottomLeft);
+							$innerBottom.append($innerBottomRight);
+							
+							 code = content('工号',employee2.code);
+							 name = content('姓名',employee2.name);
+							 dept = content('部门',employee2.departmentName);
+							$innerBottomLeft.append(code);
+							$innerBottomLeft.append(name);
+							$innerBottomLeft.append(dept);
+							$innerBottomRight.append("<img src='<%=basePath%>/" + employee2.qrPath+"'/>");
+							
+							$row.append($col2);
+					}
+						
+					var employee3 = data[i++];
+					if(employee3!=undefined){
+						var $col3 = $('<div class="topjui-col-sm4 topjui-col-xs4 col">');
+						 
+						var $innerDiv3 = $("<div class='innerDiv'>");
+						$col3.append($innerDiv3);
 						
 						 $innerTop = $("<div class='innerTop'>");
 						 $innerBottom = $("<div class='innerBottom'>");
 						
-						$innerDiv2.append($innerTop);
-						$innerDiv2.append($innerBottom);
+						$innerDiv3.append($innerTop);
+						$innerDiv3.append($innerBottom);
 						
 						 $innerBottomLeft = $("<div class='innerBottomLeft'>");
 						 $innerBottomRight = $("<div class='innerBottomRight'>");
@@ -68,48 +102,18 @@
 						$innerBottom.append($innerBottomLeft);
 						$innerBottom.append($innerBottomRight);
 						
-						 code = content('工号',employee2.code);
-						 name = content('姓名',employee2.name);
-						 dept = content('部门',employee2.departmentName);
+						 code = content('工号',employee3.code);
+						 name = content('姓名',employee3.name);
+						 dept = content('部门',employee3.departmentName);
 						$innerBottomLeft.append(code);
 						$innerBottomLeft.append(name);
 						$innerBottomLeft.append(dept);
-						$innerBottomRight.append("<img src='<%=basePath%>/" + employee2.qrPath+"'/>");
-						
-						
-					var employee3 = data[i++];
-					var $col3 = $('<div class="topjui-col-sm4 topjui-col-xs4 col">');
-					 
-					var $innerDiv3 = $("<div class='innerDiv'>");
-					$col3.append($innerDiv3);
-					
-					 $innerTop = $("<div class='innerTop'>");
-					 $innerBottom = $("<div class='innerBottom'>");
-					
-					$innerDiv3.append($innerTop);
-					$innerDiv3.append($innerBottom);
-					
-					 $innerBottomLeft = $("<div class='innerBottomLeft'>");
-					 $innerBottomRight = $("<div class='innerBottomRight'>");
-					
-					$innerBottom.append($innerBottomLeft);
-					$innerBottom.append($innerBottomRight);
-					
-					 code = content('工号',employee3.code);
-					 name = content('姓名',employee3.name);
-					 dept = content('部门',employee3.departmentName);
-					$innerBottomLeft.append(code);
-					$innerBottomLeft.append(name);
-					$innerBottomLeft.append(dept);
-					$innerBottomRight.append("<img src='<%=basePath%>/"
-												+ employee3.qrPath
-												+ "' />");
-
-								$row.append($col1);
-								$row.append($col2);
-								$row.append($col3);
-
-								$center.append($row);
+						$innerBottomRight.append("<img src='<%=basePath%>/"
+													+ employee3.qrPath
+													+ "' />");
+						$row.append($col3);
+					}
+							$center.append($row);
 							}
 						});
 	});

@@ -24,8 +24,7 @@ public class DeviceVO extends CommonModel {
 	/**经销商*/
 	private String trader;
 	/**安装日期*/
-	@DateTimeFormat(pattern = "yyyy-MM-dd") 
-	private Date installDate;
+	private String installDate;
 	/**出厂日期*/
 	@DateTimeFormat(pattern = "yyyy-MM-dd") 
 	private Date outFactoryDate;
@@ -48,6 +47,14 @@ public class DeviceVO extends CommonModel {
 	private ProductionUnit productionUnit;
 	/**设备图片*/
 	private String photo;
+	/**二维码图片路径*/
+	private String qrPath;
+	public String getQrPath() {
+		return qrPath;
+	}
+	public void setQrPath(String qrPath) {
+		this.qrPath = qrPath;
+	}
 	public String getUnitType() {
 		return unitType;
 	}
@@ -72,10 +79,10 @@ public class DeviceVO extends CommonModel {
 	public void setTrader(String trader) {
 		this.trader = trader;
 	}
-	public Date getInstallDate() {
+	public String getInstallDate() {
 		return installDate;
 	}
-	public void setInstallDate(Date installDate) {
+	public void setInstallDate(String installDate) {
 		this.installDate = installDate;
 	}
 	public Date getOutFactoryDate() {

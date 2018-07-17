@@ -1,17 +1,22 @@
 package com.digitzones.controllers;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.digitzones.model.PressLight;
+import com.digitzones.config.QRConfig;
 import com.digitzones.model.Pager;
+import com.digitzones.model.PressLight;
 import com.digitzones.service.IPressLightService;
+import com.digitzones.util.QREncoder;
+import com.digitzones.vo.PressLightVO;
 /**
  * 按灯管理控制器
  * @author zdq
@@ -20,6 +25,12 @@ import com.digitzones.service.IPressLightService;
 @Controller
 @RequestMapping("/pressLight")
 public class PressLightController {
+	private QRConfig config ;
+	@Autowired
+	public void setConfig(QRConfig config) {
+		this.config = config;
+	}
+	private QREncoder qrEncoder = new QREncoder();
 	private IPressLightService pressLightService;
 	@Autowired
 	public void setPressLightService(IPressLightService pressLightService) {
@@ -126,5 +137,37 @@ public class PressLightController {
 		modelMap.addAttribute("title", "操作提示");
 		modelMap.addAttribute("message", "成功删除!");
 		return modelMap;
+	}
+	/**
+	 * 打印故障的二维码
+	 * @param ids 设备id字符串
+	 * @return
+	 */
+	@RequestMapping("/printQr.do")
+	@ResponseBody
+	public List<PressLightVO> printQr(String ids,HttpServletRequest request) {
+		String dir = request.getServletContext().getRealPath("/");
+		List<PressLightVO> vos = new ArrayList<>();
+		String[] idStr = ids.split(",");
+		for(int i = 0 ;i<idStr.length;i++) {
+			String id = idStr[i];
+			PressLight e = pressLightService.queryObjById(Long.valueOf(id));
+			PressLightVO vo = model2VO(e);
+			vo.setQrPath(qrEncoder.generatePR(e.getCode(),dir , config.getQrPath()));
+			vos.add(vo);
+		}
+		return vos;
+	}
+	
+	private PressLightVO model2VO(PressLight pl) {
+		if(pl == null) {
+			return null;
+		}
+		PressLightVO vo = new PressLightVO();
+		vo.setId(pl.getId());
+		vo.setCode(pl.getCode());
+		vo.setReason(pl.getReason());
+		vo.setNote(pl.getNote());
+		return vo;
 	}
 } 

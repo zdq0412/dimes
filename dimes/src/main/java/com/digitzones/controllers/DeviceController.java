@@ -3,7 +3,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
@@ -16,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.config.QRConfig;
 import com.digitzones.model.Device;
 import com.digitzones.model.Pager;
 import com.digitzones.model.ProductionUnit;
 import com.digitzones.service.IDeviceService;
 import com.digitzones.service.IProductionUnitService;
+import com.digitzones.util.QREncoder;
 import com.digitzones.vo.DeviceVO;
 /**
  * 设备管理控制器
@@ -30,6 +35,13 @@ import com.digitzones.vo.DeviceVO;
 @Controller
 @RequestMapping("/device")
 public class DeviceController {
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private QRConfig config ;
+	@Autowired
+	public void setConfig(QRConfig config) {
+		this.config = config;
+	}
+	private QREncoder qrEncoder = new QREncoder();
 	private IDeviceService deviceService;
 	private IProductionUnitService productionUnitService;
 	@Autowired
@@ -230,7 +242,9 @@ public class DeviceController {
 		vo.setId(device.getId());
 		vo.setCode(device.getCode());
 		vo.setName(device.getName());
-		vo.setInstallDate(device.getInstallDate());
+		if(device.getInstallDate()!=null) {
+			vo.setInstallDate(sdf.format(device.getInstallDate()));
+		}
 		vo.setInstallPosition(device.getInstallPosition());
 		vo.setDeviceType(device.getDeviceType());
 		vo.setManufacturer(device.getManufacturer());
@@ -280,5 +294,26 @@ public class DeviceController {
 		modelMap.addAttribute("title", "操作提示");
 		modelMap.addAttribute("message", "成功删除!");
 		return modelMap;
+	}
+	
+	/**
+	 * 打印设备的二维码
+	 * @param ids 设备id字符串
+	 * @return
+	 */
+	@RequestMapping("/printQr.do")
+	@ResponseBody
+	public List<DeviceVO> printQr(String ids,HttpServletRequest request) {
+		String dir = request.getServletContext().getRealPath("/");
+		List<DeviceVO> vos = new ArrayList<>();
+		String[] idStr = ids.split(",");
+		for(int i = 0 ;i<idStr.length;i++) {
+			String id = idStr[i];
+			Device e = deviceService.queryObjById(Long.valueOf(id));
+			DeviceVO vo = model2VO(e);
+			vo.setQrPath(qrEncoder.generatePR(e.getCode(),dir , config.getQrPath()));
+			vos.add(vo);
+		}
+		return vos;
 	}
 } 

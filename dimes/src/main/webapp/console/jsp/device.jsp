@@ -1,8 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="../../common/jsp/head.jsp"%>
+<script type="text/javascript">
+ 	function openWindow(){
+		var checkedArray = $("#deviceDg").iDatagrid("getChecked");
+		if(checkedArray.length>0){
+			var ids = "";
+			for(var i = 0;i<checkedArray.length;i++){
+				var device = checkedArray[i];
+				ids += device.id +",";
+			}
+			
+			ids = ids.substring(0,ids.length-1);
+			$("#ids").val(ids);
+ 			var newWin = window.open("console/jsp/device_print.jsp"); 
+		}else{
+			alert("请选择要打印二维码的记录!");
+			return false;
+		}
+	} 
+</script>
 </head>
 <body>
+<input type="hidden" id="ids" />
 	<div data-toggle="topjui-layout" data-options="fit:true">
 		<div
 			data-options="region:'west',title:'',split:true,border:false,width:'15%',iconCls:'fa fa-sitemap',headerCls:'border_right',bodyCls:'border_right'">
@@ -42,6 +62,9 @@
                        singleSelect:true,
                        fitColumns:true,
                        pagination:true,
+                          singleSelect:true,
+						selectOnCheck:false,
+						checkOnSelect:false,
                        parentGrid:{
                            type:'treegrid',
                            id:'productionUnitTg',
@@ -50,7 +73,7 @@
 						<thead>
 							<tr>
 								<th
-									data-options="field:'id',title:'id',checkbox:false,width:'80px'"></th>
+									data-options="field:'id',title:'id',checkbox:true,width:'80px'"></th>
 								<th
 									data-options="field:'code',title:'设备代码',width:'180px',align:'center'"></th>
 								<th data-options="field:'name',title:'设备名称',sortable:false"></th>
@@ -407,6 +430,13 @@
        iconCls:'fa fa-stop',
        url:'device/disabledDevice.do',
        grid: {uncheckedMsg:'请选择要停用的设备',id:'deviceDg',param:'id:id'}">停用</a>
+       <a href="javascript:void(0)" data-toggle="topjui-menubutton"
+			data-options="iconCls: 'fa fa-pencil',
+            modal:true,
+            parentGrid:{
+		       	type:'treegrid',
+		       	id:'productionUnitTg'
+		      }" onClick="openWindow()">打印二维码</a>
 	</div>
 	<!-- 生产单元表格工具栏结束 -->
 	<!-- 设备站点表格工具栏开始 -->

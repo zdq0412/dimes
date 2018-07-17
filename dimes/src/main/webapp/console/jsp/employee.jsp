@@ -15,11 +15,8 @@
 			ids = ids.substring(0,ids.length-1);
 			$("#ids").val(ids);
  			var newWin = window.open("console/jsp/employee_print.jsp"); 
- 			newWin.onload=function(){
- 				//newWin.document.getElementById("ids").value=ids;
- 			}
 		}else{
-			alert("请选择要打印二维码的员工信息!");
+			alert("请选择要打印二维码的记录!");
 			return false;
 		}
 	} 

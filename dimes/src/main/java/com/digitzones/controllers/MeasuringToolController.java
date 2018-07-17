@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,12 +23,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.config.QRConfig;
 import com.digitzones.model.Equipment;
 import com.digitzones.model.Pager;
 import com.digitzones.service.IMeasuringToolService;
+import com.digitzones.util.QREncoder;
+import com.digitzones.vo.EquipmentVO;
 @Controller
 @RequestMapping("/measuringTool")
 public class MeasuringToolController {
+	private QRConfig config ;
+	@Autowired
+	public void setConfig(QRConfig config) {
+		this.config = config;
+	}
+	private QREncoder qrEncoder = new QREncoder();
 	private IMeasuringToolService measuringToolService;
 	@Autowired
 	public void setMeasuringToolService(IMeasuringToolService measuringToolService) {
@@ -191,5 +201,39 @@ public class MeasuringToolController {
 		}else {
 			return measuringToolService.queryMeasuringToolsByCodeOrNameOrUnity(q);
 		}
+	}
+	
+	/**
+	 * 打印装备的二维码
+	 * @param ids 设备id字符串
+	 * @return
+	 */
+	@RequestMapping("/printQr.do")
+	@ResponseBody
+	public List<EquipmentVO> printQr(String ids,HttpServletRequest request) {
+		String dir = request.getServletContext().getRealPath("/");
+		List<EquipmentVO> vos = new ArrayList<>();
+		String[] idStr = ids.split(",");
+		for(int i = 0 ;i<idStr.length;i++) {
+			String id = idStr[i];
+			Equipment e = measuringToolService.queryObjById(Long.valueOf(id));
+			EquipmentVO vo = model2VO(e);
+			vo.setQrPath(qrEncoder.generatePR(e.getCode(),dir , config.getQrPath()));
+			vos.add(vo);
+		}
+		return vos;
+	}
+	
+	private EquipmentVO model2VO(Equipment e) {
+		if(e==null) {
+			return null;
+		}
+		EquipmentVO vo = new EquipmentVO();
+		vo.setId(e.getId());
+		vo.setName(e.getName());
+		vo.setCode(e.getCode());
+		vo.setManufacturer(e.getManufacturer());
+		vo.setUnitType(e.getUnitType());
+		return vo;
 	}
 } 

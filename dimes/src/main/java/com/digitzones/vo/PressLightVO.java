@@ -1,24 +1,6 @@
-package com.digitzones.model;
+package com.digitzones.vo;
 
-import java.io.Serializable;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-/**
- * 按灯信息
- * @author zdq
- * 2018年6月3日
- */
-@Entity
-@Table(name="PRESSLIGHT")
-public class PressLight implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class PressLightVO {
 	/**唯一标识*/
 	private Long id;
 	/**代码*/
@@ -32,14 +14,16 @@ public class PressLight implements Serializable {
 	/**备注*/
 	private String note;
 	/**是否停用*/
-	private Boolean disabled;
+	private String disabled;
 	/**是否为计划停机*/
-	private Boolean planHalt;
-	/**按灯类别*/
-	private PressLightType pressLightType;
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	private String planHalt;
+	private String qrPath;
+	public String getQrPath() {
+		return qrPath;
+	}
+	public void setQrPath(String qrPath) {
+		this.qrPath = qrPath;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -76,25 +60,16 @@ public class PressLight implements Serializable {
 	public void setNote(String note) {
 		this.note = note;
 	}
-	public Boolean getDisabled() {
+	public String getDisabled() {
 		return disabled;
 	}
-	public void setDisabled(Boolean disabled) {
+	public void setDisabled(String disabled) {
 		this.disabled = disabled;
 	}
-	
-	public Boolean getPlanHalt() {
+	public String getPlanHalt() {
 		return planHalt;
 	}
-	public void setPlanHalt(Boolean planHalt) {
+	public void setPlanHalt(String planHalt) {
 		this.planHalt = planHalt;
-	}
-	@ManyToOne
-	@JoinColumn(name="PRESSLIGHTTYPE_ID")
-	public PressLightType getPressLightType() {
-		return pressLightType;
-	}
-	public void setPressLightType(PressLightType pressLightType) {
-		this.pressLightType = pressLightType;
 	}
 }
