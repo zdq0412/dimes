@@ -6,6 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * 功能模块，存储页面顶级模块和左侧菜单模块
  * @author zdq
@@ -65,6 +67,7 @@ public class Module {
 	}
 	@ManyToOne
 	@JoinColumn(name="PARENT_ID")
+	@JsonIgnore
 	public Module getParent() {
 		return parent;
 	}

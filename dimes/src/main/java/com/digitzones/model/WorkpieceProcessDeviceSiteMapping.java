@@ -17,7 +17,7 @@ import javax.persistence.Table;
 public class WorkpieceProcessDeviceSiteMapping {
 	private Long id;
 	/**加工节拍*/
-	private Float processingBeat;
+	private Float processingBeat=0f;
 	/**工件工序关联实体*/
 	private WorkpieceProcessMapping workpieceProcess;
 	/**站点*/

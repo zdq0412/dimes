@@ -16,12 +16,9 @@ public class DeviceDaoImpl extends CommonDaoImpl<Device> implements IDeviceDao {
 	public double queryOeeByProductionUnitId(Long productionUnitId) {
 		
 		String sql = "select goalOee from productionunit p where p.id=?0";
-		Float goalOee = (Float) getSession().createSQLQuery(sql)
+		double goalOee =  (double) getSession().createSQLQuery(sql)
 					.setParameter(0, productionUnitId)
 					.uniqueResult();
-		if(goalOee!=null) {
-			return goalOee;
-		}
-		return 0;
+		return goalOee;
 	}
 }

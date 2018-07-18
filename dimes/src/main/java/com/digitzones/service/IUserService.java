@@ -38,4 +38,10 @@ public interface IUserService extends ICommonService<User> {
 	 * @return
 	 */
 	public List<User> queryUsersByEmployeeId(Long employeeId);
+	/**
+	 * 为用户添加角色
+	 * @param userId
+	 * @param roleIds
+	 */
+	public void addRolesForUser(Long userId,String[] roleIds);
 }

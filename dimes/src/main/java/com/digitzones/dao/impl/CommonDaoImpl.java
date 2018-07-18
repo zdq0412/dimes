@@ -23,8 +23,6 @@ public abstract class CommonDaoImpl<T> implements ICommonDao<T> {
 	public CommonDaoImpl(Class<T> clazz) {
 		this.clazz = clazz;
 	}
-/*	public CommonDaoImpl() {
-	}*/
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		hibernateTemplate = new HibernateTemplate(sessionFactory);

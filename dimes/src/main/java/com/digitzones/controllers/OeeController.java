@@ -1,4 +1,5 @@
 package com.digitzones.controllers;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -142,7 +143,6 @@ public class OeeController {
 		}
 		return sumOee;
 	}
-
 	/**
 	 * oee算法
 	 * @param c
@@ -158,10 +158,13 @@ public class OeeController {
 		double planHaltTime = lostTimeRecordService.queryPlanHaltTime(c, ds.getId(),new Date());
 
 		if(idList != null && idList.size()>0) {
-			for(Long[] ids : idList) {
+			for(Object[] ids : idList) {
 				//根据工序,工件，设备站点查找标准节拍
-				WorkpieceProcessDeviceSiteMapping wpdsm = workpieceProcessDeviceSiteMappingService.queryByWorkPieceIdAndProcessIdAndDeviceSiteId(ids[0], ids[1], ids[2]);
+				WorkpieceProcessDeviceSiteMapping wpdsm = workpieceProcessDeviceSiteMappingService.queryByWorkPieceIdAndProcessIdAndDeviceSiteId(((BigDecimal)ids[0]).longValue(), ((BigDecimal)ids[1]).longValue(), ((BigDecimal)ids[2]).longValue());
 				Float processingBeat = wpdsm.getProcessingBeat();
+				if(processingBeat==null) {
+					processingBeat = 0f;
+				}
 				//oee公式:（总加工时间-损时时间-NG件数*标准节拍）/总加工时间 
 				//总加工时间，公式：总加工时间=当前时间-班次的开始时间 -计划停机时间
 				Calendar calendar = Calendar.getInstance();
@@ -175,10 +178,10 @@ public class OeeController {
 				double sumMinutes = totalMinutes - classesBeginMinutes - planHaltTime;
 				double oee = 0;
 				if(totalMinutes>classesBeginMinutes) {
-					oee = (sumMinutes-lostTime-ids[3]*processingBeat)/sumMinutes;
+					oee = (sumMinutes-lostTime-(Integer)ids[3]*processingBeat)/sumMinutes;
 					//
 				}else {
-					oee = (24+sumMinutes-lostTime-ids[3]*processingBeat)/(24*60+sumMinutes);
+					oee = (24+sumMinutes-lostTime-(Integer)ids[3]*processingBeat)/(24*60+sumMinutes);
 				}
 				sumOee += oee;
 			}
@@ -200,10 +203,8 @@ public class OeeController {
 			}
 			sumOee += oee;
 		}
-
 		return sumOee;
 	}
-
 	/**
 	 * 查询上个月的OEE值
 	 * @return
@@ -270,10 +271,13 @@ public class OeeController {
 						double planHaltTime = lostTimeRecordService.queryPlanHaltTime(c, ds.getId(),now);
 
 						if(idList != null && idList.size()>0) {
-							for(Long[] ids : idList) {
+							for(Object[] ids : idList) {
 								//根据工序,工件，设备站点查找标准节拍
-								WorkpieceProcessDeviceSiteMapping wpdsm = workpieceProcessDeviceSiteMappingService.queryByWorkPieceIdAndProcessIdAndDeviceSiteId(ids[0], ids[1], ids[2]);
+								WorkpieceProcessDeviceSiteMapping wpdsm = workpieceProcessDeviceSiteMappingService.queryByWorkPieceIdAndProcessIdAndDeviceSiteId(((BigDecimal)ids[0]).longValue(), ((BigDecimal)ids[1]).longValue(), ((BigDecimal)ids[2]).longValue());
 								Float processingBeat = wpdsm.getProcessingBeat();
+								if(processingBeat==null) {
+									processingBeat = 0f;
+								}
 								//oee公式:（总加工时间-损时时间-NG件数*标准节拍）/总加工时间 
 								//总加工时间，公式：总加工时间=当前时间-班次的开始时间 -计划停机时间
 								//开始时间
@@ -290,7 +294,7 @@ public class OeeController {
 									totalMinutes = 24*60+(calendar.get(Calendar.HOUR_OF_DAY)*60+calendar.get(Calendar.MINUTE))-(cal.get(Calendar.HOUR_OF_DAY)*60-cal.get(Calendar.MINUTE));
 								}
 								double sumMinutes = totalMinutes- planHaltTime;
-								double oee = (sumMinutes-lostTime-ids[3]*processingBeat)/sumMinutes;
+								double oee = (sumMinutes-lostTime-(Integer)ids[3]*processingBeat)/sumMinutes;
 								sumOee += oee;
 							}
 						}else {

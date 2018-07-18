@@ -426,7 +426,7 @@
        url:'pressLight/deletePressLight.do',
        grid: {uncheckedMsg:'请先勾选要删除的数据',id:'position',param:'id:id'}">删除</a>
        <a href="javascript:void(0)" data-toggle="topjui-menubutton"
-			data-options="iconCls: 'fa fa-pencil',
+			data-options="iconCls: 'fa fa-print',
             modal:true,
             parentGrid:{
 		       	type:'datagrid',

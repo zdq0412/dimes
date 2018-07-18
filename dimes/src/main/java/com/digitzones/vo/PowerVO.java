@@ -1,30 +1,17 @@
-package com.digitzones.model;
+package com.digitzones.vo;
 import java.util.Date;
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 /**
- * 角色
+ * 权限
  * @author zdq
  * 2018年6月4日
  */
-@Entity
-@Table(name="ROLE")
-public class Role {
+public class PowerVO {
 	/**对象标识*/
 	private Long id;
-	/**角色名称*/
-	private String roleName;
+	/**权限码*/
+	private String powerCode;
+	/**权限名称*/
+	private String powerName;
 	/**创建日期*/
 	private Date createDate;
 	/**备注*/
@@ -41,17 +28,26 @@ public class Role {
 	private String modifyUsername;
 	/**修改日期*/
 	private Date modifyDate;
-	/**该角色可操作的功能模块*/
-	private Set<Module> modules;
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	/**是否被选中*/
+	private boolean isChecked;
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
+	public String getPowerCode() {
+		return powerCode;
+	}
+	public void setPowerCode(String powerCode) {
+		this.powerCode = powerCode;
+	}
+	public String getPowerName() {
+		return powerName;
+	}
+	public void setPowerName(String powerName) {
+		this.powerName = powerName;
+	}
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -94,27 +90,16 @@ public class Role {
 	public void setModifyUsername(String modifyUsername) {
 		this.modifyUsername = modifyUsername;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date getModifyDate() {
 		return modifyDate;
 	}
 	public void setModifyDate(Date modifyDate) {
 		this.modifyDate = modifyDate;
 	}
-	public String getRoleName() {
-		return roleName;
+	public boolean isChecked() {
+		return isChecked;
 	}
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-	@ManyToMany(targetEntity=Module.class,fetch=FetchType.EAGER)
-	@JoinTable(name="ROLE_Module",
-	joinColumns= {@JoinColumn(name="ROLE_ID")},
-	inverseJoinColumns= {@JoinColumn(name="Module_ID")})
-	public Set<Module> getModules() {
-		return modules;
-	}
-	public void setModules(Set<Module> modules) {
-		this.modules = modules;
+	public void setChecked(boolean isChecked) {
+		this.isChecked = isChecked;
 	}
 }

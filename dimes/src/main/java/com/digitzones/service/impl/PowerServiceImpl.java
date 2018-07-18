@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,15 @@ public class PowerServiceImpl implements IPowerService {
 	@Override
 	public void deleteObj(Long id) {
 		powerDao.deleteById(id);
+	}
+
+	@Override
+	public List<Power> queryAllPowers() {
+		return powerDao.findAll();
+	}
+
+	@Override
+	public List<Power> queryPowersByRoleId(Long roleId) {
+		return powerDao.findByHQL("select rp.power from RolePower rp where rp.role.id=?0", new Object[] {});
 	}
 }

@@ -26,11 +26,13 @@ import com.digitzones.model.ProcessRecord;
 import com.digitzones.model.User;
 import com.digitzones.model.WorkSheet;
 import com.digitzones.model.WorkSheetDetail;
+import com.digitzones.model.Workpiece;
 import com.digitzones.service.IClassesService;
 import com.digitzones.service.IDeviceSiteService;
 import com.digitzones.service.IProcessRecordService;
 import com.digitzones.service.IWorkSheetDetailService;
 import com.digitzones.service.IWorkSheetService;
+import com.digitzones.service.IWorkpieceService;
 @Controller
 @RequestMapping("/processRecord")
 public class ProcessRecordController {
@@ -39,6 +41,11 @@ public class ProcessRecordController {
 	private IWorkSheetService workSheetService;
 	private IWorkSheetDetailService workSheetDetailService;
 	private IClassesService classService;
+	private IWorkpieceService workpieceService;
+	@Autowired
+	public void setWorkpieceService(IWorkpieceService workpieceService) {
+		this.workpieceService = workpieceService;
+	}
 	@Autowired
 	public void setClassService(IClassesService classService) {
 		this.classService = classService;
@@ -114,6 +121,14 @@ public class ProcessRecordController {
 				processRecord.setClassesCode(c.getCode());
 				processRecord.setClassesId(c.getId());
 				processRecord.setClassesName(c.getName());
+			}
+			
+			if(processRecord.getWorkPieceCode()!=null) {
+				//根据工件编码查找工件
+				Workpiece workpiece = workpieceService.queryByProperty("code", processRecord.getWorkPieceCode());
+				if(workpiece!=null) {
+					processRecord.setWorkPieceId(workpiece.getId());
+				}
 			}
 			processRecordService.addObj(processRecord);
 			modelMap.addAttribute("success", true);

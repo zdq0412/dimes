@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.digitzones.dao.IWorkpieceProcessDeviceSiteMappingDao;
 import com.digitzones.model.Pager;
-import com.digitzones.model.Processes;
 import com.digitzones.model.WorkpieceProcessDeviceSiteMapping;
 import com.digitzones.service.IWorkpieceProcessDeviceSiteMappingService;
 @Service
@@ -86,8 +85,8 @@ public class WorkpieceProcessDeviceSiteMappingServiceImpl implements IWorkpieceP
 	@Override
 	public WorkpieceProcessDeviceSiteMapping queryByWorkPieceIdAndProcessIdAndDeviceSiteId(Long workPieceId,
 			Long processId, Long deviceSiteId) {
-		List<WorkpieceProcessDeviceSiteMapping> list = workpieceProcessDeviceSiteMappingDao.findByHQL("from WorkpieceProcessDeviceSiteMapping wpdsm where wpdsm.workpieceProcess.workPieceId=?0"
-				+ "	and wpdsm.workpieceProcess.processId=?1 and wpdsm.deviceSite.id=?2", new Object[] {workPieceId,processId,deviceSiteId});
+		List<WorkpieceProcessDeviceSiteMapping> list = workpieceProcessDeviceSiteMappingDao.findByHQL("from WorkpieceProcessDeviceSiteMapping wpdsm where wpdsm.workpieceProcess.workpiece.id=?0"
+				+ "	and wpdsm.workpieceProcess.process.id=?1 and wpdsm.deviceSite.id=?2", new Object[] {workPieceId,processId,deviceSiteId});
 		return (list!=null && list.size()>0)?list.get(0):null;
 	}
 

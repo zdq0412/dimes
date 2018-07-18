@@ -345,7 +345,7 @@
        url:'employee/disabledEmployee.do',
        grid: {uncheckedMsg:'请选择要停用的员工',id:'employeeDg',param:'id:id'}">停用</a>
       <a href="javascript:void(0)" data-toggle="topjui-menubutton"
-			data-options="iconCls: 'fa fa-pencil',
+			data-options="iconCls: 'fa fa-print',
             modal:true,
             parentGrid:{
 		       	type:'treegrid',

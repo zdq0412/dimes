@@ -12,7 +12,7 @@
                 <table  
                 data-toggle="topjui-datagrid"
                        data-options="id:'departmentDg',
-                       url:'user/queryUsers.do',
+                       url:'role/queryRoles.do',
                        singleSelect:true,
                        fitColumns:true,
                        pagination:true,
@@ -20,7 +20,7 @@
                     <thead>
                     <tr>
                         <th data-options="field:'id',title:'id',checkbox:false,width:'80px',hidden:true"></th>
-                        <th data-options="field:'username',title:'用户名',width:'180px',align:'center'"></th>
+                        <th data-options="field:'roleName',title:'角色名',width:'180px',align:'center'"></th>
                         <th data-options="field:'createDate',title:'创建日期',width:'180px',align:'center',formatter:function(value,row,index){
                         	 if (value) {
                                         var date = new Date(value);
@@ -71,16 +71,8 @@
                                     	return '';
                                     }
                         }"></th>
-                        <th data-options="field:'employeeName',title:'关联员工',sortable:false,width:'80px',
-                        formatter:function(value,row,index){
-                        	if(row.employee){
-                        		return row.employee.name;
-                        	}else{
-                        		return '';
-                        	}
-                        }"></th>
-                        <th data-options="field:'note',title:'说明',sortable:false,width:'80px'"></th>
-                        <th data-options="field:'disable',title:'停用',sortable:false,width:'80px',formatter:function(value,row,index){
+                        <th data-options="field:'note',title:'说明',sortable:false,width:'180px'"></th>
+                        <th data-options="field:'disable',title:'停用',sortable:false,width:'180px',formatter:function(value,row,index){
                         	if(value){
                         		return 'Y';
                         	}else{
@@ -110,27 +102,15 @@
            id:'classesAddDialog',
            width:600,
            height:400,
-           href:'console/jsp/user_add.jsp',
+           href:'console/jsp/role_add.jsp',
            buttons:[
            	{text:'保存',handler:function(){
-           			var username = $('#username').val();
-           			if(username==null || ''===$.trim(username)){
+           			var roleName = $('#roleName').val();
+           			if(roleName==null || ''===$.trim(roleName)){
            				return false;
            			}
-           			
-           			var password = $('#password').val();
-           			if(password==null || ''===$.trim(password)){
-           				return false;
-           			}
-           			var confirmPassword = $('#confirmPassword').val();
-           			if(password!=confirmPassword){
-           				alert('用户密码与确认密码不一致 ！');
-           				return false;
-           			}
-           			$.get('user/addUser.do',{
-           			username:username,
-           			password:password,
-           			'employee.id':$('#employee').val(),
+           			$.get('role/addRole.do',{
+           			roleName:roleName,
            			note:$('#note').val()
            			},function(data){
            				if(data.success){
@@ -154,18 +134,17 @@
             	id:'classEditDialog',
                 width: 600,
                 height: 400,
-                href: 'console/jsp/user_edit.jsp',
-                url:'user/queryUserById.do?id={id}',
+                href: 'console/jsp/role_edit.jsp',
+                url:'role/queryRoleById.do?id={id}',
                  buttons:[
            	{text:'编辑',handler:function(){
-           			var username = $('#username').val();
-           			if(username==null || ''===$.trim(username)){
+           			var roleName = $('#roleName').val();
+           			if(roleName==null || ''===$.trim(roleName)){
            				return false;
            			}
-           			$.get('user/updateUser.do',{
+           			$.get('role/updateRole.do',{
            			id:$('#departmentDg').iDatagrid('getSelected').id,
-           			username:username,
-           			'employee.id':$('#employee').val(),
+           			roleName:roleName,
            			note:$('#note').val()
            			},function(data){
            				if(data.success){
@@ -186,31 +165,31 @@
        data-options="method:'doAjax',
        extend: '#departmentDg-toolbar',
        iconCls:'fa fa-trash',
-       url:'user/deleteUser.do',
+       url:'role/deleteRole.do',
        grid: {uncheckedMsg:'请先勾选要删除的数据',id:'departmentDg',param:'id:id'}">删除</a>
     <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
        data-options="method:'doAjax',
        extend: '#departmentDg-toolbar',
        iconCls:'fa fa-stop',
-       url:'user/disabledUser.do',
-       grid: {uncheckedMsg:'请选择要停用的班次',id:'departmentDg',param:'id:id'}">停用</a>
-      <a href="javascript:void(0)"
+       url:'role/disabledRole.do',
+       grid: {uncheckedMsg:'请选择要停用的记录',id:'departmentDg',param:'id:id'}">停用</a>
+        <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
        data-options="method: 'openDialog',
             extend: '#departmentDg-toolbar',
             iconCls: 'fa fa-pencil',
             dialog: {
-            	id:'signRolesDialog',
+            	id:'signPowersDialog',
                 width: 600,
                 height: 400,
-                href: 'console/jsp/user_signRoles.jsp',
+                href: 'console/jsp/role_signPowers.jsp',
                  buttons:[
            	{text:'确定',handler:function(){
-           		var ids = $('#roles').iDatagrid('getSelections');
+           		var ids = $('#powers').iDatagrid('getSelections');
            		var idsArray = new Array();
            		if(ids.length<=0){
-           			alert('请选择要添加的角色!');
+           			alert('请选择要添加的权限!');
            		}else{
            			for(var i = 0;i < ids.length;i++){
            				idsArray.push(ids[i].id);
@@ -220,7 +199,7 @@
            				roleIds:JSON.stringify(idsArray)
            			},function(data){
            				if(data.success){
-           					$('#signRolesDialog').iDialog('close');
+           					$('#signPowersDialog').iDialog('close');
            				}else{
            					alert(data.msg);
            				}
@@ -228,10 +207,10 @@
            		}
            	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
            	{text:'关闭',handler:function(){
-           		$('#signRolesDialog').iDialog('close');
+           		$('#signPowersDialog').iDialog('close');
            	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
            ]
-            }">分配角色</a>
+            }">分配权限</a>
     </div>
 <!-- 部门表格工具栏结束 -->
 </body>

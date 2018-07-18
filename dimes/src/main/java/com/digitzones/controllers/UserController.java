@@ -1,4 +1,5 @@
 package com.digitzones.controllers;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,13 +15,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.digitzones.constants.Constant;
 import com.digitzones.model.Pager;
+import com.digitzones.model.Role;
 import com.digitzones.model.User;
+import com.digitzones.service.IRoleService;
 import com.digitzones.service.IUserService;
 import com.digitzones.util.PasswordEncoder;
+import com.digitzones.vo.RoleVO;
 @Controller
 @RequestMapping("/user")
 public class UserController {
 	private IUserService userService;
+	private IRoleService roleService;
+	@Autowired
+	public void setRoleService(IRoleService roleService) {
+		this.roleService = roleService;
+	}
 	@Autowired
 	public void setUserService(IUserService userService) {
 		this.userService = userService;
@@ -48,26 +57,26 @@ public class UserController {
 	@ResponseBody
 	public ModelMap addUser(User user,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
-			User u = userService.queryByProperty("username", user.getUsername());
-			if(u!=null) {
-				modelMap.addAttribute("success", false);
-				modelMap.addAttribute("msg", "用户名称已被使用");
-			}else {
-				HttpSession session = request.getSession();
-				User loginUser = (User) session.getAttribute(Constant.User.LOGIN_USER);
-				user.setCreateDate(new Date());
-				if(loginUser!=null) {
-					user.setCreateUserId(loginUser.getId());
-					user.setCreateUsername(loginUser.getUsername());
-				}
-				if(user.getEmployee().getId()==null) {
-					user.setEmployee(null);
-				}
-				user.setPassword(new PasswordEncoder(user.getUsername()).encode(user.getPassword()));
-				userService.addObj(user);
-				modelMap.addAttribute("success", true);
-				modelMap.addAttribute("msg", "添加成功!");
+		User u = userService.queryByProperty("username", user.getUsername());
+		if(u!=null) {
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("msg", "用户名称已被使用");
+		}else {
+			HttpSession session = request.getSession();
+			User loginUser = (User) session.getAttribute(Constant.User.LOGIN_USER);
+			user.setCreateDate(new Date());
+			if(loginUser!=null) {
+				user.setCreateUserId(loginUser.getId());
+				user.setCreateUsername(loginUser.getUsername());
 			}
+			if(user.getEmployee().getId()==null) {
+				user.setEmployee(null);
+			}
+			user.setPassword(new PasswordEncoder(user.getUsername()).encode(user.getPassword()));
+			userService.addObj(user);
+			modelMap.addAttribute("success", true);
+			modelMap.addAttribute("msg", "添加成功!");
+		}
 		return modelMap;
 	}
 	/**
@@ -89,15 +98,20 @@ public class UserController {
 	 */
 	@RequestMapping("/updateUser.do")
 	@ResponseBody
-	public ModelMap updateUser(User user) {
+	public ModelMap updateUser(User user,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
-
 		User u = userService.queryByProperty("username", user.getUsername());
 		if(u!=null && !u.getId().equals(user.getId())) {
 			modelMap.addAttribute("success", false);
 			modelMap.addAttribute("msg", "用户名称已被使用");
 		}else {
 			User user0 = userService.queryObjById(user.getId());
+			HttpSession session = request.getSession();
+			User loginUser = (User)session.getAttribute(Constant.User.LOGIN_USER);
+			if(loginUser!=null) {
+				user0.setModifyUserId(loginUser.getId());
+				user0.setModifyUsername(loginUser.getUsername());
+			}
 			user0.setModifyDate(new Date());
 			user0.setUsername(user.getUsername());
 			user0.setNote(user.getNote());
@@ -110,7 +124,6 @@ public class UserController {
 		}
 		return modelMap;
 	}
-	
 	/**
 	 * 根据id删除用户
 	 * @param id
@@ -183,5 +196,77 @@ public class UserController {
 		}else {
 			return userService.queryAllUsers();
 		}
+	}
+	/**
+	 * 1、根据用户id查找角色
+	 * 2、查找所有角色
+	 * @param userId
+	 * @param rows
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping("/queryRoles.do")
+	@ResponseBody
+	public List<RoleVO> queryRoles(Long userId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page){
+		List<Role> allRoles = roleService.queryAllRoles();
+		List<Role> userRoles = roleService.queryRolesByUserId(userId);
+		List<RoleVO> vos = new ArrayList<>();
+		if(allRoles!=null) {
+			for(int i = 0;i<allRoles.size();i++) {
+				Role role = allRoles.get(i);
+				RoleVO vo = model2vo(role);
+				if(userRoles!=null) {
+					for(int j = 0;j<userRoles.size();j++) {
+						Role r = userRoles.get(j);
+						if(role.getId().equals(r.getId())) {
+							vo.setChecked(true);
+							break;
+						}
+					}
+				}
+				vos.add(vo);
+			}
+		}
+		return vos;
+	}
+
+	private RoleVO model2vo(Role r) {
+		if(r == null) {
+			return null;
+		}
+		RoleVO vo = new RoleVO();
+		vo.setId(r.getId());
+		vo.setRoleName(r.getRoleName());
+		vo.setNote(r.getNote());
+		return vo;
+	}
+	/**
+	 * 为用户分配角色
+	 * @param userId
+	 * @param roleIds
+	 * @return
+	 */
+	@RequestMapping("/signRoles.do")
+	@ResponseBody
+	public ModelMap signRoles(Long userId,String roleIds) {
+		ModelMap modelMap = new ModelMap();
+		if(roleIds!=null) {
+			if(roleIds.contains("[")) {
+				roleIds = roleIds.replace("[", "");
+			}
+			if(roleIds.contains("]")) {
+				roleIds = roleIds.replace("]", "");
+			}
+
+			String[] idArray = roleIds.split(",");
+
+			userService.addRolesForUser(userId, idArray);
+			modelMap.addAttribute("success",true);
+			modelMap.addAttribute("msg","操作完成!");
+		}else {
+			modelMap.addAttribute("success",false);
+			modelMap.addAttribute("msg","操作失败!");
+		}
+		return modelMap;
 	}
 } 
