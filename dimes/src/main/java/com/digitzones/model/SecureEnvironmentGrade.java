@@ -5,17 +5,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 /**
- * 质量等级
+ * 安环等级
  * @author zdq
  * 2018年6月5日
  */
 @Entity
-@Table(name="QUALITYGRADE")
-public class QualityGrade {
+@Table(name="SECUREENVIRONMENTGRADE")
+public class SecureEnvironmentGrade {
 	private Long id;
-	/**质量等级名称*/
+	/**安环等级名称*/
 	private String name;
-	/**质量等级编码*/
+	/**安环编码*/
 	private String code;
 	/**说明*/
 	private String note;

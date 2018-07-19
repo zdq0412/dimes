@@ -1,11 +1,18 @@
 package com.digitzones.model;
+import java.util.Set;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * 质量日历类别
  * @author zdq
@@ -13,14 +20,28 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="QUALITYCALENDARTYPE")
-public class QualityCalendarType {
-	private Long id;
-	/**类别名称*/
-	private String name;
+public class QualityCalendarType extends CommonModel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**图标*/
 	private String icon;
 	/**父类别*/
 	private QualityCalendarType parent;
+	/**
+	 * 子类别
+	 */
+	private Set<QualityCalendarType> children;
+	@OneToMany(fetch=FetchType.EAGER,mappedBy="parent")
+	@OrderBy(" ID DESC")
+	@JsonIgnore
+	public Set<QualityCalendarType> getChildren() {
+		return children;
+	}
+	public void setChildren(Set<QualityCalendarType> children) {
+		this.children = children;
+	}
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {

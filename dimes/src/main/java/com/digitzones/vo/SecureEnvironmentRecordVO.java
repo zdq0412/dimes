@@ -1,29 +1,14 @@
-package com.digitzones.model;
-
-import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.springframework.format.annotation.DateTimeFormat;
+package com.digitzones.vo;
 
 /**
  * 安环记录
  * @author zdq
  * 2018年6月5日
  */
-@Entity
-@Table(name="SECUREENVIRONMENTRECORD")
-public class SecureEnvironmentRecord {
+public class SecureEnvironmentRecordVO {
 	private Long id;
 	/**当前日期*/
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date currentDate;
+	private String currentDate;
 	/**安环类别id*/
 	private Long typeId;
 	/**安环类别名称*/
@@ -34,19 +19,16 @@ public class SecureEnvironmentRecord {
 	private String gradeName;
 	/**描述*/
 	private String description;
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date getCurrentDate() {
+	public String getCurrentDate() {
 		return currentDate;
 	}
-	public void setCurrentDate(Date currentDate) {
+	public void setCurrentDate(String currentDate) {
 		this.currentDate = currentDate;
 	}
 	public Long getTypeId() {

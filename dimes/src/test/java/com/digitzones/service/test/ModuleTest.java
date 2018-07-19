@@ -308,6 +308,20 @@ public class ModuleTest {
 		son9.setUrl("console/jsp/measuringToolMappingRecord.jsp");
 		moduleService.addModule(son9);
 		
+		Module qualityCalendarRecord = new Module();
+		qualityCalendarRecord.setParent(m);
+		qualityCalendarRecord.setName("质量日历");
+		qualityCalendarRecord.setLeaf(true);
+		qualityCalendarRecord.setUrl("console/jsp/qualityCalendarRecord.jsp");
+		moduleService.addModule(qualityCalendarRecord);
+		
+		Module secureEnvironmentRecord = new Module();
+		secureEnvironmentRecord.setParent(m);
+		secureEnvironmentRecord.setName("安环记录");
+		secureEnvironmentRecord.setLeaf(true);
+		secureEnvironmentRecord.setUrl("console/jsp/secureEnvironmentRecord.jsp");
+		moduleService.addModule(secureEnvironmentRecord);
+		
 		Module son10 = new Module();
 		son10.setParent(parent3);
 		son10.setName("报表中心");
@@ -431,6 +445,22 @@ public class ModuleTest {
 		workpieceType.setParent(basicSon3);
 		
 		moduleService.addModule(workpieceType);
+		
+		Module qualityCalendarType = new Module();
+		qualityCalendarType.setName("质量日历类别");
+		qualityCalendarType.setUrl("console/jsp/qualityCalendarType.jsp");
+		qualityCalendarType.setLeaf(true);
+		qualityCalendarType.setParent(basicSon3);
+		
+		moduleService.addModule(qualityCalendarType);
+		
+		Module secureEnvironmentType = new Module();
+		secureEnvironmentType.setName("安环类别");
+		secureEnvironmentType.setUrl("console/jsp/secureEnvironmentType.jsp");
+		secureEnvironmentType.setLeaf(true);
+		secureEnvironmentType.setParent(basicSon3);
+		
+		moduleService.addModule(secureEnvironmentType);
 
 		Module basicSon31 = new Module();
 		basicSon31.setParent(basicSon3);
@@ -469,11 +499,13 @@ public class ModuleTest {
 		basicSon41.setParent(basicSon4);
 		basicSon41.setName("安环类别");
 		basicSon41.setLeaf(true);
+		basicSon41.setUrl("console/jsp/secureEnvironmentType.jsp");
 		moduleService.addModule(basicSon41);
 		
 		Module basicSon42 = new Module();
 		basicSon42.setParent(basicSon4);
 		basicSon42.setName("质量类别");
+		basicSon42.setUrl("console/jsp/qualityType.jsp");
 		basicSon42.setLeaf(true);
 		moduleService.addModule(basicSon42);
 		
@@ -496,6 +528,22 @@ public class ModuleTest {
 		skillLevel.setLeaf(true);
 		skillLevel.setDisabled(false);
 		moduleService.addModule(skillLevel);
+		
+		Module qualityGrade = new Module();
+		qualityGrade.setName("质量等级");
+		qualityGrade.setParent(sysSetChild);
+		qualityGrade.setUrl("console/jsp/qualityGrade.jsp");
+		qualityGrade.setLeaf(true);
+		qualityGrade.setDisabled(false);
+		moduleService.addModule(qualityGrade);
+		
+		Module secureEnvironmentGrade = new Module();
+		secureEnvironmentGrade.setName("安环等级");
+		secureEnvironmentGrade.setParent(sysSetChild);
+		secureEnvironmentGrade.setUrl("console/jsp/secureEnvironmentGrade.jsp");
+		secureEnvironmentGrade.setLeaf(true);
+		secureEnvironmentGrade.setDisabled(false);
+		moduleService.addModule(secureEnvironmentGrade);
 		
 		
 		Module user = new Module();

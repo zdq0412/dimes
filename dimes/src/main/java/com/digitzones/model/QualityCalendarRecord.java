@@ -7,8 +7,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
 /**
- * 安环记录
+ * 质量记录
  * @author zdq
  * 2018年6月5日
  */
@@ -17,17 +19,26 @@ import javax.persistence.TemporalType;
 public class QualityCalendarRecord {
 	private Long id;
 	/**当前日期*/
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date currentDate;
-	/**安环类别id*/
+	/**质量类别id*/
 	private Long typeId;
-	/**安环类别名称*/
+	/**质量类别名称*/
 	private String typeName;
 	/**等级ID*/
 	private Long gradeId;
 	/**等级名称*/
 	private String gradeName;
-	/**描述*/
-	private String description;
+	/**备注*/
+	private String note;
+	/**投诉客户*/
+	private String customer;
+	/**联系方式*/
+	private String tel;
+	/**联系人*/
+	private String contacts;
+	/**投诉内容*/
+	private String content;
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
@@ -67,10 +78,35 @@ public class QualityCalendarRecord {
 	public void setGradeName(String gradeName) {
 		this.gradeName = gradeName;
 	}
-	public String getDescription() {
-		return description;
+	public String getNote() {
+		return note;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setNote(String note) {
+		this.note = note;
 	}
+	public String getCustomer() {
+		return customer;
+	}
+	public void setCustomer(String customer) {
+		this.customer = customer;
+	}
+	public String getTel() {
+		return tel;
+	}
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+	public String getContacts() {
+		return contacts;
+	}
+	public void setContacts(String contacts) {
+		this.contacts = contacts;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
 }

@@ -5,7 +5,7 @@
 </script>
 <script type="text/javascript">
 	function content( label, data){
-		var row = '<div class="topjui-row">'+
+		var row = '<div class="topjui-row row">'+
 		'<div class="topjui-col-sm12 topjui-col-xs12">'+
 			'<label class="topjui-form-label label">' + label +':</label>' +
 			'<div class="topjui-input-block data">' + data +
@@ -49,7 +49,7 @@
 						
 						$row.append($col1);
 					}
-					
+					<%-- 
 					var data2 = data[i++];
 					if(data2!=undefined){
 						var $col2 = $('<div class="topjui-col-sm4 topjui-col-xs4 col">');
@@ -105,7 +105,7 @@
 						$innerBottom.append(manufacturer);
 
 									$row.append($col3);
-								}
+								} --%>
 								$center.append($row);
 							}
 						});
@@ -119,22 +119,42 @@
 @media print {
 	.data {
 		border-bottom-style: solid;
-		width: 130pt;
-		margin-left: 70pt;
+		border-bottom-width: 1px;
+		width:5cm;
+		margin-left: 2cm;
+		text-align: center;
+		display:table-cell;
+		vertical-align: bottom;
 	}
 	.label {
-		width: 60pt;
+		width: 1.5cm;
+	}
+	.row{
+		height:0.5cm;
 	}
 	img {
-		height: 100pt;
-		width: 100pt;
+		height: 1.8cm;
+		width: 1.8cm;
 		vertical-align: middle;
+		margin-top:5px;
 	}
 	.innerTop {
-		height: 50%;
-		line-height:80pt;
+		height: 40%;
+		line-height:2cm;
 		text-align: center;
 	}
+	.innerDiv {
+	height: 5cm;
+	width: 7cm;
+	border: solid 1px gray;
+}
+.innerBottom {
+	height: 60%;
+	width:100%;
+}
+.col {
+	text-align: center;
+}
 }
 
 @media screen {
@@ -153,24 +173,23 @@
 	.innerTop {
 		height: 50%;
 	}
-}
-
-.innerBottom {
-	height: 50%;
-}
-
-
-.innerDiv {
+	.innerDiv {
 	height: 300pt;
 	width: 100%;
 	border: solid 1px gray;
 	padding:10pt;
 }
-
+.innerBottom {
+	height: 50%;
+	width:100%;
+}
 .col {
 	padding: 10pt;
 	text-align: center;
 }
+}
+
+
 </style>
 <div data-toggle="topjui-layout" data-options="fit:true">
 	<div data-options="region:'north',title:'',split:true"
