@@ -1,16 +1,23 @@
 package com.digitzones.controllers;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.digitzones.model.Pager;
 import com.digitzones.model.QualityCalendarRecord;
+import com.digitzones.model.QualityCalendarType;
 import com.digitzones.service.IQualityCalendarRecordService;
+import com.digitzones.service.IQualityCalendarTypeService;
+import com.digitzones.util.DateStringUtil;
 import com.digitzones.vo.QualityCalendarRecordVO;
 /**
  * 质量记录控制器
@@ -20,8 +27,14 @@ import com.digitzones.vo.QualityCalendarRecordVO;
 @Controller
 @RequestMapping("/qualityCalendarRecord")
 public class QualityCalendarRecordController {
+	private DateStringUtil util = new DateStringUtil();
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private IQualityCalendarRecordService qualityCalendarRecordService;
+	private IQualityCalendarTypeService qualityCalendarTypeService;
+	@Autowired
+	public void setQualityCalendarTypeService(IQualityCalendarTypeService qualityCalendarTypeService) {
+		this.qualityCalendarTypeService = qualityCalendarTypeService;
+	}
 	@Autowired
 	public void setQualityCalendarRecordService(IQualityCalendarRecordService qualityCalendarRecordService) {
 		this.qualityCalendarRecordService = qualityCalendarRecordService;
@@ -123,6 +136,45 @@ public class QualityCalendarRecordController {
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("title", "操作提示");
 		modelMap.addAttribute("message", "成功删除!");
+		return modelMap;
+	}
+	/**
+	 * 查询质量日历：工厂级图表
+	 * @return
+	 */
+	@RequestMapping("/queryQualityCalendar.do")
+	@ResponseBody
+	public ModelMap queryQualityCalendar() {
+		List<List<Integer>> data = new ArrayList<>();
+		ModelMap modelMap = new ModelMap();
+		//生成当前月的月份和年份
+		Date date = new Date();
+		List<String> names = new ArrayList<>();
+		//查询所有类别
+		List<QualityCalendarType> types = qualityCalendarTypeService.queryAllQualityCalendarTypes();
+		for(QualityCalendarType type : types) {
+			names.add(type.getName());
+		}
+		//生成当前月的天
+		List<Date> days = util.generateOneMonthDay(util.date2Month(date));
+		for(Date day : days) {
+			List<Integer> typeCount = new ArrayList<>();
+			for(QualityCalendarType type : types) {
+				//根据日期和类型id 查找数量
+				int count = qualityCalendarRecordService.queryCountByDayAndTypeId(day, type.getId());
+				if(count!=0)
+				typeCount.add(count);
+			}
+			data.add(typeCount);
+		}
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		modelMap.put("month",util.date2Month(date));
+		modelMap.put("data",data);
+		modelMap.put("names",names);
+		modelMap.put("year",c.get(Calendar.YEAR));
+		c.add(Calendar.MONTH, 1);
+		modelMap.put("nextMonth",util.date2Month(c.getTime()));
 		return modelMap;
 	}
 } 

@@ -235,7 +235,17 @@ public class ProcessesController {
 		}
 		return modelMap;
 	}
-
+	/**
+	 * 对外提供的接口：用于接收其他应用录入的数据
+	 * @param processData
+	 * @return
+	 */
+	@RequestMapping("/saveProcesses.do")
+	public ModelMap saveProcesses(String processData) {
+		ModelMap modelMap = new ModelMap();
+		return modelMap;
+	}
+	
 	/**
 	 * 为工序添加设备站点
 	 * @param classesId

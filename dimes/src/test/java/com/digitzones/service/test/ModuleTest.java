@@ -194,6 +194,7 @@ public class ModuleTest {
 		Module son212 = new Module();
 		son212.setParent(son2);
 		son212.setName("质量日历");
+		son212.setUrl("console/jsp/qualityCalendar.jsp");
 		son212.setLeaf(true);
 		moduleService.addModule(son212);
 		
@@ -234,6 +235,7 @@ public class ModuleTest {
 		son35.setParent(son3);
 		son35.setName("安全日历");
 		son35.setLeaf(true);
+		son35.setUrl("console/jsp/secureEnvironment.jsp");
 		moduleService.addModule(son35);
 		
 		Module son36 = new Module();
@@ -310,7 +312,7 @@ public class ModuleTest {
 		
 		Module qualityCalendarRecord = new Module();
 		qualityCalendarRecord.setParent(m);
-		qualityCalendarRecord.setName("质量日历");
+		qualityCalendarRecord.setName("质量投诉记录");
 		qualityCalendarRecord.setLeaf(true);
 		qualityCalendarRecord.setUrl("console/jsp/qualityCalendarRecord.jsp");
 		moduleService.addModule(qualityCalendarRecord);

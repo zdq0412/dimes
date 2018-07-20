@@ -1,6 +1,8 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +48,15 @@ public class QualityCalendarRecordServiceImpl implements IQualityCalendarRecordS
 	@Override
 	public void deleteObj(Long id) {
 		qualityCalendarRecordDao.deleteById(id);
+	}
+
+	@Override
+	public Integer queryCountByDayAndTypeId(Date day, Long typeId) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(day);
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH)+1;
+		int date = c.get(Calendar.DATE);
+		return qualityCalendarRecordDao.queryCountByDayAndTypeId(year, month, date, typeId);
 	}
 }

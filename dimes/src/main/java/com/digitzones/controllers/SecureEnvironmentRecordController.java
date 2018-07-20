@@ -1,6 +1,8 @@
 package com.digitzones.controllers;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.digitzones.model.Pager;
 import com.digitzones.model.SecureEnvironmentRecord;
+import com.digitzones.model.SecureEnvironmentType;
 import com.digitzones.service.ISecureEnvironmentRecordService;
+import com.digitzones.service.ISecureEnvironmentTypeService;
+import com.digitzones.util.DateStringUtil;
 import com.digitzones.vo.SecureEnvironmentRecordVO;
 /**
  * 安环记录控制器
@@ -22,13 +27,18 @@ import com.digitzones.vo.SecureEnvironmentRecordVO;
 @Controller
 @RequestMapping("/secureEnvironmentRecord")
 public class SecureEnvironmentRecordController {
+	private DateStringUtil util = new DateStringUtil();
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private ISecureEnvironmentRecordService secureEnvironmentRecordService;
+	private ISecureEnvironmentTypeService secureEnvironmentTypeService;
+	@Autowired
+	public void setSecureEnvironmentTypeService(ISecureEnvironmentTypeService secureEnvironmentTypeService) {
+		this.secureEnvironmentTypeService = secureEnvironmentTypeService;
+	}
 	@Autowired
 	public void setSecureEnvironmentRecordService(ISecureEnvironmentRecordService secureEnvironmentRecordService) {
 		this.secureEnvironmentRecordService = secureEnvironmentRecordService;
 	}
-
 	/**
 	 * 查询安环记录信息
 	 * @return
@@ -125,6 +135,46 @@ public class SecureEnvironmentRecordController {
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("title", "操作提示");
 		modelMap.addAttribute("message", "成功删除!");
+		return modelMap;
+	}
+	
+	/**
+	 * 查询安环日历：工厂级图表
+	 * @return
+	 */
+	@RequestMapping("/querySecureEnvironment.do")
+	@ResponseBody
+	public ModelMap querySecureEnvironment() {
+		List<List<Integer>> data = new ArrayList<>();
+		ModelMap modelMap = new ModelMap();
+		//生成当前月的月份和年份
+		Date date = new Date();
+		List<String> names = new ArrayList<>();
+		//查询所有类别
+		List<SecureEnvironmentType> types = secureEnvironmentTypeService.queryAllSecureEnvironmentTypes();
+		for(SecureEnvironmentType type : types) {
+			names.add(type.getName());
+		}
+		//生成当前月的天
+		List<Date> days = util.generateOneMonthDay(util.date2Month(date));
+		for(Date day : days) {
+			List<Integer> typeCount = new ArrayList<>();
+			for(SecureEnvironmentType type : types) {
+				//根据日期和类型id 查找数量
+				int count = secureEnvironmentTypeService.queryCountByDayAndTypeId(day, type.getId());
+				if(count!=0)
+				typeCount.add(count);
+			}
+			data.add(typeCount);
+		}
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		modelMap.put("month",util.date2Month(date));
+		modelMap.put("data",data);
+		modelMap.put("names",names);
+		modelMap.put("year",c.get(Calendar.YEAR));
+		c.add(Calendar.MONTH, 1);
+		modelMap.put("nextMonth",util.date2Month(c.getTime()));
 		return modelMap;
 	}
 } 

@@ -1,5 +1,6 @@
 package com.digitzones.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.digitzones.model.SecureEnvironmentType;
@@ -14,4 +15,12 @@ public interface ISecureEnvironmentTypeService extends ICommonService<SecureEnvi
 	 * @return
 	 */
 	public List<SecureEnvironmentType> queryAllSecureEnvironmentTypes();
+	
+	/**
+	 * 根据时间和类型查询安环记录数
+	 * @param day
+	 * @param typeId
+	 * @return
+	 */
+	public Integer queryCountByDayAndTypeId(Date day,Long typeId);
 }

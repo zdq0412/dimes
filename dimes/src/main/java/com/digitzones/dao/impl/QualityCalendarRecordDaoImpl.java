@@ -9,4 +9,21 @@ public class QualityCalendarRecordDaoImpl extends CommonDaoImpl<QualityCalendarR
 	public QualityCalendarRecordDaoImpl() {
 		super(QualityCalendarRecord.class);
 	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Integer queryCountByDayAndTypeId(int year, int month, int day, Long typeId) {
+		String sql = "select count(id) from QUALITYCALENDARRECORD q where year(currentDate)=?0 and month(currentDate)=?1"
+				+ " and day(currentDate)=?2 and typeId=?3";
+		Integer count = (Integer) this.getSession().createSQLQuery(sql)
+						 .setParameter(0, year)
+						 .setParameter(1, month)
+						 .setParameter(2, day)
+						 .setParameter(3,typeId)
+						 .uniqueResult();
+		if(count!=null) {
+			return count;
+		}
+		return 0;
+	}
 }

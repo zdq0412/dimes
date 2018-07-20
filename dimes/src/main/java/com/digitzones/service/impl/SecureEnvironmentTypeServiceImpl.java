@@ -1,6 +1,8 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +54,15 @@ public class SecureEnvironmentTypeServiceImpl implements ISecureEnvironmentTypeS
 	@Override
 	public List<SecureEnvironmentType> queryAllSecureEnvironmentTypes() {
 		return secureEnvironmentTypeDao.findAll();
+	}
+
+	@Override
+	public Integer queryCountByDayAndTypeId(Date day, Long typeId) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(day);
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH)+1;
+		int date = c.get(Calendar.DATE);
+		return secureEnvironmentTypeDao.queryCountByDayAndTypeId(year, month, date, typeId);
 	}
 }
