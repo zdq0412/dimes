@@ -41,6 +41,23 @@ public final class DateStringUtil {
 		return month;
 	}
 	/**
+	 * 根据参数给定时间，向前推12个小时(720分钟)
+	 * @param date
+	 * @return
+	 */
+	public List<Date> generate720Minutes(Date date){
+		List<Date> list = new ArrayList<>();
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.HOUR, -12);
+		for(int i = 0;i<720;i++) {
+			 c.add(Calendar.MINUTE, 1);
+			 Date d = c.getTime();
+			 list.add(d);
+		}
+		return list;
+	}
+	/**
 	 * 字符串转日期
 	 * @param dateString
 	 * @return
@@ -142,10 +159,13 @@ public final class DateStringUtil {
 	}
 	
 	public static void main(String[] args) {
-		List<Date> dates = new DateStringUtil().generateOneMonthDay("2016-02");
+		/*List<Date> dates = new DateStringUtil().generateOneMonthDay("2016-02");
 		System.out.println(dates);
 		
 		List<Date> list = new DateStringUtil().generateOneYearMonth(new Date());
+		System.out.println(list);*/
+		
+		List<Date> list = new DateStringUtil().generate720Minutes(new Date());
 		System.out.println(list);
 	}
 }

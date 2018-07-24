@@ -131,4 +131,9 @@ public class NGRecordServiceImpl implements INGRecordService {
 	public Integer queryScrapCountByDateAndProcessId(Date date, Long processId) {
 		return ngRecordDao.queryScrapCountByDateAndProcessId(date, processId);
 	}
+
+	@Override
+	public Integer queryNgCountByDeviceSiteId(Long deviceSiteId, Date today) {
+		return ngRecordDao.queryNgCountByDeviceSiteId(deviceSiteId, today);
+	}
 }

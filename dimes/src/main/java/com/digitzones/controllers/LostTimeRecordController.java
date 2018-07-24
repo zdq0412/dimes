@@ -21,10 +21,10 @@ import com.digitzones.model.LostTimeRecord;
 import com.digitzones.model.Pager;
 import com.digitzones.model.PressLightType;
 import com.digitzones.service.IClassesService;
-import com.digitzones.service.IDeviceService;
 import com.digitzones.service.IDeviceSiteService;
 import com.digitzones.service.ILostTimeRecordService;
 import com.digitzones.service.IPressLightTypeService;
+import com.digitzones.service.IProductionUnitService;
 import com.digitzones.util.DateStringUtil;
 import com.digitzones.vo.LostTimeRecordVO;
 @Controller
@@ -36,12 +36,12 @@ public class LostTimeRecordController {
 	private ILostTimeRecordService lostTimeRecordService;
 	private IPressLightTypeService pressLightTypeService;
 	private IClassesService classesService;
-	private IDeviceService deviceService;
+	private IProductionUnitService productionUnitService;
+	private DateStringUtil util = new DateStringUtil();
 	@Autowired
-	public void setDeviceService(IDeviceService deviceService) {
-		this.deviceService = deviceService;
+	public void setProductionUnitService(IProductionUnitService productionUnitService) {
+		this.productionUnitService = productionUnitService;
 	}
-
 	@Autowired
 	public void setClassesService(IClassesService classesService) {
 		this.classesService = classesService;
@@ -362,7 +362,7 @@ public class LostTimeRecordController {
 			dayList.add(util.date2DayOfMonth(day));
 		}
 		//根据产线查找目标OEE
-		double goalOee = deviceService.queryOeeByProductionUnitId(productionUnitId)*1.0/100;
+		double goalOee = productionUnitService.queryOeeByProductionUnitId(productionUnitId)*1.0/100;
 		//存放每个班的损时数
 		List<String> lostTimeList = new ArrayList<>();
 		//存放总损时数(每个班的损时List)
@@ -420,11 +420,32 @@ public class LostTimeRecordController {
 		for(@SuppressWarnings("unused") Date now : days) {
 			goalLostTimeList.add(decimalFormat.format(goalLostTime));
 		}
-		
 		modelMap.addAttribute("classes",classesList);
 		modelMap.addAttribute("goalLostTimeList",goalLostTimeList);
 		modelMap.addAttribute("lostTimeList",list);
 		modelMap.addAttribute("days", dayList);
+		return modelMap;
+	}
+	/**
+	 * 按分钟查询实时损时记录
+	 * @return
+	 */
+	@RequestMapping("/queryLostTime4RealTime.do")
+	@ResponseBody
+	public ModelMap queryLostTime4RealTime() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+		ModelMap modelMap = new ModelMap();
+		//产生720分钟时间
+		List<Date> minutesList = util.generate720Minutes(new Date());
+		List<String> minutes = new ArrayList<>();
+		List<Integer> minuteCountList = new ArrayList<>();
+		for(Date date : minutesList) {
+			minutes.add(simpleDateFormat.format(date));
+			minuteCountList.add(lostTimeRecordService.queryLostTime4RealTime(date));
+		}
+		
+		modelMap.addAttribute("minutes", minutes);
+		modelMap.addAttribute("lostTimeCounts", minuteCountList);
 		return modelMap;
 	}
 } 

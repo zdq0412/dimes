@@ -14,4 +14,15 @@ public class ProductionUnitDaoImpl extends CommonDaoImpl<ProductionUnit> impleme
 		Integer goalOutput = (Integer) this.getSession().createSQLQuery(sql).setParameter(0,productionUnitId).uniqueResult();
 		return goalOutput==null?0:goalOutput;
 	}
+
+	@SuppressWarnings({ "deprecation"})
+	@Override
+	public double queryOeeByProductionUnitId(Long productionUnitId) {
+		
+		String sql = "select goalOee from productionunit p where p.id=?0";
+		double goalOee =  (double) getSession().createSQLQuery(sql)
+					.setParameter(0, productionUnitId)
+					.uniqueResult();
+		return goalOee;
+	}
 }

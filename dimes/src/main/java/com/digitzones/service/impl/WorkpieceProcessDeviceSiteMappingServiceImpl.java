@@ -90,4 +90,14 @@ public class WorkpieceProcessDeviceSiteMappingServiceImpl implements IWorkpieceP
 		return (list!=null && list.size()>0)?list.get(0):null;
 	}
 
+	@Override
+	public Float queryProcessingBeatByProductionUnitId(Long productionUnitId) {
+		return workpieceProcessDeviceSiteMappingDao.queryProcessingBeatByProductionUnitId(productionUnitId);
+	}
+
+	@Override
+	public Float queryProcessingBeatByClassesId(Long classesId) {
+		return workpieceProcessDeviceSiteMappingDao.queryProcessingBeatByClassesId(classesId);
+	}
+
 }

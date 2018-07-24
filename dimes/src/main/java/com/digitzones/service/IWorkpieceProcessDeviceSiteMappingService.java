@@ -1,9 +1,6 @@
 package com.digitzones.service;
 
-import java.util.List;
-
 import com.digitzones.model.Pager;
-import com.digitzones.model.Processes;
 import com.digitzones.model.WorkpieceProcessDeviceSiteMapping;
 /**
  * 工件工序站点service
@@ -27,4 +24,17 @@ public interface IWorkpieceProcessDeviceSiteMappingService extends ICommonServic
 	 * @return
 	 */
 	public WorkpieceProcessDeviceSiteMapping queryByWorkPieceIdAndProcessIdAndDeviceSiteId(Long workPieceId,Long processId,Long deviceSiteId);
+
+	/**
+	 * 根据生产单元id查询该生产单元下的加工节拍
+	 * @param productionUnitId
+	 * @return
+	 */
+	public Float queryProcessingBeatByProductionUnitId(Long productionUnitId);
+	/**
+	 * 根据班次id查询该班次下的加工节拍
+	 * @param classesId
+	 * @return
+	 */
+	public Float queryProcessingBeatByClassesId(Long classesId);
 }

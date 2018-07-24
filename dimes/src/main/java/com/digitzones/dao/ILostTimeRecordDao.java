@@ -47,4 +47,10 @@ public interface ILostTimeRecordDao extends ICommonDao<LostTimeRecord> {
 	 * @return
 	 */
 	public Double queryLostTime4PerDay(Classes c,Long deviceSiteId,Date date);
+	/**
+	 * 根据年月日时分查询损时时间
+	 * @param date
+	 * @return
+	 */
+	public Integer queryLostTime4RealTime(Date date);
 }

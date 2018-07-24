@@ -86,4 +86,9 @@ public class LostTimeRecordServiceImpl implements ILostTimeRecordService {
 		Double result = lostTimeRecordDao.queryLostTime4PerDay(c, deviceSiteId, date);
 		return result ==null?0:result;
 	}
+
+	@Override
+	public Integer queryLostTime4RealTime(Date date) {
+		return lostTimeRecordDao.queryLostTime4RealTime(date);
+	}
 }

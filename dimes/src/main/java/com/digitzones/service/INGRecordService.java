@@ -22,4 +22,10 @@ public interface INGRecordService extends ICommonService<NGRecord> {
 	 * @return
 	 */
 	public Integer queryScrapCountByDateAndProcessId(Date date,Long processId);
+	/**
+	 * 根据设备站点id查询当天ng数量
+	 * @param deviceSiteId
+	 * @return
+	 */
+	public Integer queryNgCountByDeviceSiteId(Long deviceSiteId,Date today);
 }

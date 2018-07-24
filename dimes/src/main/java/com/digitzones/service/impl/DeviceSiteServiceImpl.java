@@ -79,4 +79,9 @@ public class DeviceSiteServiceImpl implements IDeviceSiteService {
 	public List<DeviceSite> queryAllDeviceSitesByDeviceId(Long deviceId) {
 		return this.deviceSiteDao.findByHQL("from DeviceSite ds where ds.device.id=?0", new Object[] {deviceId});
 	}
+
+	@Override
+	public List<DeviceSite> queryDeviceSitesByClassesId(Long classesId) {
+		return this.deviceSiteDao.queryDeviceSitesByClassesId(classesId);
+	}
 }

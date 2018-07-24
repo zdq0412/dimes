@@ -18,11 +18,11 @@ import com.digitzones.model.Device;
 import com.digitzones.model.DeviceSite;
 import com.digitzones.model.DeviceSiteParameterMapping;
 import com.digitzones.model.Pager;
-import com.digitzones.model.WorkpieceProcessDeviceSiteMapping;
 import com.digitzones.service.IClassesService;
 import com.digitzones.service.IDeviceSiteParameterMappingService;
 import com.digitzones.service.IDeviceSiteService;
 import com.digitzones.service.ILostTimeRecordService;
+import com.digitzones.service.INGRecordService;
 import com.digitzones.service.IPressLightRecordService;
 import com.digitzones.service.IProcessRecordService;
 import com.digitzones.service.IWorkpieceProcessDeviceSiteMappingService;
@@ -41,6 +41,11 @@ public class DeviceSiteController {
 	private IClassesService classesService;
 	private ILostTimeRecordService lostTimeRecordService;
 	private IDeviceSiteParameterMappingService deviceSiteParameterMappingService;
+	private INGRecordService ngRecordService;
+	@Autowired
+	public void setNgRecordService(INGRecordService ngRecordService) {
+		this.ngRecordService = ngRecordService;
+	}
 	@Autowired
 	public void setDeviceSiteParameterMappingService(IDeviceSiteParameterMappingService deviceSiteParameterMappingService) {
 		this.deviceSiteParameterMappingService = deviceSiteParameterMappingService;
@@ -247,14 +252,47 @@ public class DeviceSiteController {
 		return modelMap;
 	}
 	/**
+	 * oee算法
+	 * @param c
+	 * @param ds
+	 * @return
+	 */
+	private double queryOee(Classes c, DeviceSite ds,Float processingBeat,Date date) {
+		//查询损时时间(包括计划停机时间)
+		double lostTime = lostTimeRecordService.queryLostTime(c,ds.getId(),date);
+		//查询计划停机时间
+		double planHaltTime = lostTimeRecordService.queryPlanHaltTime(c, ds.getId(),date);
+		//查询设备站点的ng数
+		int ngCount = ngRecordService.queryNgCountByDeviceSiteId(ds.getId(), date);
+		//oee公式:（总加工时间-损时时间-NG件数*标准节拍）/总加工时间 
+		//总加工时间，公式：总加工时间=当前时间-班次的开始时间 -计划停机时间
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		int totalMinutes = calendar.get(Calendar.HOUR_OF_DAY)*60 + calendar.get(Calendar.MINUTE);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(c.getStartTime());
+		//查询计划停机时间
+		int classesBeginMinutes = cal.get(Calendar.HOUR_OF_DAY)*60 + cal.get(Calendar.MINUTE);
+		//总加工时间
+		double sumMinutes = totalMinutes - classesBeginMinutes - planHaltTime;
+		double oee = 0;
+		if(totalMinutes>classesBeginMinutes) {
+			oee = (sumMinutes-lostTime-ngCount*processingBeat)/sumMinutes;
+			//
+		}else {
+			oee = (24+sumMinutes-lostTime-ngCount*processingBeat)/(24*60+sumMinutes);
+		}
+		return oee;
+	}
+	/**
 	 * 查询在参数状态页面显示的设备站点
 	 * @return
 	 */
 	@RequestMapping("/queryDeviceSite4ParameterStatusShow.do")
 	@ResponseBody
 	public ModelMap queryDeviceSite4ParameterStatusShow() {
-		 DecimalFormat format = new DecimalFormat("#.00");
-		
+		DecimalFormat format = new DecimalFormat("#.00");
+
 		ModelMap modelMap = new ModelMap();
 		List<DeviceSite> deviceSites = deviceSiteService.queryDeviceSitesByShow(true);
 		List<String> oees = new ArrayList<>();
@@ -267,70 +305,26 @@ public class DeviceSiteController {
 			modelMap.addAttribute("error", "不存在当前班次信息!");
 			return modelMap;
 		}
+		Date now = new Date();
+		//查询当前班次的加工节拍
+		Float processingBeat = workpieceProcessDeviceSiteMappingService.queryProcessingBeatByClassesId(c.getId());
 		//根据设备站点查询加工信息
 		for(DeviceSite ds : deviceSites) {
 			//查询设备站点关联的参数
 			list.add(deviceSiteParameterMappingService.queryByDeviceSiteId(ds.getId()));
 			//根据设备站点id查询当天的加工数量
 			long count = processRecordService.queryCurrentDayCountByDeviceSiteId(ds.getId());
-			//根据设备站点id查询当前非NG数量
-			long notNgCount = processRecordService.queryCountByDeviceSiteIdAndNotNg(ds.getId());
+			//根据设备站点id查询当前NG数量
+			Integer ngCount = ngRecordService.queryNgCountByDeviceSiteId(ds.getId(), now);
+			//合格品数量
+			long notNgCount = count - ngCount;
 			if(count == 0) {
 				rtys.add("100");
 			}else {
 				rtys.add(format.format(notNgCount*1.0/count*100));
 			}
-			//查询加工信息中的工序，工件，设备站点id,NG数量
-			List<Long[]> idList = processRecordService.queryCountByDeviceSiteIdAndStatus(ds.getId(), Constant.ProcessRecord.NG);
-			Date now = new Date();
-			double lostTime = 0;
-			double planHaltTime = 0;
-			if(c!=null) {
-			//查询损时时间(包括计划停机时间)
-				lostTime = lostTimeRecordService.queryLostTime(c,ds.getId(),new Date()); 
-				//查询计划停机时间
-				planHaltTime = lostTimeRecordService.queryPlanHaltTime(c, ds.getId(),new Date());
-			}
-			if(idList!=null && idList.size()>0) {
-				for(Long[] ids : idList) {
-					//根据工序,工件，设备站点查找标准节拍
-					WorkpieceProcessDeviceSiteMapping wpdsm = workpieceProcessDeviceSiteMappingService.queryByWorkPieceIdAndProcessIdAndDeviceSiteId(ids[0], ids[1], ids[2]);
-					float processingBeat = wpdsm.getProcessingBeat();
-					//oee公式:（总加工时间-损时时间-NG件数*标准节拍）/总加工时间 
-					//总加工时间，公式：当前时间-班次的开始时间-损时时间-计划停机时间
-					Calendar calendar = Calendar.getInstance();
-					calendar.setTime(now);
-					int totalMinutes = calendar.get(Calendar.HOUR)*60 + calendar.get(Calendar.MINUTE);
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(c.getStartTime());
-					int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
-					double oee = 0;
-					double sumMinutes = totalMinutes - classesBeginMinutes - planHaltTime;
-					if(totalMinutes>classesBeginMinutes) {
-						oee = (sumMinutes-lostTime-ids[3]*processingBeat)/sumMinutes;
-						//
-					}else {
-						oee = (24+sumMinutes-lostTime-ids[3]*processingBeat)/(24*60+sumMinutes);
-					}
-					oees.add(format.format(oee*100));
-				}
-			}else {
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(now);
-				int totalMinutes = calendar.get(Calendar.HOUR)*60 + calendar.get(Calendar.MINUTE);
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(c.getStartTime());
-				int classesBeginMinutes = cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE);
-				//总加工时间
-				double sumMinutes = totalMinutes - classesBeginMinutes - planHaltTime;
-				double oee = 0;
-				if(totalMinutes>classesBeginMinutes) {
-					oee = (sumMinutes-lostTime)/sumMinutes;
-				}else {
-					oee = (24+sumMinutes-lostTime)/(24*60+sumMinutes);
-				}
-				oees.add(format.format(oee*100));
-			}
+			double oee = queryOee(c, ds, processingBeat, now);
+			oees.add(format.format(oee*100));
 		}
 		modelMap.addAttribute("deviceSites", deviceSites);
 		modelMap.addAttribute("parameters", list);

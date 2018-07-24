@@ -43,4 +43,10 @@ public interface IDeviceSiteService extends ICommonService<DeviceSite> {
 	 * @return
 	 */
 	public List<DeviceSite> queryAllDeviceSitesByDeviceId(Long deviceId);
+	/**
+	 * 根据班次id查询设备站点
+	 * @param classesId
+	 * @return
+	 */
+	public List<DeviceSite> queryDeviceSitesByClassesId(Long classesId);
 }

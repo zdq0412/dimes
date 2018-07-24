@@ -68,4 +68,9 @@ public class ProductionUnitServiceImpl implements IProductionUnitService {
 	public Integer queryGoalOutputByProductionUnitId(Long productionUnitId) {
 		return productionUnitDao.queryGoalOutputByProductionUnitId(productionUnitId);
 	}
+
+	@Override
+	public double queryOeeByProductionUnitId(Long productionUnitId) {
+		return productionUnitDao.queryOeeByProductionUnitId(productionUnitId);
+	}
 }

@@ -30,7 +30,6 @@ import com.digitzones.model.Processes;
 import com.digitzones.model.WorkSheet;
 import com.digitzones.model.WorkSheetDetail;
 import com.digitzones.model.WorkSheetDetailParametersRecord;
-import com.digitzones.model.Workpiece;
 import com.digitzones.service.IDeviceSiteService;
 import com.digitzones.service.IProcessesService;
 import com.digitzones.service.IWorkSheetDetailParametersRecordService;
@@ -75,7 +74,7 @@ public class WorkSheetController {
 	@ResponseBody
 	@SuppressWarnings("unchecked")
 	public ModelMap queryWorkSheetsByProductionUnitId(Long productionUnitId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
-		Pager<Workpiece> pager = workSheetService.queryObjs("select d from WorkSheet d where d.productionUnitId=?0 and deleted=?1", page, rows, new Object[] {productionUnitId,false});
+		Pager<WorkSheet> pager = workSheetService.queryObjs("select d from WorkSheet d where d.productionUnitId=?0 and deleted=?1", page, rows, new Object[] {productionUnitId,false});
 		ModelMap mm = new ModelMap();
 		mm.addAttribute("rows",pager.getData());
 		mm.addAttribute("total", pager.getTotalCount());
@@ -107,6 +106,23 @@ public class WorkSheetController {
 	public ModelMap queryOtherDeviceSitesByProcessId(Long processId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page){
 		ModelMap modelMap = new ModelMap();
 		Pager<ProcessDeviceSiteMapping> pager = workSheetDetailService.queryOtherDeviceSitesByProcessId(processId, page, rows);
+		modelMap.addAttribute("rows",pager.getData());
+		modelMap.addAttribute("total", pager.getTotalCount());
+		return modelMap;
+	}
+	/**
+	 * 查询所有
+	 * @param processId
+	 * @param rows
+	 * @param page
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/queryAllWorkSheetDetails.do")
+	@ResponseBody
+	public ModelMap queryAllWorkSheetDetails(@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page){
+		ModelMap modelMap = new ModelMap();
+		Pager<WorkSheetDetail> pager = workSheetDetailService.queryObjs("from WorkSheetDetail", page, rows, new Object[] {});
 		modelMap.addAttribute("rows",pager.getData());
 		modelMap.addAttribute("total", pager.getTotalCount());
 		return modelMap;

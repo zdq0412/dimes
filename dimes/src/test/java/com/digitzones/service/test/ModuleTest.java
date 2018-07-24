@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.digitzones.constants.Constant;
 import com.digitzones.model.Department;
 import com.digitzones.model.EquipmentType;
 /**
@@ -226,7 +227,7 @@ public class ModuleTest {
 		
 		Module son34 = new Module();
 		son34.setParent(son3);
-		son34.setName("人员技能");
+		son34.setName("人员技能-工厂级");
 		son34.setLeaf(true);
 		son34.setUrl("console/jsp/employeeSkill4ProductionUnit.jsp");
 		moduleService.addModule(son34);
@@ -616,6 +617,44 @@ public class ModuleTest {
 		plt.setName("故障类型");
 		
 		pressLightTypeService.addObj(plt);
+		
+		PressLightType employee = new PressLightType();
+		employee.setCode(Constant.PressLightType.EMPLOYEE);
+		employee.setName("人员");
+		employee.setParent(plt);
+		pressLightTypeService.addObj(employee);
+		
+		PressLightType device = new PressLightType();
+		device.setCode(Constant.PressLightType.DEVICE);
+		device.setName("设备");
+		device.setParent(plt);
+		pressLightTypeService.addObj(device);
+		
+		PressLightType materiel = new PressLightType();
+		materiel.setCode(Constant.PressLightType.DEVICE);
+		materiel.setName("物料");
+		materiel.setParent(plt);
+		pressLightTypeService.addObj(materiel);
+		
+		PressLightType method = new PressLightType();
+		method.setCode(Constant.PressLightType.DEVICE);
+		method.setName("方法");
+		method.setParent(plt);
+		pressLightTypeService.addObj(method);
+		
+		PressLightType secureEnvironment = new PressLightType();
+		secureEnvironment.setCode(Constant.PressLightType.DEVICE);
+		secureEnvironment.setName("安环");
+		secureEnvironment.setParent(plt);
+		pressLightTypeService.addObj(secureEnvironment);
+		
+		PressLightType measure = new PressLightType();
+		measure.setCode(Constant.PressLightType.DEVICE);
+		measure.setName("测量");
+		measure.setParent(plt);
+		pressLightTypeService.addObj(measure);
+		
+		
 		//工件类型
 		WorkpieceType workpieceType = new WorkpieceType();
 		workpieceType.setCode("PARENT_TYPE");
@@ -676,6 +715,8 @@ public class ModuleTest {
 		rootProcessType.setName("工序");
 		
 		processTypeService.addObj(rootProcessType);
+		//按灯类别初始化
+		
 	}
 	@Test
 	public void add() {

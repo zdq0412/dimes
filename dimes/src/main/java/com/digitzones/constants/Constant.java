@@ -106,4 +106,23 @@ public class Constant {
 		/**返修工单*/
 		public static final String REPAIR = "repair";
 	}
+	/**
+	 * 
+	 * @author zdq
+	 * 2018年7月23日
+	 */
+	public static  class PressLightType{
+		/**人员*/
+		public static final String EMPLOYEE="employee";
+		/**设备*/
+		public static final String DEVICE="device";
+		/**物料*/
+		public static final String MATERIEL="materiel";
+		/**方法*/
+		public static final String METHOD="method";
+		/**安环*/
+		public static final String SECUREENVIRONMENT="secureEnvironment";
+		/**测量*/
+		public static final String MEASURE="measure";
+	}
 }

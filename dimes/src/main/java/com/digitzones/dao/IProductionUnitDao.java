@@ -13,4 +13,10 @@ public interface IProductionUnitDao extends ICommonDao<ProductionUnit> {
 	 * @return
 	 */
 	public Integer queryGoalOutputByProductionUnitId(Long productionUnitId);
+	/**
+	 * 根据生产单元id查找最大目标oee
+	 * @param productionUnitId
+	 * @return
+	 */
+	public double queryOeeByProductionUnitId(Long productionUnitId);
 }

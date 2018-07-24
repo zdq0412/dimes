@@ -2,6 +2,7 @@ package com.digitzones.model;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -211,7 +212,7 @@ public class WorkSheetDetail {
 	public void setNote(String note) {
 		this.note = note;
 	}
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="WORKSHEET_ID")
 	public WorkSheet getWorkSheet() {
 		return workSheet;

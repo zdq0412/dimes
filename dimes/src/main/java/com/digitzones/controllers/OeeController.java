@@ -1,5 +1,4 @@
 package com.digitzones.controllers;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,33 +11,30 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.digitzones.constants.Constant;
 import com.digitzones.model.Classes;
 import com.digitzones.model.DeviceSite;
 import com.digitzones.model.ProductionUnit;
-import com.digitzones.model.WorkpieceProcessDeviceSiteMapping;
 import com.digitzones.service.IClassesService;
-import com.digitzones.service.IDeviceService;
 import com.digitzones.service.IDeviceSiteService;
 import com.digitzones.service.ILostTimeRecordService;
-import com.digitzones.service.IProcessRecordService;
+import com.digitzones.service.INGRecordService;
 import com.digitzones.service.IProductionUnitService;
 import com.digitzones.service.IWorkpieceProcessDeviceSiteMappingService;
 import com.digitzones.util.DateStringUtil;
 @Controller
 @RequestMapping("/oee")
 public class OeeController {
+	private DateStringUtil util = new DateStringUtil();
 	private DecimalFormat format = new DecimalFormat("#.00");
 	private IProductionUnitService productionUnitService;
 	private IDeviceSiteService deviceSiteService;
-	private IProcessRecordService processRecordService;
 	private IWorkpieceProcessDeviceSiteMappingService workpieceProcessDeviceSiteMappingService;
 	private IClassesService classesService;
 	private ILostTimeRecordService lostTimeRecordService;
-	private IDeviceService deviceService;
+	private INGRecordService ngRecordService;
 	@Autowired
-	public void setDeviceService(IDeviceService deviceService) {
-		this.deviceService = deviceService;
+	public void setNgRecordService(INGRecordService ngRecordService) {
+		this.ngRecordService = ngRecordService;
 	}
 	@Autowired
 	public void setLostTimeRecordService(ILostTimeRecordService lostTimeRecordService) {
@@ -57,10 +53,6 @@ public class OeeController {
 		this.deviceSiteService = deviceSiteService;
 	}
 	@Autowired
-	public void setProcessRecordService(IProcessRecordService processRecordService) {
-		this.processRecordService = processRecordService;
-	}
-	@Autowired
 	public void setWorkpieceProcessDeviceSiteMappingService(
 			IWorkpieceProcessDeviceSiteMappingService workpieceProcessDeviceSiteMappingService) {
 		this.workpieceProcessDeviceSiteMappingService = workpieceProcessDeviceSiteMappingService;
@@ -77,8 +69,10 @@ public class OeeController {
 		List<ProductionUnit> productionUnits = productionUnitService.queryAllProductionUnits();
 		modelMap.put("productionUnits", productionUnits);
 		modelMap.put("values", queryOee4PerProductionUnit(productionUnits));
-		modelMap.put("preMonthOee", format.format(preMonthOee()*100));
-		modelMap.put("currentMonthOee",format.format(currentMonthOee()*100));
+		//查询当前班次
+		Classes c = classesService.queryCurrentClasses();
+		modelMap.put("preMonthOee", format.format(preMonthOee(c)*100));
+		modelMap.put("currentMonthOee",format.format(currentMonthOee(c)*100));
 		modelMap.put("currentDayOee",format.format(currentDayOee()*100));
 		return modelMap;
 	}
@@ -88,15 +82,14 @@ public class OeeController {
 	 */
 	private Double currentDayOee() {
 		double sumOee = 0;
-		//根据生产单元查询设备站点
-		List<DeviceSite> deviceSites = deviceSiteService.queryAllDeviceSites();
-		//根据设备站点查询加工信息
+		//查询当前班次
+		Classes c = classesService.queryCurrentClasses();
+		//查询当前班次的加工节拍
+		Float processingBeat = workpieceProcessDeviceSiteMappingService.queryProcessingBeatByClassesId(c.getId());
+		//根据班次id查询设备站点信息
+		List<DeviceSite> deviceSites = deviceSiteService.queryDeviceSitesByClassesId(c.getId());
 		for(DeviceSite ds : deviceSites) {
-			//查询当前班次
-			Classes c = classesService.queryCurrentClasses();
-			//查询加工信息中的工序，工件，设备站点id,NG数量
-			List<Long[]> idList = processRecordService.queryCountByDeviceSiteIdAndStatus(ds.getId(), Constant.ProcessRecord.NG);
-			sumOee += queryOee(c, ds,idList);
+			sumOee += queryOee(c, ds,processingBeat,new Date());
 		}
 		return sumOee;
 	}
@@ -111,16 +104,17 @@ public class OeeController {
 			double sumOee = 0;
 			//根据生产单元查询设备站点
 			List<DeviceSite> deviceSites = deviceSiteService.queryDeviceSitesByProductionUnitId(pu.getId());
+			//查询生产单元的加工节拍
+			Float processingBeat = workpieceProcessDeviceSiteMappingService.queryProcessingBeatByProductionUnitId(pu.getId());
+			//查询当前班次
+			Classes c = classesService.queryCurrentClasses();
 			//根据设备站点查询加工信息
 			for(DeviceSite ds : deviceSites) {
-				//查询当前班次
-				Classes c = classesService.queryCurrentClasses();
-				//查询加工信息中的工序，工件，设备站点id,NG数量
-				List<Long[]> idList = processRecordService.queryCountByDeviceSiteIdAndStatus(ds.getId(), Constant.ProcessRecord.NG);
-				sumOee += queryOee(c, ds,idList);
+
+				sumOee += queryOee(c, ds,processingBeat,new Date());
 			}
 
-			values.add(format.format(sumOee*100));
+			values.add(format.format(sumOee/deviceSites.size()*100));
 		}
 		return values;
 	}
@@ -128,20 +122,22 @@ public class OeeController {
 	 * 查询上个月的OEE值
 	 * @return
 	 */
-	private Double preMonthOee() {
+	private Double preMonthOee(Classes c) {
 		double sumOee = 0;
-		//根据生产单元查询设备站点
-		List<DeviceSite> deviceSites = deviceSiteService.queryAllDeviceSites();
-		//根据设备站点查询加工信息
-		//根据设备站点查询加工信息
-		for(DeviceSite ds : deviceSites) {
-			//查询当前班次
-			Classes c = classesService.queryCurrentClasses();
-			//查询加工信息中的工序，工件，设备站点id,NG数量
-			List<Long[]> idList = processRecordService.queryPreMonthDeviceSiteIdAndStatus(ds.getId(), Constant.ProcessRecord.NG);
-			sumOee += queryOee(c, ds,idList);
+		//查询当前班次的加工节拍
+		Float processingBeat = workpieceProcessDeviceSiteMappingService.queryProcessingBeatByClassesId(c.getId());
+		//根据班次id查询设备站点信息
+		List<DeviceSite> deviceSites = deviceSiteService.queryDeviceSitesByClassesId(c.getId());
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		calendar.add(Calendar.MONTH,-1);
+		List<Date> preMonthDays = util.generateOneMonthDay(util.date2Month(calendar.getTime()));
+		for(Date today : preMonthDays) {
+			for(DeviceSite ds : deviceSites) {
+				sumOee += queryOee(c, ds,processingBeat,today);
+			}
 		}
-		return sumOee;
+		return sumOee/preMonthDays.size();
 	}
 	/**
 	 * oee算法
@@ -149,79 +145,50 @@ public class OeeController {
 	 * @param ds
 	 * @return
 	 */
-	private double queryOee(Classes c , DeviceSite ds,List<Long[]> idList) {
-		Date now = new Date();
-		double sumOee = 0;
+	private double queryOee(Classes c, DeviceSite ds,Float processingBeat,Date date) {
 		//查询损时时间(包括计划停机时间)
-		double lostTime = lostTimeRecordService.queryLostTime(c,ds.getId(),new Date());
+		double lostTime = lostTimeRecordService.queryLostTime(c,ds.getId(),date);
 		//查询计划停机时间
-		double planHaltTime = lostTimeRecordService.queryPlanHaltTime(c, ds.getId(),new Date());
-
-		if(idList != null && idList.size()>0) {
-			for(Object[] ids : idList) {
-				//根据工序,工件，设备站点查找标准节拍
-				WorkpieceProcessDeviceSiteMapping wpdsm = workpieceProcessDeviceSiteMappingService.queryByWorkPieceIdAndProcessIdAndDeviceSiteId(((BigDecimal)ids[0]).longValue(), ((BigDecimal)ids[1]).longValue(), ((BigDecimal)ids[2]).longValue());
-				Float processingBeat = wpdsm.getProcessingBeat();
-				if(processingBeat==null) {
-					processingBeat = 0f;
-				}
-				//oee公式:（总加工时间-损时时间-NG件数*标准节拍）/总加工时间 
-				//总加工时间，公式：总加工时间=当前时间-班次的开始时间 -计划停机时间
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(now);
-				int totalMinutes = calendar.get(Calendar.HOUR_OF_DAY)*60 + calendar.get(Calendar.MINUTE);
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(c.getStartTime());
-				//查询计划停机时间
-				int classesBeginMinutes = cal.get(Calendar.HOUR_OF_DAY)*60 + cal.get(Calendar.MINUTE);
-				//总加工时间
-				double sumMinutes = totalMinutes - classesBeginMinutes - planHaltTime;
-				double oee = 0;
-				if(totalMinutes>classesBeginMinutes) {
-					oee = (sumMinutes-lostTime-(Integer)ids[3]*processingBeat)/sumMinutes;
-					//
-				}else {
-					oee = (24+sumMinutes-lostTime-(Integer)ids[3]*processingBeat)/(24*60+sumMinutes);
-				}
-				sumOee += oee;
-			}
+		double planHaltTime = lostTimeRecordService.queryPlanHaltTime(c, ds.getId(),date);
+		//查询设备站点的ng数
+		int ngCount = ngRecordService.queryNgCountByDeviceSiteId(ds.getId(), date);
+		//oee公式:（总加工时间-损时时间-NG件数*标准节拍）/总加工时间 
+		//总加工时间，公式：总加工时间=当前时间-班次的开始时间 -计划停机时间
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		int totalMinutes = calendar.get(Calendar.HOUR_OF_DAY)*60 + calendar.get(Calendar.MINUTE);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(c.getStartTime());
+		//查询计划停机时间
+		int classesBeginMinutes = cal.get(Calendar.HOUR_OF_DAY)*60 + cal.get(Calendar.MINUTE);
+		//总加工时间
+		double sumMinutes = totalMinutes - classesBeginMinutes - planHaltTime;
+		double oee = 0;
+		if(totalMinutes>classesBeginMinutes) {
+			oee = (sumMinutes-lostTime-ngCount*processingBeat)/sumMinutes;
+			//
 		}else {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(now);
-			int totalMinutes = calendar.get(Calendar.HOUR_OF_DAY)*60 + calendar.get(Calendar.MINUTE);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(c.getStartTime());
-			int classesBeginMinutes = cal.get(Calendar.HOUR_OF_DAY)*60 + cal.get(Calendar.MINUTE);
-			//总加工时间
-			double sumMinutes = totalMinutes - classesBeginMinutes - planHaltTime;
-			double oee = 0;
-			if(totalMinutes>classesBeginMinutes) {
-				oee = (sumMinutes-lostTime)/sumMinutes;
-				//
-			}else {
-				oee = (24+sumMinutes-lostTime)/(24*60+sumMinutes);
-			}
-			sumOee += oee;
+			oee = (24+sumMinutes-lostTime-ngCount*processingBeat)/(24*60+sumMinutes);
 		}
-		return sumOee;
+		return oee;
 	}
 	/**
-	 * 查询上个月的OEE值
+	 * 查询当前月的OEE值
 	 * @return
 	 */
-	private Double currentMonthOee() {
+	private Double currentMonthOee(Classes c) {
 		double sumOee = 0;
-		//根据生产单元查询设备站点
-		List<DeviceSite> deviceSites = deviceSiteService.queryAllDeviceSites();
-		//根据设备站点查询加工信息
-		for(DeviceSite ds : deviceSites) {
-			//查询当前班次
-			Classes c = classesService.queryCurrentClasses();
-			//查询加工信息中的工序，工件，设备站点id,NG数量
-			List<Long[]> idList = processRecordService.queryCurrentMonthDeviceSiteIdAndStatus(ds.getId(), Constant.ProcessRecord.NG);
-			sumOee += queryOee(c, ds,idList);
+		//查询当前班次的加工节拍
+		Float processingBeat = workpieceProcessDeviceSiteMappingService.queryProcessingBeatByClassesId(c.getId());
+		//根据班次id查询设备站点信息
+		List<DeviceSite> deviceSites = deviceSiteService.queryDeviceSitesByClassesId(c.getId());
+		List<Date> currentMonthDays = util.generateOneMonthDay(util.date2Month(new Date()));
+		for(Date today : currentMonthDays) {
+			for(DeviceSite ds : deviceSites) {
+				sumOee += queryOee(c, ds,processingBeat,today);
+			}
 		}
-		return sumOee;
+		return sumOee/currentMonthDays.size();
 	}
 
 	/**
@@ -234,9 +201,8 @@ public class OeeController {
 		if(productionUnitId==null) {
 			productionUnitId = 0l;
 		}
-		
 		//根据产线查找目标OEE
-		double goalOee = deviceService.queryOeeByProductionUnitId(productionUnitId);
+		double goalOee = productionUnitService.queryOeeByProductionUnitId(productionUnitId);
 		List<String> goalOeeList = new ArrayList<>();
 		ModelMap modelMap = new ModelMap();
 		//产生一个月的时间
@@ -258,92 +224,42 @@ public class OeeController {
 			List<String> oees = new ArrayList<>();
 			for(Date now : days) {
 				goalOeeList.add(format.format(goalOee));
-				
+
 				String nowDay = util.date2DayOfMonth(now);
 				String dateDay = util.date2DayOfMonth(date);
+				double oee = 0;
+				Float processingBeat = workpieceProcessDeviceSiteMappingService.queryProcessingBeatByClassesId(c.getId());
 				if(Integer.valueOf(nowDay)<=Integer.valueOf(dateDay)) {
-					double sumOee = 0;
 					for(DeviceSite ds : deviceSites) {
-						List<Long[]> idList = processRecordService.queryByDay(ds.getId(), Constant.ProcessRecord.NG, now);
-						//查询损时时间(包括计划停机时间)
-						double lostTime = lostTimeRecordService.queryLostTime4PerDay(c,ds.getId(),now);
-						//查询计划停机时间
-						double planHaltTime = lostTimeRecordService.queryPlanHaltTime(c, ds.getId(),now);
-
-						if(idList != null && idList.size()>0) {
-							for(Object[] ids : idList) {
-								//根据工序,工件，设备站点查找标准节拍
-								WorkpieceProcessDeviceSiteMapping wpdsm = workpieceProcessDeviceSiteMappingService.queryByWorkPieceIdAndProcessIdAndDeviceSiteId(((BigDecimal)ids[0]).longValue(), ((BigDecimal)ids[1]).longValue(), ((BigDecimal)ids[2]).longValue());
-								Float processingBeat = wpdsm.getProcessingBeat();
-								if(processingBeat==null) {
-									processingBeat = 0f;
-								}
-								//oee公式:（总加工时间-损时时间-NG件数*标准节拍）/总加工时间 
-								//总加工时间，公式：总加工时间=当前时间-班次的开始时间 -计划停机时间
-								//开始时间
-								Calendar calendar = Calendar.getInstance();
-								calendar.setTime(c.getStartTime());
-								//结束时间
-								Calendar cal = Calendar.getInstance();
-								cal.setTime(c.getEndTime());
-								long totalMinutes = 0;
-								//班次开始时间大于结束时间
-								if(calendar.get(Calendar.HOUR_OF_DAY)<cal.get(Calendar.HOUR_OF_DAY)) {
-									totalMinutes = cal.get(Calendar.HOUR_OF_DAY)*60+cal.get(Calendar.MINUTE)-calendar.get(Calendar.HOUR_OF_DAY)*60-calendar.get(Calendar.MINUTE);
-								}else {
-									totalMinutes = 24*60+(calendar.get(Calendar.HOUR_OF_DAY)*60+calendar.get(Calendar.MINUTE))-(cal.get(Calendar.HOUR_OF_DAY)*60-cal.get(Calendar.MINUTE));
-								}
-								double sumMinutes = totalMinutes- planHaltTime;
-								double oee = (sumMinutes-lostTime-(Integer)ids[3]*processingBeat)/sumMinutes;
-								sumOee += oee;
-							}
-						}else {
-							//开始时间
-							Calendar calendar = Calendar.getInstance();
-							calendar.setTime(c.getStartTime());
-							//结束时间
-							Calendar cal = Calendar.getInstance();
-							cal.setTime(c.getEndTime());
-							long totalMinutes = 0;
-							//班次开始时间大于结束时间
-							if(calendar.get(Calendar.HOUR_OF_DAY)<cal.get(Calendar.HOUR_OF_DAY)) {
-								totalMinutes = cal.get(Calendar.HOUR_OF_DAY)*60+cal.get(Calendar.MINUTE)-calendar.get(Calendar.HOUR_OF_DAY)*60-calendar.get(Calendar.MINUTE);
-							}else {
-								totalMinutes = 24*60+(calendar.get(Calendar.HOUR_OF_DAY)*60+calendar.get(Calendar.MINUTE))-(cal.get(Calendar.HOUR_OF_DAY)*60-cal.get(Calendar.MINUTE));
-							}
-							//总加工时间
-							double sumMinutes = totalMinutes- planHaltTime;
-							double oee  = (sumMinutes-lostTime)/sumMinutes;
-							sumOee += oee;
-						}
+						oee = queryOee(c, ds, processingBeat, date);
 					}
-					oees.add(format.format(sumOee*100/deviceSites.size()));
 				}
+				oees.add(format.format(oee*100/deviceSites.size()));
 			}
 			oeeList.add(oees);
-		}
-		//求平均值
-		List<String> avgs = new ArrayList<>();
-		for(int j = 0;j<days.size();j++) {
-			double sum = 0;
-			for(int i = 0;i<oeeList.size();i++) {
-				if(j<oeeList.get(i).size()) {
-					try {
+	}
+	//求平均值
+	List<String> avgs = new ArrayList<>();
+	for(int j = 0;j<days.size();j++) {
+		double sum = 0;
+		for(int i = 0;i<oeeList.size();i++) {
+			if(j<oeeList.get(i).size()) {
+				try {
 					sum += Double.parseDouble(oeeList.get(i).get(j));
-					}catch (Exception e) {
-						System.err.println(e.getMessage());
-						sum += 0;
-					}
+				}catch (Exception e) {
+					System.err.println(e.getMessage());
+					sum += 0;
 				}
 			}
-			avgs.add(format.format(sum/oeeList.size()));
 		}
-		
-		modelMap.addAttribute("classes",classesList);
-		modelMap.addAttribute("goalOeeList",goalOeeList);
-		modelMap.addAttribute("avgs",avgs);
-		modelMap.addAttribute("oeeList", oeeList);
-		modelMap.addAttribute("days", dayList);
-		return modelMap;
+		avgs.add(format.format(sum/oeeList.size()));
 	}
+
+	modelMap.addAttribute("classes",classesList);
+	modelMap.addAttribute("goalOeeList",goalOeeList);
+	modelMap.addAttribute("avgs",avgs);
+	modelMap.addAttribute("oeeList", oeeList);
+	modelMap.addAttribute("days", dayList);
+	return modelMap;
+}
 } 

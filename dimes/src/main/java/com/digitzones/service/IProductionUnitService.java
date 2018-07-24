@@ -32,4 +32,10 @@ public interface IProductionUnitService extends ICommonService<ProductionUnit>{
 	 * @return
 	 */
 	public Integer queryGoalOutputByProductionUnitId(Long productionUnitId);
+	/**
+	 * 根据生产单元id查找目标oee值
+	 * @param productionUnitId
+	 * @return
+	 */
+	public double queryOeeByProductionUnitId(Long productionUnitId);
 }

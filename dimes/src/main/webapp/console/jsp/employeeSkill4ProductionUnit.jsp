@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="../../common/jsp/head.jsp"%>
 <script>
-	//点击产线，查询该产线的产量
 	function requestEmployeeSkill(productionUnitId) {
 		$.get("employeeSkill/queryEmployeeSkill4empByProductionUnitId.do", {
 			productionUnitId : productionUnitId

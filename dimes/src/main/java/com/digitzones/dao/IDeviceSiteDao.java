@@ -1,5 +1,7 @@
 package com.digitzones.dao;
 
+import java.util.List;
+
 import com.digitzones.model.DeviceSite;
 /**
  * 设备站点dao
@@ -18,5 +20,10 @@ public interface IDeviceSiteDao extends ICommonDao<DeviceSite> {
 	 * @return
 	 */
 	public Long queryCountOfDeviceSiteByStatus(String status);
-	
+	/**
+	 * 根据班次id查询设备站点
+	 * @param classesId
+	 * @return
+	 */
+	public List<DeviceSite> queryDeviceSitesByClassesId(Long classesId);
 }
