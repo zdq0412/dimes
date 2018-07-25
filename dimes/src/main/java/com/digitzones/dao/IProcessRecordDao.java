@@ -11,13 +11,6 @@ import com.digitzones.model.ProcessRecord;
  */
 public interface IProcessRecordDao extends ICommonDao<ProcessRecord> {
 	/**
-	 * 查询当前工序、工件、设备站点下的,当前班次的，该状态的加工记录数
-	 * @param deviceSiteId
-	 * @param status
-	 * @return List<Long[]> :工件id，工序id，设备站点id,班次id，记录数
-	 */
-	public List<Long[]> queryCountByDeviceSiteIdAndStatus(Long deviceSiteId,String status);
-	/**
 	 * 根据设备站点id查询当天的加工数量
 	 * @param deviceSiteId
 	 * @return 
@@ -29,13 +22,6 @@ public interface IProcessRecordDao extends ICommonDao<ProcessRecord> {
 	 * @return
 	 */
 	public Long queryCurrentDayCountByDeviceSiteId(Long deviceSiteId);
-	/**
-	 * 查询上个月工序、工件、设备站点下的,当前班次的，该状态的加工记录数
-	 * @param deviceSiteId
-	 * @param status
-	 * @return List<Long[]> :工件id，工序id，设备站点id,班次id，记录数
-	 */
-	public List<Long[]> queryPreMonthDeviceSiteIdAndStatus(Long deviceSiteId,String status);
 	/**
 	 * 查询当前月工序、工件、设备站点下的,当前班次的，该状态的加工记录数
 	 * @param deviceSiteId

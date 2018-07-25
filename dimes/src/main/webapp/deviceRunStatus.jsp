@@ -145,6 +145,9 @@
 							label : {
 								formatter : '{b}: {@2012} ({d}%)'
 							},
+							itemStyle: {
+				            	color:'#03BAED'
+							},
 							encode : {
 								itemName : result.data[0][0],
 								value : '2012',

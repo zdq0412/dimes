@@ -1,6 +1,7 @@
 package com.digitzones.service;
 
 import java.util.Date;
+import java.util.List;
 
 import com.digitzones.model.PressLightRecord;
 /**
@@ -15,4 +16,10 @@ public interface IPressLightRecordService extends ICommonService<PressLightRecor
 	 * @return
 	 */
 	public Long queryCountByPressLightTime(Date pressLightTime);
+	/**
+	 * 根据时间查询按灯记录
+	 * @param date
+	 * @return
+	 */
+	public List<PressLightRecord> queryPressLightRecordsByTime(Date date);
 }

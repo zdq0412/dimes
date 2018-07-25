@@ -187,7 +187,7 @@
 	height: 50px;
 	line-height: 50px;
 	font-size: 50px;
-	color: #6062AB;
+	color: #57EEFD;
 }
 
 #time {
@@ -195,7 +195,7 @@
 	height: 90px;
 	text-align: center;
 	line-height: 98px;
-	color: #6062AB;
+	color: #57EEFD;
 	font-size: 25px;
 }
 
@@ -238,7 +238,7 @@
 .title {
 	height: 40px;
 	width: 100%;
-	color: #6062AB;
+	color:  #57EEFD;
 	font-size: 30px;
 	margin-left:10px;
 	margin-top:5px;

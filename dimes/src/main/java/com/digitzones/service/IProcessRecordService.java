@@ -11,27 +11,6 @@ import com.digitzones.model.ProcessRecord;
  */
 public interface IProcessRecordService extends ICommonService<ProcessRecord> {
 	/**
-	 * 查询当前工序、工件、设备站点下的,当前班次的，该状态的加工记录数
-	 * @param deviceSiteId
-	 * @param status
-	 * @return
-	 */
-	public List<Long[]> queryCountByDeviceSiteIdAndStatus(Long deviceSiteId,String status);
-	/**
-	 * 查询上个月工序、工件、设备站点下的,当前班次的，该状态的加工记录数
-	 * @param deviceSiteId
-	 * @param status
-	 * @return
-	 */
-	public List<Long[]> queryPreMonthDeviceSiteIdAndStatus(Long deviceSiteId,String status);
-	/**
-	 * 查询当前月工序、工件、设备站点下的,当前班次的，该状态的加工记录数
-	 * @param deviceSiteId
-	 * @param status
-	 * @return
-	 */
-	public List<Long[]> queryCurrentMonthDeviceSiteIdAndStatus(Long deviceSiteId,String status);
-	/**
 	 * 根据设备站点id查询当天的非NG的加工数量
 	 * @param deviceSiteId
 	 * @return 

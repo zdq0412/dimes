@@ -15,4 +15,5 @@ public interface IPressLightService extends ICommonService<PressLight> {
 	 * @return List<PressLight>
 	 */
 	public List<PressLight> queryAllPressLightByTypeId(Long typeId);
+	
 }

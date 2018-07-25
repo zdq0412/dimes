@@ -120,22 +120,6 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 	public void deleteObj(Long id) {
 		processRecordDao.deleteById(id);
 	}
-
-	@Override
-	public List<Long[]> queryCountByDeviceSiteIdAndStatus(Long deviceSiteId, String status) {
-		return processRecordDao.queryCountByDeviceSiteIdAndStatus(deviceSiteId, status);
-	}
-
-	@Override
-	public List<Long[]> queryPreMonthDeviceSiteIdAndStatus(Long deviceSiteId, String status) {
-		return processRecordDao.queryPreMonthDeviceSiteIdAndStatus(deviceSiteId, status);
-	}
-
-	@Override
-	public List<Long[]> queryCurrentMonthDeviceSiteIdAndStatus(Long deviceSiteId, String status) {
-		return processRecordDao.queryCurrentMonthDeviceSiteIdAndStatus(deviceSiteId, status);
-	}
-
 	@Override
 	public Long queryCountByDeviceSiteIdAndNotNg(Long deviceSiteId) {
 		return processRecordDao.queryCountByDeviceSiteIdAndNotNg(deviceSiteId);

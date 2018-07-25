@@ -1,7 +1,9 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,5 +79,13 @@ public class PressLightRecordServiceImpl implements IPressLightRecordService {
 	@Override
 	public Long queryCountByPressLightTime(Date pressLightTime) {
 		return pressLightRecordDao.queryCountByPressLightTime(pressLightTime);
+	}
+
+	@Override
+	public List<PressLightRecord> queryPressLightRecordsByTime(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		String hql = "from PressLightRecord plr where year(plr.pressLightTime)=?0 and month(plr.pressLightTime)=?1 and day(plr.pressLightTime)=?2";
+		return  pressLightRecordDao.findByHQL(hql, new Object[] {c.get(Calendar.YEAR),c.get(Calendar.MONTH)+1,c.get(Calendar.DATE)});
 	}
 }

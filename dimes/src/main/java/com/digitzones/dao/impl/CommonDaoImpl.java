@@ -16,12 +16,13 @@ import com.digitzones.model.Pager;
 @Repository("commonDaoImpl")
 public abstract class CommonDaoImpl<T> implements ICommonDao<T> {
 	private Class<T> clazz; 
+	
+	public CommonDaoImpl(Class<T> clazz) {
+		this.clazz = clazz;
+	}
 	private HibernateTemplate hibernateTemplate;
 	public HibernateTemplate getHibernateTemplate() {
 		return hibernateTemplate;
-	}
-	public CommonDaoImpl(Class<T> clazz) {
-		this.clazz = clazz;
 	}
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {

@@ -125,7 +125,6 @@
 					// 这个是修改宽度的属性
 					}
 				},
-
 				splitLine : {
 					length : 10,
 					lineStyle : {
@@ -199,10 +198,10 @@ table tr td, table tr th {
 	color: white;
 }
 
-table:first-child {
+/* table:first-child {
 	background-color: #10325F;
 }
-
+ */
 #title {
 	width: 99.5%;
 	height: 40px;
