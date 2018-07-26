@@ -143,20 +143,20 @@
 							radius : '30%',
 							center : [ '50%', '25%' ],
 							label : {
-								formatter : '{b}: {@2012} ({d}%)'
+								formatter : '{b}: {@} ({d}%)'
 							},
 							itemStyle: {
 				            	color:'#03BAED'
 							},
 							encode : {
 								itemName : result.data[0][0],
-								value : '2012',
-								tooltip : '2012'
+								value :1,
+								tooltip : 1
 							}
 						} ]
 					};
 
-					myChart.on('updateAxisPointer', function(event) {
+					 myChart.on('updateAxisPointer', function(event) {
 						var xAxisInfo = event.axesInfo[0];
 						if (xAxisInfo) {
 							var dimension = xAxisInfo.value + 1;
@@ -174,7 +174,7 @@
 								}
 							});
 						}
-					});
+					}); 
 					myChart.setOption(option);
 				});
 		setInterval($.get("lostTimeRecord/queryLostTime4RealTime.do",function(data){
@@ -212,9 +212,10 @@
 	}
 </script>
 <style>
- body{
- 	margin:0;
- }
+body {
+	margin: 0;
+}
+
 #outer {
 	height: 1080px;
 	width: 1920px;
@@ -270,18 +271,20 @@
 	width: 100%;
 	color: #57EEFD;
 	font-size: 25px;
-	margin-left:10px;
-	margin-top:5px;
+	margin-left: 10px;
+	margin-top: 5px;
 }
 
 #deviceHaltTime {
 	height: 100%;
 	width: 100%;
 }
+
 #deviceHaltClassify {
 	height: 100%;
 	width: 100%;
 }
+
 #realTimeDiv {
 	height: 350px;
 	width: 90%;
@@ -308,9 +311,7 @@
 		</div>
 		<div id="realTimeDiv">
 			<div class="title">实时故障时间</div>
-			<div id="realTime" style="height:310px;width:100%;">
-				
-			</div>
+			<div id="realTime" style="height: 310px; width: 100%;"></div>
 		</div>
 	</div>
 </body>

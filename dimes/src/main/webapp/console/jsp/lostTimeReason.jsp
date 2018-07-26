@@ -108,7 +108,7 @@
     			    yAxis : [
     			        {
     			            type : 'value',
-    			            max:14,
+    			            max:24,
     			            interval:2
     			        }
     			    ],

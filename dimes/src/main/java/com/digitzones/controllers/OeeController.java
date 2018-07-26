@@ -11,7 +11,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.digitzones.constants.Constant;
 import com.digitzones.model.Classes;
 import com.digitzones.model.DeviceSite;
 import com.digitzones.model.ProductionUnit;
@@ -19,7 +18,6 @@ import com.digitzones.service.IClassesService;
 import com.digitzones.service.IDeviceSiteService;
 import com.digitzones.service.ILostTimeRecordService;
 import com.digitzones.service.IOeeService;
-import com.digitzones.service.IProcessRecordService;
 import com.digitzones.service.IProductionUnitService;
 import com.digitzones.service.IWorkpieceService;
 import com.digitzones.util.DateStringUtil;
@@ -29,7 +27,6 @@ public class OeeController {
 	private DecimalFormat format = new DecimalFormat("#.00");
 	private IProductionUnitService productionUnitService;
 	private IDeviceSiteService deviceSiteService;
-	private IProcessRecordService processRecordService;
 	private IClassesService classesService;
 	private IWorkpieceService workpieceService;
 	private ILostTimeRecordService lostTimeRecordService;
@@ -57,10 +54,6 @@ public class OeeController {
 	@Autowired
 	public void setDeviceSiteService(IDeviceSiteService deviceSiteService) {
 		this.deviceSiteService = deviceSiteService;
-	}
-	@Autowired
-	public void setProcessRecordService(IProcessRecordService processRecordService) {
-		this.processRecordService = processRecordService;
 	}
 	/**
 	 * 工厂级oee查询
@@ -262,7 +255,7 @@ public class OeeController {
 				if(Integer.valueOf(nowDay)<=Integer.valueOf(dateDay)) {
 					double oee = 0;
 					for(DeviceSite ds : deviceSites) {
-						List<Long[]> idList = processRecordService.queryByDay(ds.getId(), Constant.ProcessRecord.NG, now);
+						List<Object[]> idList = oeeService.queryNGInfo4CurrentDay(now, ds.getId());
 						//查询损时时间(包括计划停机时间)
 						double lostTime = oeeService.queryLostTimeByDeviceSiteId(now, ds.getId(), c);
 						//查询计划停机时间
@@ -277,7 +270,7 @@ public class OeeController {
 								if(processingBeat==null) {
 									processingBeat = 0f;
 								}
-								sumNgAndProcessingBeat+=Long.parseLong(ids[3]==null?"0":ids[3].toString())*processingBeat;
+								sumNgAndProcessingBeat+=Long.parseLong(ids[4]==null?"0":ids[4].toString())*processingBeat;
 							}
 							//oee公式:（总加工时间-损时时间-NG件数*标准节拍）/总加工时间 
 							//总加工时间，公式：总加工时间=当前时间-班次的开始时间 -计划停机时间
@@ -315,7 +308,7 @@ public class OeeController {
 							oee  = (sumMinutes-lostTime)/sumMinutes;
 						}
 					}
-					oees.add(format.format(oee*100/deviceSites.size()));
+					oees.add(format.format(oee*100));
 				}
 			}
 			oeeList.add(oees);

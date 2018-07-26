@@ -63,10 +63,13 @@
 		        cellSize: [70, 29],
 		        yearLabel: {show: false},
 		        orient: 'vertical',
+		        itemStyle:{
+		        	color:'#1C2437'
+		        },
 		        dayLabel: {
 		            firstDay: 1,
 		            nameMap: 'cn',
-		            color:'#5793F3'
+		            color:'#8AD5DA'
 		        },
 		        monthLabel: {
 		            show: false

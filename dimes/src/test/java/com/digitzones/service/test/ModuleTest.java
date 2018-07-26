@@ -227,7 +227,7 @@ public class ModuleTest {
 		
 		Module son34 = new Module();
 		son34.setParent(son3);
-		son34.setName("人员技能-工厂级");
+		son34.setName("人员技能-产线级");
 		son34.setLeaf(true);
 		son34.setUrl("console/jsp/employeeSkill4ProductionUnit.jsp");
 		moduleService.addModule(son34);
@@ -241,7 +241,7 @@ public class ModuleTest {
 		
 		Module son36 = new Module();
 		son36.setParent(son3);
-		son36.setName("损失时间分析");
+		son36.setName("损时分析");
 		son36.setLeaf(true);
 		son36.setUrl("console/jsp/lostTimeReason.jsp");
 		moduleService.addModule(son36);

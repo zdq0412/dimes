@@ -48,10 +48,10 @@ public class OeeDaoImpl  implements IOeeDao {
 				+ " and day(record.lostTimeTime)=?2 "
 				+ " and record.deleted=0 and record.DEVICESITE_ID=?3 " ;
 		if(beginTime>endTime) {
-			sql +=" (CONVERT(varchar(100),record.lostTimeTime,108)>=?4 and CONVERT(varchar(100),record.lostTimeTime,108)<='23:59:59')"
+			sql +=" and (CONVERT(varchar(100),record.lostTimeTime,108)>=?4 and CONVERT(varchar(100),record.lostTimeTime,108)<='23:59:59')"
 					+ " or (CONVERT(varchar(100),record.lostTimeTime,108)<=?5 and CONVERT(varchar(100),record.lostTimeTime,108)>='00:00:00')";
 		}else {
-			sql +=" CONVERT(varchar(100),record.lostTimeTime,108)>=?4 and CONVERT(varchar(100),record.lostTimeTime,108)<=?5";
+			sql +=" and  CONVERT(varchar(100),record.lostTimeTime,108)>=?4 and CONVERT(varchar(100),record.lostTimeTime,108)<=?5";
 		}
 
 		Integer result = (Integer) getSession().createSQLQuery(sql)
@@ -114,7 +114,7 @@ public class OeeDaoImpl  implements IOeeDao {
 		if(result==null) {
 			return 0f;
 		}
-		return (Float) result; 
+		return ((Double) result).floatValue(); 
 	}
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
