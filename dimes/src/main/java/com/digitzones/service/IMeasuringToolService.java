@@ -1,5 +1,7 @@
 package com.digitzones.service;
 
+import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 
 import com.digitzones.model.Equipment;
@@ -20,4 +22,11 @@ public interface IMeasuringToolService extends ICommonService<Equipment> {
 	 * @return
 	 */
 	public List<Equipment> queryMeasuringToolsByCodeOrNameOrUnity(String value);
+	/**
+	 * 添加量具
+	 * @param equipment
+	 * @param pic 量具图片文件
+	 * @return
+	 */
+	public Serializable addMeasuringTool(Equipment equipment,File pic);
 }

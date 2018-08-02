@@ -154,11 +154,12 @@ public class ProcessRecordDaoImpl extends CommonDaoImpl<ProcessRecord> implement
 		String sql = "select sum(method.ngCount) from PROCESSRECORD pr inner join NGRECORD ng  on pr.no = ng.no"
 				+ " inner join NGPROCESSMETHOD method on method.NGRECORD_ID=ng.id "
 				+ " inner join WORKSHEET ws on pr.no = ws.no "
-				+ " where year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1";
+				+ " where year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1  and method.processMethod!=?2";
 		@SuppressWarnings("rawtypes")
 		List list = getSession().createSQLQuery(sql)
 								.setParameter(0, year)
 								.setParameter(1, month)
+								.setParameter(2, Constant.ProcessRecord.COMPROMISE)
 								.list();
 		if(list!=null&&list.size()>0) {
 			return (Integer) list.get(0);
@@ -189,9 +190,8 @@ public class ProcessRecordDaoImpl extends CommonDaoImpl<ProcessRecord> implement
 		c.setTime(day);
 		String sql = "select COUNT(pr.id) from PROCESSRECORD pr inner join DEVICESITE site on pr.deviceSiteId=site.id"
 				+ " inner join Device d on site.device_id = d.id "
-				+ " inner join PRODUCTIONUNIT p on d.productionUnit_Id=p.id "
 				+ " where year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1"
-				+ " and day(pr.collectionDate)=?2 and pr.classesId=?3 and p.id=?4";
+				+ " and day(pr.collectionDate)=?2 and pr.classesId=?3 and d.production_id=?4";
 		
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH)+1;

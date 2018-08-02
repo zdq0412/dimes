@@ -61,11 +61,17 @@ public class DeviceController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/queryIdleDevices.do")
 	@ResponseBody
-	public ModelMap queryIdleDevices(@RequestParam(defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page){
+	public ModelMap queryIdleDevices(@RequestParam(defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page,HttpServletRequest request){
 		Pager<Device> pager = deviceService.queryObjs("from Device d where d.productionUnit is null", page, rows, new Object[] {});
 		ModelMap modelMap = new ModelMap();
+		List<DeviceVO> vos = new ArrayList<>();
+		if(pager.getData()!=null && pager.getData().size()>0) {
+			for(Device d : pager.getData()) {
+				vos.add(model2VO(d, request));
+			}
+		}
 		modelMap.addAttribute("total", pager.getTotalCount());
-		modelMap.addAttribute("rows", pager.getData());
+		modelMap.addAttribute("rows", vos);
 		return modelMap;
 	}
 	/**
@@ -157,7 +163,7 @@ public class DeviceController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/queryDevicesByProductionUnitId.do")
 	@ResponseBody
-	public ModelMap queryDevicesByProductionUnitId(@RequestParam(value="productionUnitId",required=false)Long productionUnitId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
+	public ModelMap queryDevicesByProductionUnitId(@RequestParam(value="productionUnitId",required=false)Long productionUnitId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page,HttpServletRequest request) {
 		Pager<Device> pager = null;
 		if(productionUnitId==null) {
 			pager = deviceService.queryObjs("select d from Device d inner join d.productionUnit p ", page, rows, new Object[] {});
@@ -169,8 +175,14 @@ public class DeviceController {
 		}
 
 		ModelMap mm = new ModelMap();
-		mm.addAttribute("rows",pager.getData());
+		List<DeviceVO> vos = new ArrayList<>();
+		if(pager.getData()!=null && pager.getData().size()>0) {
+			for(Device d : pager.getData()) {
+				vos.add(model2VO(d, request));
+			}
+		}
 		mm.addAttribute("total", pager.getTotalCount());
+		mm.addAttribute("rows", vos);
 		mm.addAttribute("code", "0");
 		mm.addAttribute("msg", "");
 		return mm;
@@ -183,14 +195,20 @@ public class DeviceController {
 	 */
 	@RequestMapping("/addDevice.do")
 	@ResponseBody
-	public ModelMap addDevice(Device device) {
+	public ModelMap addDevice(Device device,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
 		Device device4Code = deviceService.queryByProperty("code", device.getCode());
 		if(device4Code!=null) {
 			modelMap.addAttribute("success", false);
 			modelMap.addAttribute("msg", "设备编码已被使用");
 		}else {
-			deviceService.addObj(device);
+			if(device.getPhotoName()!=null) {
+				String dir = request.getServletContext().getRealPath("/");
+				File file = new File(dir,device.getPhotoName());
+				deviceService.addDevice(device,file);
+			}else {
+				deviceService.addObj(device);
+			}
 			modelMap.addAttribute("success", true);
 			modelMap.addAttribute("msg", "添加成功!");
 		}
@@ -206,7 +224,11 @@ public class DeviceController {
 		InputStream is;
 		try {
 			is = file.getInputStream();
-			File out = new File(dir,fileName);
+			File parentDir = new File(dir);
+			if(!parentDir.exists()) {
+				parentDir.mkdirs();
+			}
+			File out = new File(parentDir,fileName);
 			FileCopyUtils.copy(is, new FileOutputStream(out));
 			modelMap.addAttribute("statusCode", 200);
 			modelMap.addAttribute("title", "操作提示");
@@ -224,20 +246,20 @@ public class DeviceController {
 	 */
 	@RequestMapping("/queryDeviceById.do")
 	@ResponseBody
-	public DeviceVO queryDeviceById(Long id) {
+	public DeviceVO queryDeviceById(Long id,HttpServletRequest request) {
 		Device device = deviceService.queryObjById(id);
-		return model2VO(device);
+		return model2VO(device,request);
 	}
 	/**
 	 * 将领域模型转换为值对象
 	 * @param device
 	 * @return
 	 */
-	private DeviceVO model2VO(Device device) {
+	private DeviceVO model2VO(Device device,HttpServletRequest request) {
 		if(device == null) {
 			return null;
 		}
-		
+
 		DeviceVO vo = new DeviceVO();
 		vo.setId(device.getId());
 		vo.setCode(device.getCode());
@@ -251,7 +273,20 @@ public class DeviceController {
 		vo.setNote(device.getNote());
 		vo.setBottleneck(device.getBottleneck().toString());
 		vo.setOutFactoryCode(device.getOutFactoryCode());
-		vo.setPhoto(device.getPhoto());
+		if(device.getPhoto()!=null) {
+			String dir = request.getServletContext().getRealPath("/");
+			String realName = device.getPhotoName();
+			String fileName = realName;
+			InputStream is;
+			try {
+				is = device.getPhoto().getBinaryStream();
+				File out = new File(dir,fileName);
+				FileCopyUtils.copy(is, new FileOutputStream(out));
+				vo.setPhoto(dir + "/" + fileName);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		vo.setOutFactoryDate(device.getOutFactoryDate());
 		vo.setParameterValueType(device.getParameterValueType());
 		vo.setUnitType(device.getUnitType());
@@ -295,7 +330,7 @@ public class DeviceController {
 		modelMap.addAttribute("message", "成功删除!");
 		return modelMap;
 	}
-	
+
 	/**
 	 * 打印设备的二维码
 	 * @param ids 设备id字符串
@@ -310,7 +345,7 @@ public class DeviceController {
 		for(int i = 0 ;i<idStr.length;i++) {
 			String id = idStr[i];
 			Device e = deviceService.queryObjById(Long.valueOf(id));
-			DeviceVO vo = model2VO(e);
+			DeviceVO vo = model2VO(e,request);
 			vo.setQrPath(qrEncoder.generatePR(e.getCode(),dir , config.getQrPath()));
 			vos.add(vo);
 		}

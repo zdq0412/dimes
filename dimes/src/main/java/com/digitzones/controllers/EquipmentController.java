@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -53,11 +54,17 @@ public class EquipmentController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/queryEquipmentsByEquipmentTypeId.do")
 	@ResponseBody 
-	public ModelMap queryEquipmentsByEquipmentTypeId(@RequestParam(value="equipmentTypeId",required=false)Long equipmentTypeId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
-		Pager<Object[]> pager = null;
+	public ModelMap queryEquipmentsByEquipmentTypeId(@RequestParam(value="equipmentTypeId",required=false)Long equipmentTypeId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page,HttpServletRequest request) {
+		Pager<Equipment> pager = null;
 		pager = equipmentService.queryObjs("select p from Equipment p inner join p.equipmentType pt  where pt.id=?0", page, rows, new Object[] {equipmentTypeId});
 		ModelMap mm = new ModelMap();
-		mm.addAttribute("rows",pager.getData());
+		List<EquipmentVO> vos = new ArrayList<>();
+		if(pager.getData()!=null&&pager.getData().size()>0) {
+			for(Equipment e:pager.getData()) {
+				vos.add(model2VO(e, request));
+			}
+		}
+		mm.addAttribute("rows",vos);
 		mm.addAttribute("total", pager.getTotalCount());
 		mm.addAttribute("code", "0");
 		mm.addAttribute("msg", "");
@@ -70,14 +77,20 @@ public class EquipmentController {
 	 */
 	@RequestMapping("/addEquipment.do")
 	@ResponseBody
-	public ModelMap addEquipment(Equipment equipment) {
+	public ModelMap addEquipment(Equipment equipment,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
 		Equipment equipment4Code = equipmentService.queryByProperty("code", equipment.getCode());
 		if(equipment4Code!=null) {
 			modelMap.addAttribute("success", false);
 			modelMap.addAttribute("msg", "装备编码已被使用");
 		}else {
-			equipmentService.addObj(equipment);
+			if(equipment.getPicName()!=null) {
+				String dir = request.getServletContext().getRealPath("/");
+				File file = new File(dir,equipment.getPicName());
+				equipmentService.addEquipment(equipment, file);
+			}else {
+				equipmentService.addObj(equipment);
+			}
 			modelMap.addAttribute("success", true);
 			modelMap.addAttribute("msg", "添加成功!");
 		}
@@ -111,9 +124,9 @@ public class EquipmentController {
 	 */
 	@RequestMapping("/queryEquipmentById.do")
 	@ResponseBody
-	public Equipment queryEquipmentById(Long id) {
+	public EquipmentVO queryEquipmentById(Long id,HttpServletRequest request) {
 		Equipment equipment = equipmentService.queryObjById(id);
-		return equipment;
+		return model2VO(equipment, request);
 	}
 	/**
 	 * 更新参数信息
@@ -179,12 +192,18 @@ public class EquipmentController {
 	@RequestMapping("/queryEquipmentByProcessId.do")
 	@ResponseBody
 	@SuppressWarnings("unchecked")
-	public ModelMap queryEquipmentByProcessId(Long processId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
+	public ModelMap queryEquipmentByProcessId(Long processId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
 		String hql = "select ds from ProcessesEquipmentMapping pdm inner join  pdm.equipments ds  inner join pdm.processes p where p.id=?0";
 		Pager<Equipment> pager = equipmentService.queryObjs(hql, page, rows, new Object[] {processId});
+		List<EquipmentVO> vos = new ArrayList<>();
+		if(pager.getData()!=null&&pager.getData().size()>0) {
+			for(Equipment e:pager.getData()) {
+				vos.add(model2VO(e, request));
+			}
+		}
+		modelMap.addAttribute("rows",vos);
 		modelMap.addAttribute("total", pager.getTotalCount());
-		modelMap.addAttribute("rows", pager.getData());
 		return modelMap;
 	}
 	/**
@@ -200,7 +219,7 @@ public class EquipmentController {
 			return equipmentService.queryEquipmentsByCodeOrNameOrUnity(q);
 		}
 	}
-	
+
 	/**
 	 * 打印装备的二维码
 	 * @param ids 设备id字符串
@@ -215,14 +234,14 @@ public class EquipmentController {
 		for(int i = 0 ;i<idStr.length;i++) {
 			String id = idStr[i];
 			Equipment e = equipmentService.queryObjById(Long.valueOf(id));
-			EquipmentVO vo = model2VO(e);
+			EquipmentVO vo = model2VO(e,request);
 			vo.setQrPath(qrEncoder.generatePR(e.getCode(),dir , config.getQrPath()));
 			vos.add(vo);
 		}
 		return vos;
 	}
-	
-	private EquipmentVO model2VO(Equipment e) {
+
+	private EquipmentVO model2VO(Equipment e,HttpServletRequest request) {
 		if(e==null) {
 			return null;
 		}
@@ -232,6 +251,18 @@ public class EquipmentController {
 		vo.setCode(e.getCode());
 		vo.setManufacturer(e.getManufacturer());
 		vo.setUnitType(e.getUnitType());
+		if(e.getPic()!=null) {
+			String dir = request.getServletContext().getRealPath("/");
+			InputStream is;
+			try {
+				is = e.getPic().getBinaryStream();
+				File out = new File(dir,e.getPicName());
+				FileCopyUtils.copy(is, new FileOutputStream(out));
+				vo.setPic(dir+"/"+e.getPicName());
+			} catch (SQLException | IOException e1) {
+				e1.printStackTrace();
+			}
+		}
 		return vo;
 	}
 } 

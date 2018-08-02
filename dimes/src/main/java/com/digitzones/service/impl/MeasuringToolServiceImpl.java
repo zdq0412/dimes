@@ -1,5 +1,6 @@
 package com.digitzones.service.impl;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
@@ -59,5 +60,10 @@ public class MeasuringToolServiceImpl implements IMeasuringToolService {
 	public List<Equipment> queryMeasuringToolsByCodeOrNameOrUnity(String value) {
 		String hql = "from Equipment e where (e.code like ?0 or e.name like ?0 or e.unitType like ?0) and e.baseCode=?1";
 		return equipmentDao.findByHQL(hql,new Object[] {"%" + value + "%",Constant.EquipmentType.MEASURINGTOOL});
+	}
+
+	@Override
+	public Serializable addMeasuringTool(Equipment equipment, File pic) {
+		return equipmentDao.addMeasuringTool(equipment, pic);
 	}
 }

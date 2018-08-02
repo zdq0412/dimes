@@ -120,10 +120,6 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 	public void deleteObj(Long id) {
 		processRecordDao.deleteById(id);
 	}
-	@Override
-	public Long queryCountByDeviceSiteIdAndNotNg(Long deviceSiteId) {
-		return processRecordDao.queryCountByDeviceSiteIdAndNotNg(deviceSiteId);
-	}
 
 	@Override
 	public Long queryCurrentDayCountByDeviceSiteId(Long deviceSiteId) {

@@ -1,5 +1,7 @@
 package com.digitzones.service;
 
+import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 
 import com.digitzones.model.Device;
@@ -21,5 +23,12 @@ public interface IDeviceService extends ICommonService<Device> {
 	 * @return
 	 */
 	public List<Device> queryDevicesByProductionUnitId(Long productionUnitId);
+	/**
+	 * 添加设备
+	 * @param device
+	 * @param file 设备图片文件对象
+	 * @return
+	 */
+	public Serializable addDevice(Device device,File file);
 	
 }

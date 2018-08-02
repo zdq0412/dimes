@@ -10,6 +10,18 @@
     		});
     		
     	});
+    	//提交登录表单
+    	function login(){
+    		$('#loginForm').form({
+    		    url:'user/login.do',
+    		    onSubmit: function(){
+    		    },
+    		    success:function(data){
+    		    	window.location.href="console/jsp/console.jsp";
+    		    }
+    		});
+    		$('#loginForm').submit();
+    	}
     </script>
     <style>
         /* Full-width input fields */
@@ -182,7 +194,7 @@
     </div>
     <div id="id01" class="modal">
 
-        <form class="modal-content animate" action="" id="loginForm">
+        <form class="modal-content animate" id="loginForm">
             <div class="imgcontainer">
                 <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
                 <img src="front/imgs/img_avatar.png" alt="Avatar" class="avatar">
@@ -195,7 +207,7 @@
                 <label><b>Password</b></label>
                 <input type="password" placeholder="请输入密码"  id="password" name="password" required>
 
-                <button type="submit" onclick="" style="width:49%;">登录</button>
+                <button type="button" onclick="login()" style="width:49%;">登录</button>
                 <button type="button" id="cancelBtn" style="width:49%;background-color:#F4A460;">重置</button>
             </div>
         </form>

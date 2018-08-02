@@ -524,6 +524,14 @@ public class ModuleTest {
 		moduleService.addModule(sysSetChild);
 		
 		
+		Module workflow = new Module();
+		workflow.setParent(sysSetChild);
+		workflow.setDisabled(false);
+		workflow.setLeaf(true);
+		workflow.setPriority(10);
+		workflow.setUrl("console/jsp/workflow.jsp");
+		moduleService.addModule(workflow);
+		
 		Module skillLevel = new Module();
 		skillLevel.setName("技能等级");
 		skillLevel.setParent(sysSetChild);

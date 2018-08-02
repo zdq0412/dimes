@@ -11,12 +11,6 @@ import com.digitzones.model.ProcessRecord;
  */
 public interface IProcessRecordService extends ICommonService<ProcessRecord> {
 	/**
-	 * 根据设备站点id查询当天的非NG的加工数量
-	 * @param deviceSiteId
-	 * @return 
-	 */
-	public Long queryCountByDeviceSiteIdAndNotNg(Long deviceSiteId);
-	/**
 	 * 查询当天的加工数量
 	 * @param deviceSiteId
 	 * @return

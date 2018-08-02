@@ -1,5 +1,6 @@
 package com.digitzones.service.impl;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
@@ -65,5 +66,10 @@ public class DeviceServiceImpl implements IDeviceService {
 	@Override
 	public List<Device> queryDevicesByProductionUnitId(Long productionUnitId) {
 		return this.deviceDao.findByHQL("from Device d where d.productionUnit.id=?0", new Object[] {productionUnitId});
+	}
+
+	@Override
+	public Serializable addDevice(Device device, File file) {
+		return this.deviceDao.addDevice(device, file);
 	}
 }

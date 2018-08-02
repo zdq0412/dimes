@@ -1,5 +1,6 @@
 package com.digitzones.model;
 
+import java.sql.Blob;
 import java.util.Date;
 import java.util.Set;
 
@@ -58,7 +59,22 @@ public class Device extends CommonModel {
 	/**生产单元*/
 	private ProductionUnit productionUnit;
 	/**设备图片*/
-	private String photo;
+	private Blob photo;
+	/**图片的名称*/
+	private String photoName;
+	public String getPhotoName() {
+		return photoName;
+	}
+	public void setPhotoName(String photoName) {
+		this.photoName = photoName;
+	}
+	@JsonIgnore
+	public Blob getPhoto() {
+		return photo;
+	}
+	public void setPhoto(Blob photo) {
+		this.photo = photo;
+	}
 	/**
 	 * 设备和班次关联类
 	 */
@@ -79,12 +95,6 @@ public class Device extends CommonModel {
 	}
 	public void setDeviceSites(Set<DeviceSite> deviceSites) {
 		this.deviceSites = deviceSites;
-	}
-	public String getPhoto() {
-		return photo;
-	}
-	public void setPhoto(String photo) {
-		this.photo = photo;
 	}
 	public String getUnitType() {
 		return unitType;

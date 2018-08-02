@@ -41,6 +41,8 @@ public class Role {
 	private String modifyUsername;
 	/**修改日期*/
 	private Date modifyDate;
+	/**角色类型*/
+	private String type;
 	/**该角色可操作的功能模块*/
 	private Set<Module> modules;
 	@Id
@@ -50,6 +52,13 @@ public class Role {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreateDate() {

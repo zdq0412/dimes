@@ -354,7 +354,7 @@
            			outFactoryDate:$('#outFactoryDate').val(),
            			outFactoryCode:$('#outFactoryCode').val(),
            			installPosition:$('#installPosition').val(),
-           			photo:$('#photo').val(),
+           			photoName:$('#photoName').val(),
            			parameterValueType:$('#parameterValueType').val(),
            			bottleneck:$('input[name=bottleneck]:checked').val()
            			},function(data){
@@ -401,7 +401,7 @@
            			outFactoryDate:$('#outFactoryDate').val(),
            			outFactoryCode:$('#outFactoryCode').val(),
            			installPosition:$('#installPosition').val(),
-           			photo:$('#photo').val(),
+           			photoName:$('#photoName').val(),
            			parameterValueType:$('#parameterValueType').val(),
            			bottleneck:$('input[name=bottleneck]:checked').val()
            			},function(data){

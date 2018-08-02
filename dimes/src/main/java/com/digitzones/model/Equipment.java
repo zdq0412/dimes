@@ -1,5 +1,6 @@
 package com.digitzones.model;
 
+import java.sql.Blob;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -10,6 +11,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * 装备
  * @author zdq
@@ -43,7 +46,9 @@ public class Equipment extends CommonModel {
 	/**装备类型*/
 	private EquipmentType equipmentType;
 	/**装备图片*/
-	private String pic;
+	private Blob pic;
+	/**图片名称*/
+	private String picName;
 	/**记录是量具还是装备*/
 	private String baseCode;
 	
@@ -122,11 +127,18 @@ public class Equipment extends CommonModel {
 	public void setMeasurementDifference(Float measurementDifference) {
 		this.measurementDifference = measurementDifference;
 	}
-	public String getPic() {
+	@JsonIgnore
+	public Blob getPic() {
 		return pic;
 	}
-	public void setPic(String pic) {
+	public void setPic(Blob pic) {
 		this.pic = pic;
+	}
+	public String getPicName() {
+		return picName;
+	}
+	public void setPicName(String picName) {
+		this.picName = picName;
 	}
 	
 }
