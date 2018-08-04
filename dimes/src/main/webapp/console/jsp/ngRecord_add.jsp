@@ -5,7 +5,7 @@
 		//不合格类型
 		$("#ngTypeName").iCombotreegrid({
 			url : 'ngReasonType/queryTopNgReasonTypes.do',
-			idField : 'id',
+			idField : 'name',
 			treeField : 'name',
 			columns : [ [ {
 				field : 'name',

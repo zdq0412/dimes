@@ -15,8 +15,15 @@
 		base-package="com.digitzones.controllers
 		com.digitzones.config
 		" />
-	<context:property-placeholder
-		location="classpath:function.properties" />
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:function.properties</value>
+				<value>classpath:workflow.properties</value>
+			</list>
+		</property>
+	</bean>
 	<mvc:annotation-driven />
 	<!-- 配置视图解析器 -->
 	<bean

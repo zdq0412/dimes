@@ -19,6 +19,7 @@ import com.digitzones.model.ParameterType;
 import com.digitzones.model.PressLightType;
 import com.digitzones.model.ProcessType;
 import com.digitzones.model.ProductionUnit;
+import com.digitzones.model.Role;
 import com.digitzones.model.SkillLevel;
 import com.digitzones.model.WorkpieceType;
 import com.digitzones.service.IDepartmentService;
@@ -29,6 +30,7 @@ import com.digitzones.service.IParameterTypeService;
 import com.digitzones.service.IPressLightTypeService;
 import com.digitzones.service.IProcessTypeService;
 import com.digitzones.service.IProductionUnitService;
+import com.digitzones.service.IRoleService;
 import com.digitzones.service.ISkillLevelService;
 import com.digitzones.service.IWorkpieceTypeService;
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -44,6 +46,11 @@ public class ModuleTest {
 	private IEquipmentTypeService equipmentTypeService;
 	private ISkillLevelService skillLevelService;
 	private IProcessTypeService processTypeService;
+	private IRoleService roleService;
+	@Autowired
+	public void setRoleService(IRoleService roleService) {
+		this.roleService = roleService;
+	}
 	@Autowired
 	public void setProcessTypeService(IProcessTypeService processTypeService) {
 		this.processTypeService = processTypeService;
@@ -723,15 +730,114 @@ public class ModuleTest {
 		rootProcessType.setName("工序");
 		
 		processTypeService.addObj(rootProcessType);
-		//按灯类别初始化
+		//预设角色
+		Role r0 = new Role();
+		r0.setAllowDelete(false);
+		r0.setRoleName("NG审核人");
+		r0.setDisable(false);
+		r0.setNote("不合格品审核人，预设角色，不允许删除和修改!");
+		roleService.addObj(r0);
+		
+		Role r1 = new Role();
+		r1.setAllowDelete(false);
+		r1.setRoleName("NG复核人");
+		r1.setDisable(false);
+		r1.setNote("不合格品复核人，预设角色，不允许删除和修改!");
+		roleService.addObj(r1);
+		
+		Role r2 = new Role();
+		r2.setAllowDelete(false);
+		r2.setRoleName("NG确认人");
+		r2.setDisable(false);
+		r2.setNote("不合格品确认人，预设角色，不允许删除和修改!");
+		roleService.addObj(r2);
+		
+		Role r3 = new Role();
+		r3.setAllowDelete(false);
+		r3.setRoleName("按灯恢复人");
+		r3.setDisable(false);
+		r3.setNote("按灯恢复人，预设角色，不允许删除和修改!");
+		roleService.addObj(r3);
+		
+		Role r4 = new Role();
+		r4.setAllowDelete(false);
+		r4.setRoleName("熄灯人");
+		r4.setDisable(false);
+		r4.setNote("熄灯人，预设角色，不允许删除和修改!");
+		roleService.addObj(r4);
+		
+		
+		Role r6 = new Role();
+		r6.setAllowDelete(false);
+		r6.setRoleName("按灯确认人");
+		r6.setDisable(false);
+		r6.setNote("按灯确认人，预设角色，不允许删除和修改!");
+		roleService.addObj(r6);
+		
+		Role r7 = new Role();
+		r7.setAllowDelete(false);
+		r7.setRoleName("损时确认人");
+		r7.setDisable(false);
+		r7.setNote("损时确认人，预设角色，不允许删除和修改!");
+		roleService.addObj(r7);
 		
 	}
 	@Test
 	public void add() {
-		ProcessType rootProcessType = new ProcessType();
-		rootProcessType.setCode("root");
-		rootProcessType.setName("工序");
+		/*Role r0 = new Role();
+		r0.setAllowDelete(false);
+		r0.setRoleName("NG审核人");
+		r0.setDisable(false);
+		r0.setNote("不合格品审核人，预设角色，不允许删除和修改!");
+		roleService.addObj(r0);
 		
-		processTypeService.addObj(rootProcessType);
+		Role r1 = new Role();
+		r1.setAllowDelete(false);
+		r1.setRoleName("NG复核人");
+		r1.setDisable(false);
+		r1.setNote("不合格品复核人，预设角色，不允许删除和修改!");
+		roleService.addObj(r1);
+		
+		Role r2 = new Role();
+		r2.setAllowDelete(false);
+		r2.setRoleName("NG确认人");
+		r2.setDisable(false);
+		r2.setNote("不合格品确认人，预设角色，不允许删除和修改!");
+		roleService.addObj(r2);
+		
+		Role r3 = new Role();
+		r3.setAllowDelete(false);
+		r3.setRoleName("按灯恢复人");
+		r3.setDisable(false);
+		r3.setNote("按灯恢复人，预设角色，不允许删除和修改!");
+		roleService.addObj(r3);
+		
+		Role r4 = new Role();
+		r4.setAllowDelete(false);
+		r4.setRoleName("熄灯人");
+		r4.setDisable(false);
+		r4.setNote("熄灯人，预设角色，不允许删除和修改!");
+		roleService.addObj(r4);
+		
+		Role r5 = new Role();
+		r5.setAllowDelete(false);
+		r5.setRoleName("熄灯人");
+		r5.setDisable(false);
+		r5.setNote("熄灯人，预设角色，不允许删除和修改!");
+		roleService.addObj(r5);
+		
+		Role r6 = new Role();
+		r6.setAllowDelete(false);
+		r6.setRoleName("按灯确认人");
+		r6.setDisable(false);
+		r6.setNote("按灯确认人，预设角色，不允许删除和修改!");
+		roleService.addObj(r6);
+		
+		Role r7 = new Role();
+		r7.setAllowDelete(false);
+		r7.setRoleName("损时确认人");
+		r7.setDisable(false);
+		r7.setNote("损时确认人，预设角色，不允许删除和修改!");
+		roleService.addObj(r7);*/
 	}
 }

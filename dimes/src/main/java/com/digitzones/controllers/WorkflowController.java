@@ -3,8 +3,11 @@ package com.digitzones.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,8 +17,12 @@ import java.util.zip.ZipInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.history.HistoricIdentityLink;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.io.FileUtils;
@@ -30,7 +37,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.digitzones.util.StringUtil;
 import com.digitzones.vo.ProcessDefinitionVO;
-
 /**
  * 工作流控制器
  * @author zdq
@@ -39,6 +45,7 @@ import com.digitzones.vo.ProcessDefinitionVO;
 @Controller
 @RequestMapping("/workflow")
 public class WorkflowController {
+	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private ProcessEngine engine;
 	@Autowired
 	public void setEngine(ProcessEngine engine) {
@@ -174,6 +181,84 @@ public class WorkflowController {
 			modelMap.addAttribute("success", false);
 			modelMap.addAttribute("msg", "查找失败!");
 		}
+		return modelMap;
+	}
+	/**
+	 * 根据业务键查找流程信息
+	 * @param businessKey
+	 * @return
+	 */
+	@RequestMapping("/queryWorkflow.do")
+	@ResponseBody
+	public ModelMap queryWorkflow(String businessKey) {
+		ModelMap modelMap = new ModelMap();
+		HistoryService historyService = engine.getHistoryService();
+		List<HistoricTaskInstance> taskList = historyService.createHistoricTaskInstanceQuery().processInstanceBusinessKey(businessKey).list();
+		List<Map<String, Object>> data = new ArrayList<>();
+		if(taskList!=null && taskList.size()>0) {
+			for(HistoricTaskInstance task : taskList) {
+				Map<String,Object> map = new HashMap<>();
+				Date date = task.getCreateTime();
+				if(date!=null) {
+					format.applyPattern("yyyy-MM-dd");
+					map.put("year",format.format(date));
+					format.applyPattern("yyyy-MM-dd HH:mm:ss");
+				}else {
+					map.put("year","");
+				}
+
+				List<Map<String,Object>> list = new ArrayList<>();
+				Map<String,Object> m = new HashMap<>();
+				if(task.getEndTime()==null) {
+					m.put("date", "");
+				}else {
+					format.applyPattern("HH:mm:ss");
+					m.put("date", format.format(task.getEndTime()));
+					format.applyPattern("yyyy-MM-dd HH:mm:ss");
+				}
+				m.put("intro", task.getName());
+				List<HistoricIdentityLink> persons = historyService.getHistoricIdentityLinksForTask(task.getId());
+				String users = "";
+				String roles = "";
+				String assignee = task.getAssignee();
+				for(HistoricIdentityLink person : persons) {
+					if(person.getUserId()!=null&&!"".equals(person.getUserId().trim())) {
+						users += person.getUserId()  + ",";
+					}
+					if(person.getGroupId()!=null&&!"".equals(person.getGroupId().trim())) {
+						roles += person.getGroupId()  + ",";
+					}
+				}
+				if(users.length()>0) {
+					users=users.substring(0,users.length()-1);
+				}
+				if(roles.length()>0) {
+					roles=roles.substring(0,roles.length()-1);
+				}
+				if(assignee!=null &&!"".equals(assignee.trim())) {
+					users = assignee + ","+users;
+				}
+				if(task.getEndTime()!=null) {
+					m.put("highlight", "highlight");
+				}
+				m.put("version","执行人:" + users + "<br />" + "执行角色:" + roles);
+				list.add(m);
+				map.put("list", list);
+
+				List<String> more = new ArrayList<>();
+				List<HistoricVariableInstance> localVariables = historyService.createHistoricVariableInstanceQuery().taskId(task.getId()).list();
+				if(localVariables!=null && localVariables.size()>0) {
+					for(HistoricVariableInstance variable : localVariables) {
+						if("suggestion".equals(variable.getVariableName())) {
+							more.add(""+variable.getValue());
+						}
+					}
+				}
+				m.put("more",more);
+				data.add(map);
+			}
+		}
+		modelMap.addAttribute("data", data);
 		return modelMap;
 	}
 }

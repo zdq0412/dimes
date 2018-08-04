@@ -3,6 +3,7 @@ package com.digitzones.service.impl;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,11 @@ import com.digitzones.dao.INGRecordDao;
 import com.digitzones.model.NGProcessMethod;
 import com.digitzones.model.NGRecord;
 import com.digitzones.model.Pager;
+import com.digitzones.model.User;
 import com.digitzones.model.WorkSheetDetail;
 import com.digitzones.service.INGRecordService;
 import com.digitzones.service.IWorkSheetDetailService;
-@Service
+@Service("ngRecordService")
 public class NGRecordServiceImpl implements INGRecordService {
 	private INGRecordDao ngRecordDao;
 	private IWorkSheetDetailService workSheetDetailService;
@@ -91,7 +93,12 @@ public class NGRecordServiceImpl implements INGRecordService {
 	}
 
 	@Override
-	public void auditNGRecord(NGRecord record) {
+	public void auditNGRecord(NGRecord record,User user,Map<String,Object> args) {
+		record.setAuditDate(new Date());
+		if(user!=null) {
+			record.setAuditorId(user.getId());
+			record.setAuditorName(user.getUsername());
+		}
 		String processMethod = record.getProcessingMethod();
 		//判断是否存在工单
 		Long workSheetId = record.getWorkSheetId();
@@ -135,5 +142,42 @@ public class NGRecordServiceImpl implements INGRecordService {
 	@Override
 	public Integer queryNgCountByDeviceSiteId(Long deviceSiteId, Date today) {
 		return ngRecordDao.queryNgCountByDeviceSiteId(deviceSiteId, today);
+	}
+
+	@Override
+	public void reviewNGRecord(NGRecord record, User user, Map<String, Object> args) {
+		record.setReviewDate(new Date());
+		if(user!=null) {
+			record.setReviewerId(user.getId());
+			record.setReviewerName(user.getUsername());
+		}
+		ngRecordDao.update(record);
+	}
+
+	@Override
+	public void confirmNGRecord(NGRecord record, User user, Map<String, Object> args) {
+		record.setConfirmDate(new Date());
+		if(user!=null) {
+			record.setConfirmUserId(user.getId());
+			record.setConfirmUsername(user.getUsername());
+		}
+
+		ngRecordDao.update(record);
+	}
+
+	@Override
+	public void deleteNGRecord(NGRecord record) {
+		record.setDeleted(true);
+		ngRecordDao.update(record);
+	}
+
+	@Override
+	public Serializable addNGRecord(NGRecord record, User user, Map<String, Object> args) {
+		if(user!=null) {
+			record.setInputUserId(user.getId());
+			record.setInputDate(new Date());
+			record.setInputUsername(user.getUsername());
+		}
+		return this.addObj(record);
 	}
 }

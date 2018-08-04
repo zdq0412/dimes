@@ -3,6 +3,7 @@ package com.digitzones.service.impl;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +12,9 @@ import com.digitzones.dao.ILostTimeRecordDao;
 import com.digitzones.model.Classes;
 import com.digitzones.model.LostTimeRecord;
 import com.digitzones.model.Pager;
+import com.digitzones.model.User;
 import com.digitzones.service.ILostTimeRecordService;
-@Service
+@Service("lostTimeRecordService")
 public class LostTimeRecordServiceImpl implements ILostTimeRecordService {
 	private ILostTimeRecordDao lostTimeRecordDao;
 	@Autowired
@@ -90,5 +92,29 @@ public class LostTimeRecordServiceImpl implements ILostTimeRecordService {
 	@Override
 	public Integer queryLostTime4RealTime(Date date) {
 		return lostTimeRecordDao.queryLostTime4RealTime(date);
+	}
+
+	@Override
+	public void confirm(LostTimeRecord lostTimeRecord,User user,Map<String,Object> args) {
+		if(user!=null) {
+			lostTimeRecord.setConfirmUserId(user.getId());
+			lostTimeRecord.setConfirmUserName(user.getUsername());
+		}
+		this.updateObj(lostTimeRecord);
+	}
+
+	@Override
+	public Serializable addLostTimeRecord(LostTimeRecord lostTimeRecord, User user,Map<String,Object> args) {
+		if(user!=null) {
+			lostTimeRecord.setRecordUserId(user.getId());
+			lostTimeRecord.setRecordUserName(user.getUsername());
+		}
+		return this.addObj(lostTimeRecord);
+	}
+
+	@Override
+	public void deleteLostTimeRecord(LostTimeRecord lostTimeRecord) {
+		lostTimeRecord.setDeleted(true);
+		this.updateObj(lostTimeRecord);
 	}
 }

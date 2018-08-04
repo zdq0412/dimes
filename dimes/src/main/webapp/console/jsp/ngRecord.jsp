@@ -1,6 +1,88 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="../../common/jsp/head.jsp"%>
+ <script>
+    	function timeAxis(id){
+    		 $.get("workflow/queryWorkflow.do",{businessKey:id},function(data){
+    			var $div = $("<div  class='topjui-timeaxis-container' style='height:100%;width:100%;' data-toggle='topjui-timeaxis'>");
+    			 var list = JSON.stringify(data.data);
+    			//去除key中的单引号
+    			list = list.replace(/"(\w+)":/g, "$1:");
+    			var reg = new RegExp("\"","g");//g,表示全部替换。
+    			var l = list.replace(reg,"'");
+    			 $div.attr("data-options","title:'NG流程',list:" + l);
+    			 
+    			 var $wrapper=$("<div class='wrapper'>");
+    			 $div.append($wrapper);
+    			 var $light = "<div class='light'><i></i></div>";
+    			 $wrapper.append($light);
+    			 
+    			 var $topjui_timeaxis_main = $("<div class='topjui-timeaxis-main'>");
+    			 $wrapper.append($topjui_timeaxis_main);
+    			 
+    			 var $title = $("<h1 class='title'>");
+    			 $topjui_timeaxis_main.append($title);
+    			 $title.text("NG流程");
+    			 for(var i = 0;i<data.data.length;i++){
+    				 var $year = $("<div class='year year" + i +"'>");
+    				 $topjui_timeaxis_main.append($year);
+    				 
+    				 var $yearValue = $("<h2>");
+    				 $year.append($yearValue);
+    				 
+    				 $yearValue.append("<a>" + data.data[i].year + "<i></i></a>");
+    				 
+    				 var $list = $("<div class='list' style='height:116px;'>");
+    				 $year.append($list);
+    				 for(var j = 0;j<data.data[i].list.length;j++){
+    					 var obj = data.data[i].list[j];
+    					 var $ul = $("<ul class='ul"+j+"' style='position:absolute;'>");
+    					 $list.append($ul);
+    					 
+    					 var $li = $("<li class='cls'>");
+    					 $ul.append($li);
+    					 
+    					 var $date = $("<p class='date'>"+obj.date+"</p>");
+    					 $li.append($date);
+    					 var $intro = $("<p class='intro'>" + obj.intro + "</p>");
+    					 $li.append($intro);
+    					 var $version = $("<p class='version'>" + obj.version + "</p>");
+    					 $li.append($version);
+    					 var $more = $("<div class='more more00'>")
+    					 $li.append($more);
+    					 $more.append("<p>"+obj.more[0]?obj.more:'' + "</p>");
+    				 }
+    			 }
+    			var tab1 = $("#tab1"); 
+    			tab1.html($div);
+    		}); 
+    	}
+    	/**动态改变按钮动作*/
+    	function handleButtons(row){
+    		var $confirmBtn = $("#confirmBtn");
+    		var $auditBtn = $("#auditBtn");
+    		var $reviewBtn = $("#reviewBtn");
+    		
+    		if(row.auditDate){
+    			$auditBtn.iMenubutton("disable");
+    		}else{
+    			$auditBtn.iMenubutton("enable");
+    			
+    		}
+    		
+    		if(!row.reviewDate && row.auditDate){
+    			$reviewBtn.iMenubutton("enable");
+    		}else{
+    			$reviewBtn.iMenubutton("disable");
+    		}
+    		
+    		if(!row.confirmDate && row.reviewDate){
+    			$confirmBtn.iMenubutton("enable");
+    		}else{
+    			$confirmBtn.iMenubutton("disable");
+    		}
+    	}
+    </script>
 </head>
 <body>
 	<div data-toggle="topjui-layout" data-options="fit:true">
@@ -45,7 +127,11 @@
                            type:'treegrid',
                            id:'departmentTg',
                        },
-			           childTab: [{id:'southTabs'}]">
+			           childTab: [{id:'southTabs'}],
+			           onClickRow:function(index,row){
+			           	 	timeAxis(row.id);
+			           	 	handleButtons(row);
+			           }">
 						<thead>
 							<tr>
 								<th
@@ -206,7 +292,7 @@
                          id:'departmentDg',
                          param:'ngRecordId:id'
                      }">
-						 <div title="不合格详情" data-options="id:'tab0',iconCls:'fa fa-th'">
+						<div title="不合格详情" data-options="id:'tab0',iconCls:'fa fa-th'">
                         <table 
                          data-toggle="topjui-datagrid"
                                data-options="id:'position',
@@ -231,6 +317,8 @@
                             </tr>
                             </thead>
                         </table>
+                    </div>
+						<div title="流程时间轴" data-options="id:'tab1',iconCls:'fa fa-th'" id="tab1">
                     </div>
 					</div>
 				</div>
@@ -353,26 +441,92 @@
        iconCls:'fa fa-trash',
        url:'ngRecord/deleteNGRecord.do',
        grid: {uncheckedMsg:'请先勾选要删除的数据',id:'departmentDg',param:'id:id'}">删除</a>
-		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
-			data-options="method:'doAjax',
-       extend: '#departmentDg-toolbar',
-       iconCls:'fa fa-trash',
-       url:'ngRecord/auditNGRecord.do',
-       grid: {uncheckedMsg:'请先勾选要审核的数据',id:'departmentDg',param:'id:id'}">审核</a>
-		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
-			data-options="method:'doAjax',
-       extend: '#departmentDg-toolbar',
-       iconCls:'fa fa-trash',
-       url:'ngRecord/reviewNGRecord.do',
-       grid: {uncheckedMsg:'请先勾选要复核的数据',id:'departmentDg',param:'id:id'}">复核</a>
-		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
-			data-options="method:'doAjax',
-       extend: '#departmentDg-toolbar',
-       iconCls:'fa fa-trash',
-       url:'ngRecord/confirmNGRecord.do',
-       grid: {uncheckedMsg:'请先勾选要确认的数据',id:'departmentDg',param:'id:id'}">确认</a>
+       
+       <a href="javascript:void(0)" data-toggle="topjui-menubutton"
+			data-options="method: 'openDialog',
+            extend: '#departmentDg-toolbar',
+            iconCls: 'fa fa-pencil',
+            dialog: {
+            	id:'auditDialog',
+                width:600,
+                height: 400,
+                href: 'console/jsp/ngRecord_workflow.jsp',
+                 buttons:[
+           	{text:'审核',handler:function(){
+           			$.get('ngRecord/auditNGRecord.do',{
+           			id:$('#departmentDg').iDatagrid('getSelected').id,
+           			suggestion:$('#suggestion').val()
+           			},function(data){
+           				if(data.success){
+	           				$('#auditDialog').iDialog('close');
+	           				$('#departmentDg').iDatagrid('reload');
+           				}else{
+           					alert(data.msg);
+           				}
+           			});
+           	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
+           	{text:'取消',handler:function(){
+           		$('#auditDialog').iDialog('close');
+           	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
+           ]
+            }" id="auditBtn">审核</a>
+       <a href="javascript:void(0)" data-toggle="topjui-menubutton"
+			data-options="method: 'openDialog',
+            extend: '#departmentDg-toolbar',
+            iconCls: 'fa fa-pencil',
+            dialog: {
+            	id:'reviewDialog',
+                width:600,
+                height: 400,
+                href: 'console/jsp/ngRecord_workflow.jsp',
+                 buttons:[
+           	{text:'复核',handler:function(){
+           			$.get('ngRecord/reviewNGRecord.do',{
+           			id:$('#departmentDg').iDatagrid('getSelected').id,
+           			suggestion:$('#suggestion').val()
+           			},function(data){
+           				if(data.success){
+	           				$('#reviewDialog').iDialog('close');
+	           				$('#departmentDg').iDatagrid('reload');
+           				}else{
+           					alert(data.msg);
+           				}
+           			});
+           	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
+           	{text:'取消',handler:function(){
+           		$('#reviewDialog').iDialog('close');
+           	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
+           ]
+            }" id="reviewBtn">复核</a>
+       <a href="javascript:void(0)" data-toggle="topjui-menubutton"
+			data-options="method: 'openDialog',
+            extend: '#departmentDg-toolbar',
+            iconCls: 'fa fa-pencil',
+            dialog: {
+            	id:'confirmDialog',
+                width:600,
+                height: 400,
+                href: 'console/jsp/ngRecord_workflow.jsp',
+                 buttons:[
+           	{text:'确认',handler:function(){
+           			$.get('ngRecord/confirmNGRecord.do',{
+           			id:$('#departmentDg').iDatagrid('getSelected').id,
+           			suggestion:$('#suggestion').val()
+           			},function(data){
+           				if(data.success){
+	           				$('#confirmDialog').iDialog('close');
+	           				$('#departmentDg').iDatagrid('reload');
+           				}else{
+           					alert(data.msg);
+           				}
+           			});
+           	},iconCls:'fa fa-plus',btnCls:'topjui-btn-normal'},
+           	{text:'取消',handler:function(){
+           		$('#confirmDialog').iDialog('close');
+           	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
+           ]
+            }" id="confirmBtn">确认</a>
 	</div>
-	
 	<div id="position-toolbar" class="topjui-toolbar"
 		data-options="grid:{
            type:'datagrid',

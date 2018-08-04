@@ -21,11 +21,11 @@
     </laneSet>
     <startEvent id="ngWorkflowStart" name="不合格品流程开始" activiti:initiator="applyUserId"></startEvent>
     <sequenceFlow id="flow1" sourceRef="ngWorkflowStart" targetRef="ngAudit"></sequenceFlow>
-    <userTask id="ngAudit" name="审核" activiti:assignee="${ngWorkflowAuditPerson}" activiti:candidateUsers="${ngWorkflowAuditPersons}" activiti:candidateGroups="${ngWorkflowAuditRoles}"></userTask>
+    <userTask id="ngAudit" name="审核" activiti:assignee="${ngAuditPerson}" activiti:candidateUsers="${ngAuditPersons}" activiti:candidateGroups="${ngAuditRoles}"></userTask>
     <sequenceFlow id="flow2" sourceRef="ngAudit" targetRef="ngReview"></sequenceFlow>
-    <userTask id="ngReview" name="复核" activiti:assignee="${ngWorkflowReviewPerson}" activiti:candidateUsers="${ngWorkflowReviewPersons}" activiti:candidateGroups="${ngWorkflowReviewRoles}"></userTask>
+    <userTask id="ngReview" name="复核" activiti:assignee="${ngReviewPerson}" activiti:candidateUsers="${ngReviewPersons}" activiti:candidateGroups="${ngReviewRoles}"></userTask>
     <sequenceFlow id="flow3" sourceRef="ngReview" targetRef="ngWorkflowConfirm"></sequenceFlow>
-    <userTask id="ngWorkflowConfirm" name="确认" activiti:assignee="${ngWorkflowConfirmPerson}" activiti:candidateUsers="${ngWorkflowConfirmPersons}" activiti:candidateGroups="${ngWorkflowConfirmRoles}"></userTask>
+    <userTask id="ngWorkflowConfirm" name="确认" activiti:assignee="${ngConfirmPerson}" activiti:candidateUsers="${ngConfirmPersons}" activiti:candidateGroups="${ngConfirmRoles}"></userTask>
     <endEvent id="ngWorkflowEnd" name="不合格品流程结束"></endEvent>
     <sequenceFlow id="flow4" sourceRef="ngWorkflowConfirm" targetRef="ngWorkflowEnd"></sequenceFlow>
   </process>

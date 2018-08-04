@@ -1,16 +1,25 @@
 package com.digitzones.controllers;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.config.WorkFlowKeyConfig;
+import com.digitzones.constants.Constant;
 import com.digitzones.model.DeviceSite;
 import com.digitzones.model.Pager;
 import com.digitzones.model.PressLightRecord;
+import com.digitzones.model.User;
 import com.digitzones.service.IDeviceSiteService;
 import com.digitzones.service.IPressLightRecordService;
 @Controller
@@ -18,16 +27,19 @@ import com.digitzones.service.IPressLightRecordService;
 public class PressLightRecordController {
 	private IPressLightRecordService pressLightRecordService;
 	private IDeviceSiteService deviceSiteService;
+	private WorkFlowKeyConfig workFlowKeyConfig;
+	@Autowired
+	public void setWorkFlowKeyConfig(WorkFlowKeyConfig workFlowKeyConfig) {
+		this.workFlowKeyConfig = workFlowKeyConfig;
+	}
 	@Autowired
 	public void setDeviceSiteService(IDeviceSiteService deviceSiteService) {
 		this.deviceSiteService = deviceSiteService;
 	}
-
 	@Autowired
-	public void setPressLightRecordService(IPressLightRecordService pressLightRecordService) {
+	public void setPressLightRecordService(@Qualifier("pressLightRecordServiceProxy")IPressLightRecordService pressLightRecordService) {
 		this.pressLightRecordService = pressLightRecordService;
-	}
-
+	} 
 	/**
 	 * 根据设备站点id查找按灯记录
 	 * @param deviceSiteId
@@ -46,7 +58,6 @@ public class PressLightRecordController {
 		modelMap.addAttribute("rows", pager.getData());
 		return modelMap;
 	}
-
 	/**
 	 * 添加按灯记录
 	 * @param pressLightRecord
@@ -54,7 +65,7 @@ public class PressLightRecordController {
 	 */
 	@RequestMapping("/addPressLightRecord.do")
 	@ResponseBody
-	public ModelMap addPressLightRecord(PressLightRecord pressLightRecord) {
+	public ModelMap addPressLightRecord(PressLightRecord pressLightRecord,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
 		DeviceSite ds = deviceSiteService.queryObjById(pressLightRecord.getDeviceSite().getId());
 		if(ds==null) {
@@ -62,8 +73,12 @@ public class PressLightRecordController {
 			modelMap.addAttribute("msg", "请选择设备站点");
 			return modelMap;
 		}
+		
+		HttpSession session = request.getSession();
+		User user = (User)session.getAttribute(Constant.User.LOGIN_USER);
+		modelMap.put("businessKey", workFlowKeyConfig.getPressLightWorkflowKey());
 		pressLightRecord.setPressLightTime(new Date());
-		pressLightRecordService.addObj(pressLightRecord);
+		pressLightRecordService.addPressLightRecord(pressLightRecord, user, modelMap);
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("msg", "添加成功!");
 		return modelMap;
@@ -111,16 +126,19 @@ public class PressLightRecordController {
 	 */
 	@RequestMapping("/recoverPressLightRecord.do")
 	@ResponseBody
-	public ModelMap recoverPressLightRecord(String id) {
+	public ModelMap recoverPressLightRecord(Long id,String suggestion,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
-		if(id!=null && id.contains("'")) {
-			id = id.replace("'", "");
-		}
-		PressLightRecord plr = pressLightRecordService.queryObjById(Long.valueOf(id));
+		
+		HttpSession session = request.getSession();
+		User user = (User)session.getAttribute(Constant.User.LOGIN_USER);
+		
+		PressLightRecord plr = pressLightRecordService.queryObjById(id);
 		plr.setRecovered(true);
 		plr.setRecoverTime(new Date());
 		plr.setHalt(false);
-		pressLightRecordService.updateObj(plr);
+		Map<String,Object> args = new HashMap<>();
+		args.put("suggestion", suggestion);
+		pressLightRecordService.recoverPressLightRecord(plr, user, args);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("title", "提示");
@@ -134,14 +152,16 @@ public class PressLightRecordController {
 	 */
 	@RequestMapping("/confirmPressLightRecord.do")
 	@ResponseBody
-	public ModelMap confirmPressLightRecord(String id) {
+	public ModelMap confirmPressLightRecord(Long id,String suggestion,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
-		if(id!=null && id.contains("'")) {
-			id = id.replace("'", "");
-		}
-		PressLightRecord plr = pressLightRecordService.queryObjById(Long.valueOf(id));
+		PressLightRecord plr = pressLightRecordService.queryObjById(id);
 		plr.setConfirmTime(new Date());
-		pressLightRecordService.updateObj(plr);
+		
+		HttpSession session = request.getSession();
+		User user = (User)session.getAttribute(Constant.User.LOGIN_USER);
+		Map<String,Object> args = new HashMap<>();
+		args.put("suggestion", suggestion);
+		pressLightRecordService.confirmPressLightRecord(plr, user, args);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("title", "提示");
@@ -149,20 +169,21 @@ public class PressLightRecordController {
 		return modelMap;
 	}
 	/**
-	 * 确认
+	 *熄灯
 	 * @param pressLightRecord
 	 * @return
 	 */
 	@RequestMapping("/lightOutPressLightRecord.do")
 	@ResponseBody
-	public ModelMap lightOutPressLightRecord(String id) {
+	public ModelMap lightOutPressLightRecord(Long id,String suggestion,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
-		if(id!=null && id.contains("'")) {
-			id = id.replace("'", "");
-		}
-		PressLightRecord plr = pressLightRecordService.queryObjById(Long.valueOf(id));
+		PressLightRecord plr = pressLightRecordService.queryObjById(id);
 		plr.setLightOutTime(new Date());
-		pressLightRecordService.updateObj(plr);
+		HttpSession session = request.getSession();
+		User user = (User)session.getAttribute(Constant.User.LOGIN_USER);
+		Map<String,Object> args = new HashMap<>();
+		args.put("suggestion", suggestion);
+		pressLightRecordService.lightoutPressLightRecord(plr, user, args);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("title", "提示");
@@ -185,7 +206,15 @@ public class PressLightRecordController {
 		ModelMap modelMap = new ModelMap();
 		PressLightRecord pr = pressLightRecordService.queryObjById(Long.valueOf(id));
 		pr.setDeleted(true);
-		pressLightRecordService.updateObj(pr);
+		try {
+			pressLightRecordService.deletePressLightRecord(pr);
+		}catch(RuntimeException e) {
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("message", e.getMessage());
+			return modelMap;
+		}
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("title", "操作提示");

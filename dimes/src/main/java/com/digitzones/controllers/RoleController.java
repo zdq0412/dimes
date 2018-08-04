@@ -102,7 +102,14 @@ public class RoleController {
 	@ResponseBody
 	public ModelMap updateRole(Role role,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
-
+		Role r = roleService.queryObjById(role.getId());
+		if(!r.getAllowDelete()) {
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("message", "操作失败,该角色为预设角色，不允许修改!");
+			return modelMap;
+		}
+		
 		Role u = roleService.queryByProperty("roleName", role.getRoleName());
 		if(u!=null && !u.getId().equals(role.getId())) {
 			modelMap.addAttribute("success", false);
@@ -124,7 +131,6 @@ public class RoleController {
 		}
 		return modelMap;
 	}
-
 	/**
 	 * 根据id删除角色
 	 * @param id
@@ -140,6 +146,14 @@ public class RoleController {
 
 		Long roleId = Long.valueOf(id);
 
+		Role r = roleService.queryObjById(roleId);
+		if(!r.getAllowDelete()) {
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("message", "删除失败,该角色为预设角色，不允许删除!");
+			return modelMap;
+		}
+		
 		//根据角色查询用户
 		Long userCount = userRoleService.queryCountByRoleId(roleId);
 		if(userCount>0) {
@@ -169,6 +183,14 @@ public class RoleController {
 
 		Long roleId = Long.valueOf(id);
 		ModelMap modelMap = new ModelMap();
+		
+		Role r = roleService.queryObjById(roleId);
+		if(!r.getAllowDelete()) {
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("message", "操作失败,该角色为预设角色，不允许停用!");
+			return modelMap;
+		}
 		//根据角色查询用户
 		Long userCount = userRoleService.queryCountByRoleId(roleId);
 		if(userCount>0) {

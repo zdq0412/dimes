@@ -26,15 +26,79 @@ import com.digitzones.vo.PressLightVO;
 @RequestMapping("/pressLight")
 public class PressLightController {
 	private QRConfig config ;
-	@Autowired
-	public void setConfig(QRConfig config) {
-		this.config = config;
-	}
 	private QREncoder qrEncoder = new QREncoder();
 	private IPressLightService pressLightService;
-	@Autowired
-	public void setPressLightService(IPressLightService pressLightService) {
-		this.pressLightService = pressLightService;
+	/**
+	 * 添加按灯
+	 * @param parameter
+	 * @return
+	 */
+	@RequestMapping("/addPressLight.do")
+	@ResponseBody
+	public ModelMap addPressLight(PressLight parameter) {
+		ModelMap modelMap = new ModelMap();
+		PressLight parameter4Code = pressLightService.queryByProperty("code", parameter.getCode());
+		if(parameter4Code!=null) {
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("msg", "按灯编码已被使用");
+		}else {
+			pressLightService.addObj(parameter);
+			modelMap.addAttribute("success", true);
+			modelMap.addAttribute("msg", "添加成功!");
+		}
+		return modelMap;
+	}
+	/**
+	 * 根据id删除按灯
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/deletePressLight.do")
+	@ResponseBody
+	public ModelMap deletePressLight(String id) {
+		if(id!=null && id.contains("'")) {
+			id = id.replace("'", "");
+		}
+		ModelMap modelMap = new ModelMap();
+		pressLightService.deleteObj(Long.valueOf(id));
+		modelMap.addAttribute("success", true);
+		modelMap.addAttribute("statusCode", 200);
+		modelMap.addAttribute("title", "操作提示");
+		modelMap.addAttribute("message", "成功删除!");
+		return modelMap;
+	}
+
+	private PressLightVO model2VO(PressLight pl) {
+		if(pl == null) {
+			return null;
+		}
+		PressLightVO vo = new PressLightVO();
+		vo.setId(pl.getId());
+		vo.setCode(pl.getCode());
+		vo.setReason(pl.getReason());
+		vo.setNote(pl.getNote());
+		return vo;
+	}
+	
+	/**
+	 * 打印故障的二维码
+	 * @param ids 设备id字符串
+	 * @return
+	 */
+	@RequestMapping("/printQr.do")
+	@ResponseBody
+	public List<PressLightVO> printQr(String ids,HttpServletRequest request) {
+		String dir = request.getServletContext().getRealPath("/");
+		List<PressLightVO> vos = new ArrayList<>();
+		String[] idStr = ids.split(",");
+		for(int i = 0 ;i<idStr.length;i++) {
+			String id = idStr[i];
+			PressLight e = pressLightService.queryObjById(Long.valueOf(id));
+			PressLightVO vo = model2VO(e);
+			vo.setQrPath(qrEncoder.generatePR(e.getCode(),dir , config.getQrPath()));
+			vos.add(vo);
+		}
+		return vos;
 	}
 
 	/**
@@ -48,7 +112,17 @@ public class PressLightController {
 		List<PressLight> list = pressLightService.queryAllPressLightByTypeId(typeId);
 		return list;
 	}
-	
+	/**
+	 * 根据id查询按灯
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/queryPressLightById.do")
+	@ResponseBody
+	public PressLight queryPressLightById(Long id) {
+		PressLight parameter = pressLightService.queryObjById(id);
+		return parameter;
+	}
 	/**
 	 * 分页查询按灯信息
 	 * @param pid
@@ -73,38 +147,15 @@ public class PressLightController {
 		mm.addAttribute("msg", "");
 		return mm;
 	}
-
-	/**
-	 * 添加按灯
-	 * @param parameter
-	 * @return
-	 */
-	@RequestMapping("/addPressLight.do")
-	@ResponseBody
-	public ModelMap addPressLight(PressLight parameter) {
-		ModelMap modelMap = new ModelMap();
-		PressLight parameter4Code = pressLightService.queryByProperty("code", parameter.getCode());
-		if(parameter4Code!=null) {
-			modelMap.addAttribute("success", false);
-			modelMap.addAttribute("msg", "按灯编码已被使用");
-		}else {
-			pressLightService.addObj(parameter);
-			modelMap.addAttribute("success", true);
-			modelMap.addAttribute("msg", "添加成功!");
-		}
-		return modelMap;
+	@Autowired
+	public void setConfig(QRConfig config) {
+		this.config = config;
 	}
-	/**
-	 * 根据id查询按灯
-	 * @param id
-	 * @return
-	 */
-	@RequestMapping("/queryPressLightById.do")
-	@ResponseBody
-	public PressLight queryPressLightById(Long id) {
-		PressLight parameter = pressLightService.queryObjById(id);
-		return parameter;
+	@Autowired
+	public void setPressLightService(IPressLightService pressLightService) {
+		this.pressLightService = pressLightService;
 	}
+	
 	/**
 	 * 更新按灯
 	 * @param parameter
@@ -118,56 +169,5 @@ public class PressLightController {
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("msg", "编辑成功!");
 		return modelMap;
-	}
-	/**
-	 * 根据id删除按灯
-	 * @param id
-	 * @return
-	 */
-	@RequestMapping("/deletePressLight.do")
-	@ResponseBody
-	public ModelMap deletePressLight(String id) {
-		if(id!=null && id.contains("'")) {
-			id = id.replace("'", "");
-		}
-		ModelMap modelMap = new ModelMap();
-		pressLightService.deleteObj(Long.valueOf(id));
-		modelMap.addAttribute("success", true);
-		modelMap.addAttribute("statusCode", 200);
-		modelMap.addAttribute("title", "操作提示");
-		modelMap.addAttribute("message", "成功删除!");
-		return modelMap;
-	}
-	/**
-	 * 打印故障的二维码
-	 * @param ids 设备id字符串
-	 * @return
-	 */
-	@RequestMapping("/printQr.do")
-	@ResponseBody
-	public List<PressLightVO> printQr(String ids,HttpServletRequest request) {
-		String dir = request.getServletContext().getRealPath("/");
-		List<PressLightVO> vos = new ArrayList<>();
-		String[] idStr = ids.split(",");
-		for(int i = 0 ;i<idStr.length;i++) {
-			String id = idStr[i];
-			PressLight e = pressLightService.queryObjById(Long.valueOf(id));
-			PressLightVO vo = model2VO(e);
-			vo.setQrPath(qrEncoder.generatePR(e.getCode(),dir , config.getQrPath()));
-			vos.add(vo);
-		}
-		return vos;
-	}
-	
-	private PressLightVO model2VO(PressLight pl) {
-		if(pl == null) {
-			return null;
-		}
-		PressLightVO vo = new PressLightVO();
-		vo.setId(pl.getId());
-		vo.setCode(pl.getCode());
-		vo.setReason(pl.getReason());
-		vo.setNote(pl.getNote());
-		return vo;
 	}
 } 

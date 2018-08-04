@@ -6,6 +6,7 @@ package com.digitzones.constants;
  */
 import java.util.ArrayList;
 import java.util.List;
+
 import com.digitzones.model.WorkSheetDetail;
 public class Constant {
 	/**
@@ -107,7 +108,6 @@ public class Constant {
 		public static final String REPAIR = "repair";
 	}
 	/**
-	 * 
 	 * @author zdq
 	 * 2018年7月23日
 	 */
@@ -124,5 +124,65 @@ public class Constant {
 		public static final String SECUREENVIRONMENT="secureEnvironment";
 		/**测量*/
 		public static final String MEASURE="measure";
+	}
+	/**
+	 * 工作流静态类
+	 * @author zdq
+	 * 2018年8月2日
+	 */
+	public static class Workflow{
+		/**意见*/
+		public static final String SUGGESTION = "suggestion";
+		
+		/**启动流程的用户ID*/
+		public static final String APPLY_USER_ID = "applyUserId";
+		/**损时确认角色*/
+		public static final String LOSTTIME_CONFIRM_ROLES = "lostTimeConfirmRoles";
+		/**损时候选确认人*/
+		public static final String LOSTTIME_CONFIRM_PERSONS = "lostTimeConfirmPersons";
+		/**损时确认人*/
+		public static final String LOSTTIME_CONFIRM_PERSON = "lostTimeConfirmPerson";
+		
+		/**熄灯人*/
+		public static final String LIGHTOUT_PERSON = "lightoutPerson";
+		/**熄灯候选人*/
+		public static final String LIGHTOUT_PERSONS = "lightoutPersons";
+		/**熄灯角色*/
+		public static final String LIGHTOUT_ROLES = "lightoutRoles";
+		
+		/**按灯恢复人*/
+		public static final String LIGHTOUT_RECOVER_PERSON = "lightoutRecoverPerson";
+		/**按灯恢复候选人*/
+		public static final String LIGHTOUT_RECOVER_PERSONS = "lightoutRecoverPersons";
+		/**按灯恢复角色*/
+		public static final String LIGHTOUT_RECOVER_ROLES = "lightoutRecoverRoles";
+		
+		/**按灯确认人*/
+		public static final String LIGHTOUT_CONFIRM_PERSON = "lightoutConfirmPerson";
+		/**按灯确认候选人*/
+		public static final String LIGHTOUT_CONFIRM_PERSONS = "lightoutConfirmPersons";
+		/**按灯确认角色*/
+		public static final String LIGHTOUT_CONFIRM_ROLES = "lightoutConfirmRoles";
+		
+		/**不合格品审核人*/
+		public static final String NG_AUDIT_PERSON = "ngAuditPerson";
+		/**不合格品候选审核人*/
+		public static final String NG_AUDIT_PERSONS = "ngAuditPersons";
+		/**不合格品候选审核角色*/
+		public static final String NG_AUDIT_ROLES = "ngAuditRoles";
+		
+		/**不合格品复核人*/
+		public static final String NG_REVIEW_PERSON = "ngReviewPerson";
+		/**不合格品候选复核人*/
+		public static final String NG_REVIEW_PERSONS = "ngReviewPersons";
+		/**不合格品候选复核角色*/
+		public static final String NG_REVIEW_ROLES = "ngReviewRoles";
+		
+		/**不合格品确认人*/
+		public static final String NG_CONFIRM_PERSON = "ngConfirmPerson";
+		/**不合格品候选确认人*/
+		public static final String NG_CONFIRM_PERSONS = "ngConfirmPersons";
+		/**不合格品候选确认角色*/
+		public static final String NG_CONFIRM_ROLES = "ngConfirmRoles";
 	}
 }

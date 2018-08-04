@@ -6,11 +6,11 @@
 <% 
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
-	/*  User user = (User)session.getAttribute(Constant.User.LOGIN_USER);
+	User user = (User)session.getAttribute(Constant.User.LOGIN_USER);
 	if(user == null){
-		response.sendRedirect(basePath + "login.jsp");
+		response.sendRedirect(basePath + "index.jsp");
 		return;
-	} */ 
+	} 
 %>
 
 <!DOCTYPE html>
@@ -22,6 +22,7 @@
     <link rel="shortcut icon" href="console/js/topjui/images/favicon.ico"/>
     <!-- TopJUI框架样式 -->
     <link type="text/css" href="console/js/topjui/css/topjui.core.min.css" rel="stylesheet">
+    <link type="text/css" href="console/js/topjui/css/topjui.timeaxis.css" rel="stylesheet">
     <link type="text/css" href="console/js/topjui/themes/default/topjui.black.css" rel="stylesheet" id="dynamicTheme"/>
     <!-- FontAwesome字体图标 -->
     <link type="text/css" href="console/js/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>

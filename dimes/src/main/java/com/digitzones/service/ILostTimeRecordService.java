@@ -1,10 +1,13 @@
 package com.digitzones.service;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.digitzones.model.Classes;
 import com.digitzones.model.LostTimeRecord;
+import com.digitzones.model.User;
 /**
  * 损时记录service
  * @author zdq
@@ -61,4 +64,21 @@ public interface ILostTimeRecordService extends ICommonService<LostTimeRecord> {
 	 * @return
 	 */
 	public Integer queryLostTime4RealTime(Date date);
+	/**
+	 * 损时确认
+	 * @param lostTimeRecord
+	 */
+	public void confirm(LostTimeRecord lostTimeRecord,User user,Map<String,Object> args);
+	/**
+	 * 添加损时记录
+	 * @param lostTimeRecord
+	 * @param user
+	 * @return
+	 */
+	public Serializable addLostTimeRecord(LostTimeRecord lostTimeRecord,User user,Map<String,Object> args);
+	/**
+	 * 设置删除标志
+	 * @param lostTimeRecord
+	 */
+	public void deleteLostTimeRecord(LostTimeRecord lostTimeRecord);
 }

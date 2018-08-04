@@ -11,12 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.config.WorkFlowKeyConfig;
 import com.digitzones.constants.Constant;
 import com.digitzones.model.Classes;
 import com.digitzones.model.DeviceSite;
@@ -47,6 +49,12 @@ public class NGRecordController {
 	private IClassesService classService;
 	private IProcessRecordService processRecordService;
 	private IProductionUnitService productionUnitService;
+	private WorkFlowKeyConfig workFlowKeyConfig;
+	@Autowired
+	public void setWorkFlowKeyConfig(WorkFlowKeyConfig workFlowKeyConfig) {
+		this.workFlowKeyConfig = workFlowKeyConfig;
+	}
+
 	@Autowired
 	public void setProductionUnitService(IProductionUnitService productionUnitService) {
 		this.productionUnitService = productionUnitService;
@@ -68,7 +76,7 @@ public class NGRecordController {
 	}
 
 	@Autowired
-	public void setNgRecordService(INGRecordService ngRecordService) {
+	public void setNgRecordService(@Qualifier("ngRecordServiceProxy")INGRecordService ngRecordService) {
 		this.ngRecordService = ngRecordService;
 	}
 
@@ -108,13 +116,9 @@ public class NGRecordController {
 		}
 		//获取当前登录用户
 		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute(Constant.User.LOGIN_USER);
-		if(user!=null) {
-			ngRecord.setInputUserId(user.getId());
-			ngRecord.setInputUsername(user.getUsername());
-		}
-		ngRecord.setInputDate(new Date());
-		ngRecordService.addObj(ngRecord);
+		User user = (User)session.getAttribute(Constant.User.LOGIN_USER);
+		modelMap.put("businessKey", workFlowKeyConfig.getNgWorkflowKey());
+		ngRecordService.addNGRecord(ngRecord, user, modelMap);
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("msg", "添加成功!");
 		return modelMap;
@@ -212,7 +216,15 @@ public class NGRecordController {
 		ModelMap modelMap = new ModelMap();
 		NGRecord record = ngRecordService.queryObjById(Long.valueOf(id));
 		record.setDeleted(true);
-		ngRecordService.updateObj(record);
+		try {
+		ngRecordService.deleteNGRecord(record);
+		}catch(RuntimeException e) {
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("message", e.getMessage());
+			return modelMap;
+		}
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("title", "操作提示");
@@ -226,9 +238,9 @@ public class NGRecordController {
 	 */
 	@RequestMapping("/reviewNGRecord.do")
 	@ResponseBody
-	public ModelMap reviewNGRecord(NGRecord r,HttpServletRequest request) {
+	public ModelMap reviewNGRecord(Long id,String suggestion ,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
-		NGRecord record = ngRecordService.queryObjById(r.getId());
+		NGRecord record = ngRecordService.queryObjById(id);
 
 		if(record.getReviewerId()!=null) {
 			modelMap.addAttribute("statusCode", 300);
@@ -244,12 +256,13 @@ public class NGRecordController {
 			record.setReviewerId(loginUser.getId());
 			record.setReviewerName(loginUser.getUsername());
 		}
-		record.setReviewSuggestion(r.getReviewSuggestion());
-		ngRecordService.updateObj(record);
+		record.setReviewSuggestion(suggestion);
+		modelMap.put(Constant.Workflow.SUGGESTION, suggestion);
+		ngRecordService.reviewNGRecord(record, loginUser, modelMap);
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("title", "操作提示");
-		modelMap.addAttribute("message", "成功删除!");
+		modelMap.addAttribute("message", "操作成功!");
 		return modelMap;
 	}
 	/**
@@ -259,9 +272,9 @@ public class NGRecordController {
 	 */
 	@RequestMapping("/auditNGRecord.do")
 	@ResponseBody
-	public ModelMap auditNGRecord(NGRecord r,HttpServletRequest request) {
+	public ModelMap auditNGRecord(Long id,String suggestion,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
-		NGRecord record = ngRecordService.queryObjById(r.getId());
+		NGRecord record = ngRecordService.queryObjById(id);
 
 		if(record.getAuditorId()!=null) {
 			modelMap.addAttribute("statusCode", 300);
@@ -277,12 +290,13 @@ public class NGRecordController {
 			record.setAuditorId(loginUser.getId());
 			record.setAuditorName(loginUser.getUsername());
 		}
-		record.setAuditSuggestion(r.getAuditSuggestion());
-		ngRecordService.auditNGRecord(record);
+		record.setAuditSuggestion(suggestion);
+		modelMap.put(Constant.Workflow.SUGGESTION, suggestion);
+		ngRecordService.auditNGRecord(record, loginUser, modelMap);
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("title", "操作提示");
-		modelMap.addAttribute("message", "成功删除!");
+		modelMap.addAttribute("message", "操作成功!");
 		return modelMap;
 	}
 	/**
@@ -292,9 +306,9 @@ public class NGRecordController {
 	 */
 	@RequestMapping("/confirmNGRecord.do")
 	@ResponseBody
-	public ModelMap confirmNGRecord(NGRecord r,HttpServletRequest request) {
+	public ModelMap confirmNGRecord(Long id,String suggestion,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
-		NGRecord record = ngRecordService.queryObjById(r.getId());
+		NGRecord record = ngRecordService.queryObjById(id);
 
 		if(record.getConfirmUserId()!=null) {
 			modelMap.addAttribute("statusCode", 300);
@@ -310,12 +324,13 @@ public class NGRecordController {
 			record.setConfirmUserId(loginUser.getId());
 			record.setConfirmUsername(loginUser.getUsername());
 		}
-		record.setConfirmSuggestion(r.getConfirmSuggestion());
-		ngRecordService.updateObj(record);
+		record.setConfirmSuggestion(suggestion);
+		modelMap.put(Constant.Workflow.SUGGESTION, suggestion);
+		ngRecordService.confirmNGRecord(record, loginUser, modelMap);
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("title", "操作提示");
-		modelMap.addAttribute("message", "成功删除!");
+		modelMap.addAttribute("message", "已确认!");
 		return modelMap;
 	}
 

@@ -1,49 +1,65 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<% 
+<%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
 %>
 <!DOCTYPE html>
 <html>
 <head>
-<base href="<%=basePath%>"/>
-<meta charset="utf-8"/>
- <!-- 浏览器标签图片 -->
-    <link rel="shortcut icon" href="console/js/topjui/images/favicon.ico"/>
-    <!-- TopJUI框架样式 -->
-    <link type="text/css" href="console/js/topjui/css/topjui.core.min.css" rel="stylesheet">
-    <link type="text/css" href="console/js/topjui/themes/default/topjui.black.css" rel="stylesheet" id="dynamicTheme"/>
-    <!-- FontAwesome字体图标 -->
-    <link type="text/css" href="console/js/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
-      <link type="text/css" href="console/js/static/plugins/layui/css/layui.css" rel="stylesheet"/>
-    <!-- jQuery相关引用 -->
-    <script type="text/javascript" src="console/js/static/plugins/jquery/jquery.min.js"></script>
-   <!--  <script type="text/javascript" src="console/js/static/plugins/echarts/echarts.min.js"></script> -->
-   
-    <script type="text/javascript" src="common/js/echarts.js"></script>
-    <script type="text/javascript" src="console/js/static/plugins/jquery/jquery.cookie.js"></script>
-    <!-- TopJUI框架配置 -->
-    <script type="text/javascript" src="console/js/static/public/js/topjui.config.js"></script>
-    <!-- TopJUI框架核心 -->
-    <script type="text/javascript" src="console/js/topjui/js/topjui.core.min.js"></script>
-    <!-- TopJUI中文支持 -->
-    <script type="text/javascript" src="console/js/topjui/js/locale/topjui.lang.zh_CN.js"></script>
-    <!-- layui框架js -->
-    <script type="text/javascript" src="console/js/static/plugins/layui/layui.js" charset="utf-8"></script>
-    <!-- 首页js -->
-   
-    <script type="text/javascript">
-    	var contextPath = "<%=basePath%>";
-    </script>
-  <link rel="stylesheet" href="console/js/static/plugins/bootstrap/css/bootstrap.min.css" />
+<base href="<%=basePath%>" />
+<meta charset="utf-8" />
+<!-- 浏览器标签图片 -->
+<link rel="shortcut icon" href="console/js/topjui/images/favicon.ico" />
+<!-- TopJUI框架样式 -->
+<link type="text/css" href="console/js/topjui/css/topjui.core.min.css"
+	rel="stylesheet">
+<link type="text/css"
+	href="console/js/topjui/themes/default/topjui.black.css"
+	rel="stylesheet" id="dynamicTheme" />
+<!-- FontAwesome字体图标 -->
+<link type="text/css"
+	href="console/js/static/plugins/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet" />
+<link type="text/css"
+	href="console/js/static/plugins/layui/css/layui.css" rel="stylesheet" />
+<!-- jQuery相关引用 -->
+<script type="text/javascript"
+	src="console/js/static/plugins/jquery/jquery.min.js"></script>
+<!--  <script type="text/javascript" src="console/js/static/plugins/echarts/echarts.min.js"></script> -->
+
+<script type="text/javascript" src="common/js/echarts.js"></script>
+<script type="text/javascript"
+	src="console/js/static/plugins/jquery/jquery.cookie.js"></script>
+<!-- TopJUI框架配置 -->
+<script type="text/javascript"
+	src="console/js/static/public/js/topjui.config.js"></script>
+<!-- TopJUI框架核心 -->
+<script type="text/javascript"
+	src="console/js/topjui/js/topjui.core.min.js"></script>
+<!-- TopJUI中文支持 -->
+<script type="text/javascript"
+	src="console/js/topjui/js/locale/topjui.lang.zh_CN.js"></script>
+<!-- layui框架js -->
+<script type="text/javascript"
+	src="console/js/static/plugins/layui/layui.js" charset="utf-8"></script>
+<!-- 首页js -->
+
+<script type="text/javascript">
+    	var contextPath = "<%=basePath%>
+	";
+</script>
+<link rel="stylesheet"
+	href="console/js/static/plugins/bootstrap/css/bootstrap.min.css" />
 <style type="text/css">
 html, body {
 	height: 100%;
 }
 
 .box {
-	background: url("console/js/topjui/images/loginBg.jpg") no-repeat center center;
+	background: url("console/js/topjui/images/loginBg.jpg") no-repeat center
+		center;
 	background-size: cover;
 	margin: 0 auto;
 	position: relative;
@@ -154,12 +170,12 @@ html, body {
 							value="${param.referer}"> --%>
 						<div class="form-group">
 							<div class="col-xs-10 col-xs-offset-1">
-							
+
 								<div class="input-group">
 									<span class="input-group-addon"><span
 										class="glyphicon glyphicon-user"></span></span> <input type="text"
 										id="username" name="username" class="form-control"
-										placeholder="用户名" >
+										placeholder="用户名">
 								</div>
 							</div>
 						</div>
@@ -169,11 +185,13 @@ html, body {
 									<span class="input-group-addon"><span
 										class="glyphicon glyphicon-lock"></span></span> <input
 										type="password" id="password" name="password"
-										class="form-control" placeholder="密码" >
+										class="form-control" placeholder="密码">
 								</div>
 							</div>
 						</div>
-						<span id="tip" style="color:red;font-size:1.2em;width:100%;margin-left:100px;">${msg }</span><p></p>
+						<span id="tip"
+							style="color: red; font-size: 1.2em; width: 100%; margin-left: 100px;">${msg }</span>
+						<p></p>
 						<div class="form-group form-actions">
 							<div class="col-xs-12 text-center">
 								<button type="button" id="login" class="btn btn-sm btn-success">
@@ -202,15 +220,15 @@ html, body {
 		</div>
 	</div>
 	<script type="text/javascript">
-    if (navigator.appName == "Microsoft Internet Explorer" &&
-            (navigator.appVersion.split(";")[1].replace(/[ ]/g, "") == "MSIE6.0" ||
-            navigator.appVersion.split(";")[1].replace(/[ ]/g, "") == "MSIE7.0" ||
-            navigator.appVersion.split(";")[1].replace(/[ ]/g, "") == "MSIE8.0")
-    ) {
-        alert("您的浏览器版本过低，请使用360安全浏览器的极速模式或IE9.0以上版本的浏览器");
-    }
-</script>
-<!-- 	<script>
+		if (navigator.appName == "Microsoft Internet Explorer"
+				&& (navigator.appVersion.split(";")[1].replace(/[ ]/g, "") == "MSIE6.0"
+						|| navigator.appVersion.split(";")[1].replace(/[ ]/g,
+								"") == "MSIE7.0" || navigator.appVersion
+						.split(";")[1].replace(/[ ]/g, "") == "MSIE8.0")) {
+			alert("您的浏览器版本过低，请使用360安全浏览器的极速模式或IE9.0以上版本的浏览器");
+		}
+	</script>
+	<!-- 	<script>
     var _hmt = _hmt || [];
     (function() {
         var hm = document.createElement("script");
@@ -220,51 +238,51 @@ html, body {
     })();
 </script> -->
 	<script type="text/javascript">
-     $(function () {
-        $("#login").on("click", function () {
-        	if(!$("#username").val()){
-        		$("#tip").text("用户名不能为空!");
-        		return ;
-        	}
-        	if(!$("#password").val()){
-        		$("#tip").text("密码不能为空!");
-        		return ;
-        	}
-        	$("#loginForm").submit();
-        });
-           // submitForm();
+		$(function() {
+			$("#login").on("click", function() {
+				if (!$("#username").val()) {
+					$("#tip").text("用户名不能为空!");
+					return;
+				}
+				if (!$("#password").val()) {
+					$("#tip").text("密码不能为空!");
+					return;
+				}
+				$("#loginForm").submit();
+			});
+			// submitForm();
 
-        /* function submitForm() {
-            if (navigator.appName == "Microsoft Internet Explorer" &&
-                    (navigator.appVersion.split(";")[1].replace(/[ ]/g, "") == "MSIE6.0" ||
-                    navigator.appVersion.split(";")[1].replace(/[ ]/g, "") == "MSIE7.0" ||
-                    navigator.appVersion.split(";")[1].replace(/[ ]/g, "") == "MSIE8.0")
-            ) {
-                alert("您的浏览器版本过低，请使用360安全浏览器的极速模式或IE9.0以上版本的浏览器");
-            } else {
-                var formData = $("#loginForm").serialize();
-                $.ajax({
-                    type: 'POST',
-                    url: 'user/login.do',
-                    data: formData,
-                    success: function (data) {
-                        if (data.statusCode == 200) {
-                            location.href = "console/jsp/console.jsp";
-                        } else {
-                        	$("#tip").text("用户名或密码错误!");
-                        }
-                    },
-                    error: function () {
+			/* function submitForm() {
+			    if (navigator.appName == "Microsoft Internet Explorer" &&
+			            (navigator.appVersion.split(";")[1].replace(/[ ]/g, "") == "MSIE6.0" ||
+			            navigator.appVersion.split(";")[1].replace(/[ ]/g, "") == "MSIE7.0" ||
+			            navigator.appVersion.split(";")[1].replace(/[ ]/g, "") == "MSIE8.0")
+			    ) {
+			        alert("您的浏览器版本过低，请使用360安全浏览器的极速模式或IE9.0以上版本的浏览器");
+			    } else {
+			        var formData = $("#loginForm").serialize();
+			        $.ajax({
+			            type: 'POST',
+			            url: 'user/login.do',
+			            data: formData,
+			            success: function (data) {
+			                if (data.statusCode == 200) {
+			                    location.href = "console/jsp/console.jsp";
+			                } else {
+			                	$("#tip").text("用户名或密码错误!");
+			                }
+			            },
+			            error: function () {
 
-                    }
-                });
-            }
-        }
-        $("#reset").on("click", function () {
-            $("#username").val("");
-            $("#password").val("");
-        });*/
-    }); 
-</script>
+			            }
+			        });
+			    }
+			}
+			$("#reset").on("click", function () {
+			    $("#username").val("");
+			    $("#password").val("");
+			});*/
+		});
+	</script>
 </body>
 </html>

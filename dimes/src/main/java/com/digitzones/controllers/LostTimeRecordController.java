@@ -1,4 +1,5 @@
 package com.digitzones.controllers;
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -6,20 +7,33 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.activiti.engine.ActivitiObjectNotFoundException;
+import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.digitzones.config.WorkFlowKeyConfig;
+import com.digitzones.constants.Constant;
 import com.digitzones.model.Classes;
 import com.digitzones.model.DeviceSite;
 import com.digitzones.model.LostTimeRecord;
 import com.digitzones.model.Pager;
 import com.digitzones.model.PressLightType;
+import com.digitzones.model.User;
 import com.digitzones.service.IClassesService;
 import com.digitzones.service.IDeviceSiteService;
 import com.digitzones.service.ILostTimeRecordService;
@@ -38,6 +52,16 @@ public class LostTimeRecordController {
 	private IClassesService classesService;
 	private IProductionUnitService productionUnitService;
 	private DateStringUtil util = new DateStringUtil();
+	private WorkFlowKeyConfig workFlowKeyConfig;
+	private ProcessEngine processEngine;
+	@Autowired
+	public void setProcessEngine(ProcessEngine processEngine) {
+		this.processEngine = processEngine;
+	}
+	@Autowired
+	public void setWorkFlowKeyConfig(WorkFlowKeyConfig workFlowKeyConfig) {
+		this.workFlowKeyConfig = workFlowKeyConfig;
+	}
 	@Autowired
 	public void setProductionUnitService(IProductionUnitService productionUnitService) {
 		this.productionUnitService = productionUnitService;
@@ -53,7 +77,7 @@ public class LostTimeRecordController {
 	}
 
 	@Autowired
-	public void setLostTimeRecordService(ILostTimeRecordService lostTimeRecordService) {
+	public void setLostTimeRecordService(@Qualifier("lostTimeRecordServiceProxy")ILostTimeRecordService lostTimeRecordService) {
 		this.lostTimeRecordService = lostTimeRecordService;
 	}
 
@@ -87,7 +111,7 @@ public class LostTimeRecordController {
 	 */
 	@RequestMapping("/addLostTimeRecord.do")
 	@ResponseBody
-	public ModelMap addLostTimeRecord(LostTimeRecord lostTimeRecord) {
+	public ModelMap addLostTimeRecord(LostTimeRecord lostTimeRecord,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
 		DeviceSite ds = deviceSiteService.queryObjById(lostTimeRecord.getDeviceSite().getId());
 		if(ds==null) {
@@ -106,9 +130,27 @@ public class LostTimeRecordController {
 			long result = endTimeMilliSec - beginTimeMilliSec;
 			lostTimeRecord.setSumOfLostTime(result/60/1000*1.0);
 		}
-
 		lostTimeRecord.setLostTimeTime(new Date());
-		lostTimeRecordService.addObj(lostTimeRecord);
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute(Constant.User.LOGIN_USER);
+		try {
+			Map<String,Object> args = new HashMap<>();
+			args.put("businessKey", workFlowKeyConfig.getLostTimeWorkflowKey());
+			Serializable id = lostTimeRecordService.addLostTimeRecord(lostTimeRecord,user,args);
+			//执行损时申请
+			TaskService taskService = processEngine.getTaskService();
+			Map<String,Object> variables = new HashMap<>();
+			variables.put(Constant.Workflow.LOSTTIME_CONFIRM_ROLES, "损时确认人");
+			variables.put(Constant.Workflow.LOSTTIME_CONFIRM_PERSON, "");
+			variables.put(Constant.Workflow.LOSTTIME_CONFIRM_PERSONS, "");
+			Task task = taskService.createTaskQuery().processInstanceBusinessKey(id+"").taskAssignee(user.getUsername()).singleResult();
+			taskService.complete(task.getId(),variables);
+		}catch(ActivitiObjectNotFoundException e) {
+			e.printStackTrace();
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("msg", "启动流程失败:启动流程的key不存在！");
+			return modelMap;
+		}
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("msg", "添加成功!");
 		return modelMap;
@@ -179,21 +221,21 @@ public class LostTimeRecordController {
 	 */
 	@RequestMapping("/confirmLostTimeRecord.do")
 	@ResponseBody
-	public ModelMap confirmLostTimeRecord(String id) {
-		ModelMap modelMap = new ModelMap();
-		if(id!=null && id.contains("'")) {
-			id = id.replace("'", "");
-		}
-		LostTimeRecord plr = lostTimeRecordService.queryObjById(Long.valueOf(id));
+	public ModelMap confirmLostTimeRecord(Long id,String suggestion,HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		User user = (User)session.getAttribute(Constant.User.LOGIN_USER);
+		LostTimeRecord plr = lostTimeRecordService.queryObjById(id);
 		plr.setConfirmTime(new Date());
-		lostTimeRecordService.updateObj(plr);
+		Map<String,Object> args = new HashMap<>();
+		args.put("suggestion", suggestion);
+		lostTimeRecordService.confirm(plr,user,args);
+		ModelMap modelMap = new ModelMap();
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("title", "提示");
 		modelMap.addAttribute("message", "操作成功!");
 		return modelMap;
 	}
-
 	/**
 	 * 根据id删除损时记录
 	 * @param id
@@ -208,7 +250,15 @@ public class LostTimeRecordController {
 		ModelMap modelMap = new ModelMap();
 		LostTimeRecord pr = lostTimeRecordService.queryObjById(Long.valueOf(id));
 		pr.setDeleted(true);
-		lostTimeRecordService.updateObj(pr);
+		try {
+			lostTimeRecordService.deleteLostTimeRecord(pr);
+		}catch(RuntimeException e) {
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("message", e.getMessage());
+			return modelMap;
+		}
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("title", "操作提示");
@@ -372,13 +422,13 @@ public class LostTimeRecordController {
 		List<DeviceSite> deviceSites = deviceSiteService.queryDeviceSitesByProductionUnitId(productionUnitId);
 		//查询所有班次
 		List<Classes> classesList = classesService.queryAllClasses();
-		
+
 		double totalHours = 0;
 		for(int i = 0;i<classesList.size();i++) {
-			
-			
+
+
 			Classes c = classesList.get(i);
-			
+
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(c.getStartTime());
 			//结束时间
@@ -391,7 +441,7 @@ public class LostTimeRecordController {
 			}else {
 				totalMinutes = 24*60+(calendar.get(Calendar.HOUR_OF_DAY)*60+calendar.get(Calendar.MINUTE))-(cal.get(Calendar.HOUR_OF_DAY)*60-cal.get(Calendar.MINUTE));
 			}
-			
+
 			double sumHours = totalMinutes*1.0/60;
 			totalHours+=sumHours;
 			for(Date now : days) {
@@ -443,7 +493,7 @@ public class LostTimeRecordController {
 			minutes.add(simpleDateFormat.format(date));
 			minuteCountList.add(lostTimeRecordService.queryLostTime4RealTime(date));
 		}
-		
+
 		modelMap.addAttribute("minutes", minutes);
 		modelMap.addAttribute("lostTimeCounts", minuteCountList);
 		return modelMap;
