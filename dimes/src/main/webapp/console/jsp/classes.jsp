@@ -19,7 +19,7 @@
 			           childTab: [{id:'southTabs'}]">
                     <thead>
                     <tr>
-                        <th data-options="field:'id',title:'id',checkbox:false,width:'80px'"></th>
+                        <th data-options="field:'id',title:'id',checkbox:false,width:'80px',hidden:true"></th>
                         <th data-options="field:'classType',title:'班次类别',width:'180px',align:'center',formatter:function(value,row,index){
                             if (row.classType) {
                                 return row.classType.name;

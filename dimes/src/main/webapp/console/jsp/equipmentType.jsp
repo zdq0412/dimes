@@ -382,11 +382,13 @@
            	{text:'保存',handler:function(){
            			var code = $('#code').val();
            			if(code==null || ''===$.trim(code)){
+           				$.iMessager.alert('提示','请输入装备代码!');
            				return false;
            			}
            			
            			var name = $('#name').val();
            			if(name==null || ''===$.trim(name)){
+           				$.iMessager.alert('提示','请输入装备名称!');
            				return false;
            			}
            			$.get('equipment/addEquipment.do',{
@@ -404,7 +406,7 @@
            			cumulation:$('#cumulation').val(),
            			measurementDifference:$('#measurementDifference').val(),
            			warrantyPeriod:$('#warrantyPeriod').val(),
-           			pic:$('#pic').val()
+           			picName:$('#picName').val()
            			},function(data){
            				if(data.success){
 	           				$('#equipmentAddDialog').iDialog('close');
@@ -434,11 +436,13 @@
            	{text:'编辑',handler:function(){
            			var code = $('#code').val();
            			if(code==null || ''===$.trim(code)){
+           				$.iMessager.alert('提示','请输入装备代码!');
            				return false;
            			}
            			
            			var name = $('#name').val();
            			if(name==null || ''===$.trim(name)){
+           				$.iMessager.alert('提示','请输入装备名称!');
            				return false;
            			}
            			$.get('equipment/updateEquipment.do',{
@@ -457,7 +461,7 @@
            			cumulation:$('#cumulation').val(),
            			measurementDifference:$('#measurementDifference').val(),
            			warrantyPeriod:$('#warrantyPeriod').val(),
-           			pic:$('#pic').val()
+           			picName:$('#picName').val()
            			},function(data){
            				if(data.success){
 	           				$('#equipmentEditDialog').iDialog('close');

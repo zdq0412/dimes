@@ -51,17 +51,17 @@ public class ProductionUnitServiceImpl implements IProductionUnitService {
 
 	@Override
 	public List<ProductionUnit> queryTopProductionUnits() {
-		return  productionUnitDao.findByHQL("from ProductionUnit pu where pu.parent is null", new Object[] {});
+		return  productionUnitDao.findByHQL("from ProductionUnit pu where pu.parent is null order by code", new Object[] {});
 	}
 
 	@Override
 	public Long queryCountOfSubProductionUnit(Serializable pid) {
-		return productionUnitDao.findCount("from ProductionUnit pu inner join pu.parent p where p.id=?0", new Object[] {pid});
+		return productionUnitDao.findCount("from ProductionUnit pu inner join pu.parent p where p.id=?0 order by code", new Object[] {pid});
 	}
 
 	@Override
 	public List<ProductionUnit> queryAllProductionUnits() {
-		return this.productionUnitDao.findByHQL("from ProductionUnit pu where pu.parent!=null", new Object[] {});
+		return this.productionUnitDao.findByHQL("from ProductionUnit pu where pu.parent!=null order by code", new Object[] {});
 	}
 
 	@Override

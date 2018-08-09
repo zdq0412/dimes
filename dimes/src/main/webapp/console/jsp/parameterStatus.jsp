@@ -50,7 +50,7 @@
 <script type="text/javascript">
     	var contextPath = "<%=basePath%>";
 	$(function() {
-		$.get("deviceSite/queryDeviceSite4ParameterStatusShow.do", function(result) {
+		$.get("oee/queryDeviceSite4ParameterStatusShow.do", function(result) {
 			
 			if(result.error){
 				alert(result.error);
@@ -112,7 +112,7 @@
 				$contentDiv.append($parameterDiv);
 				$rtyValue.append((result.rtys[i]?result.rtys[i]:0) + "%");
 				oee($oeeDiv.get(0),result.oees[i]?result.oees[i]:0);
-				$picDiv.append("<img src='" + result.deviceSites[i].device.photo + "' style='height:100%;width:100%;'/>");
+				$picDiv.append("<img src='" + result.deviceSites[i].device.photoName + "' style='height:100%;width:100%;'/>");
 			}
 		});
 	});

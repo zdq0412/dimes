@@ -5,7 +5,7 @@
 	$(function() {
 		$
 				.get(
-						"deviceSite/queryDeviceSite4ParameterStatusShow.do",
+						"oee/queryDeviceSite4ParameterStatusShow.do",
 						function(result) {
 
 							if (result.error) {
@@ -77,7 +77,7 @@
 										result.oees[i] ? result.oees[i] : 0);
 								$picDiv
 										.append("<img src='"
-												+ result.deviceSites[i].device.photo
+												+ result.deviceSites[i].device.photoName
 												+ "' style='height:100%;width:100%;'/>");
 							}
 							$("#title").text("嘉兴迪筑智能工业技术有限公司");
@@ -194,7 +194,7 @@ body {
 
 table tr td, table tr th {
 	text-align: center;
-	font-size: 1em;
+	font-size: 1.3em;
 	color: white;
 }
 

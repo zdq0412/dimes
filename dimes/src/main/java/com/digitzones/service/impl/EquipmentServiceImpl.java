@@ -66,4 +66,9 @@ public class EquipmentServiceImpl implements IEquipmentService {
 	public Serializable addEquipment(Equipment equipment, File pic) {
 		return equipmentDao.addEquipment(equipment, pic);
 	}
+
+	@Override
+	public void updateEquipment(Equipment equipment, File pic) {
+		equipmentDao.updateEquipment(equipment, pic);
+	}
 }

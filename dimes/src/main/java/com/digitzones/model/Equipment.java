@@ -140,5 +140,4 @@ public class Equipment extends CommonModel {
 	public void setPicName(String picName) {
 		this.picName = picName;
 	}
-	
 }

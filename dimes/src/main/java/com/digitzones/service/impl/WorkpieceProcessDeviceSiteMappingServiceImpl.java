@@ -100,4 +100,9 @@ public class WorkpieceProcessDeviceSiteMappingServiceImpl implements IWorkpieceP
 		return workpieceProcessDeviceSiteMappingDao.queryProcessingBeatByClassesId(classesId);
 	}
 
+	@Override
+	public Float queryProcessingBeat(Long workPieceId, Long processId, Long deviceSiteId) {
+		return workpieceProcessDeviceSiteMappingDao.queryProcessingBeat(workPieceId, processId, deviceSiteId);
+	}
+
 }

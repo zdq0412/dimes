@@ -241,6 +241,8 @@
 										<th
 											data-options="field:'standardValue',title:'标准值',width:50,sortable:false"></th>
 										<th
+											data-options="field:'trueValue',title:'实际值',width:50,sortable:false"></th>
+										<th
 											data-options="field:'parameterNote',title:'备注',width:50,sortable:false"></th>
 									</tr>
 								</thead>
@@ -382,7 +384,7 @@
                 href: 'console/jsp/device_edit.jsp',
                 url:'device/queryDeviceById.do?id={id}',
                  buttons:[
-           		{text:'编辑',handler:function(){
+           		{text:'保存',handler:function(){
            			var code = $('#code').val();
            			var name = $('#name').val();
            			if(name==null || ''===$.trim(name)){
@@ -503,8 +505,11 @@
                 href: 'console/jsp/deviceSite_edit.jsp',
                 url:'deviceSite/queryDeviceSiteById.do?id={id}',
                 buttons:[ 	{
-                 				text:'编辑',handler:function(){
+                 				text:'保存',handler:function(){
            								 var code = $('#code').val();
+           								 if(!code){
+           								 	return false;
+           								 }
 					           			var name = $('#name').val();
 					           			if(name==null || ''===$.trim(name)){
 					           				return false;
@@ -609,11 +614,7 @@
 		           href:'console/jsp/device_parameter_edit.jsp',
 		           url:'parameter/queryDeviceSiteParameterById.do?id={id}',
                  buttons:[
-           	{text:'编辑',handler:function(){
-           			var deviceSiteId = $('#deviceId').val();
-           			if(!deviceSiteId){
-           				return false;
-           			}
+           	{text:'保存',handler:function(){
            			$.get('parameter/updateDeviceSiteParameter.do',{
            			id:$('#parameter').iDatagrid('getSelected').id,
            			upLine:$('#upLine').val(),

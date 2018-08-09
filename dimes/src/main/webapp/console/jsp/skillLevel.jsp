@@ -112,13 +112,13 @@
            	},iconCls:'fa fa-close',btnCls:'topjui-btn-normal'},
            ]
             }">编辑</a>
-    <a href="javascript:void(0)"
+<!--     <a href="javascript:void(0)"
        data-toggle="topjui-menubutton"
        data-options="method:'doAjax',
        extend: '#departmentDg-toolbar',
        iconCls:'fa fa-trash',
        url:'skillLevel/deleteSkillLevel.do',
-       grid: {uncheckedMsg:'请先勾选要删除的数据',id:'departmentDg',param:'id:id'}">删除</a>
+       grid: {uncheckedMsg:'请先勾选要删除的数据',id:'departmentDg',param:'id:id'}">删除</a> -->
     </div>
 <!-- 部门表格工具栏结束 -->
 <!-- 职位表格工具栏开始 -->

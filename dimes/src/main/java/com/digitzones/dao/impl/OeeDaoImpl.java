@@ -67,40 +67,6 @@ public class OeeDaoImpl  implements IOeeDao {
 		}
 		return result;
 	}
-	@SuppressWarnings({ "unchecked", "deprecation" })
-	@Override
-	public List<Object[]> queryNGInfo(Date today,Long deviceSiteId,Classes classes) {
-		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-		long beginTime = classes.getStartTime().getTime();
-		long endTime = classes.getEndTime().getTime();
-		Calendar c = Calendar.getInstance();
-		c.setTime(today);
-		int year = c.get(Calendar.YEAR);
-		int month = c.get(Calendar.MONTH)+1;
-		int day  = c.get(Calendar.DATE);
-		String sql = "select deviceSiteid,deviceSiteName,processId,workpiececode,SUM(case  when method.ngCount is null then 0 else method.ngCount end) from NGRECORD record inner join NGPROCESSMETHOD method on record.id=method.ngrecord_id "
-				+ " where method.processMethod!=?0 and record.deleted=0 and year(record.inputDate)=?1 and month(record.inputDate)=?2"
-				+ " and day(record.inputDate)=?3 and deviceSiteId=?4 ";
-
-		if(beginTime>endTime) {
-			sql +=" and (CONVERT(varchar(100),record.inputDate,108)>=?5 and CONVERT(varchar(100),record.inputDate,108)<='23:59:59')"
-					+ " or (CONVERT(varchar(100),record.inputDate,108)<=?6 and CONVERT(varchar(100),record.inputDate,108)>='00:00:00')";
-		}else {
-			sql +=" and (CONVERT(varchar(100),record.inputDate,108)>=?5 and CONVERT(varchar(100),record.inputDate,108)<=?6)";
-		}
-
-		String groupBy =  " group by deviceSiteid,deviceSiteName,processId,workpiececode ";
-		sql = sql+groupBy;
-		return getSession().createSQLQuery(sql)
-				.setParameter(0, Constant.ProcessRecord.COMPROMISE)
-				.setParameter(1, year)
-				.setParameter(2, month)
-				.setParameter(3,day)
-				.setParameter(4, deviceSiteId)
-				.setParameter(5, format.format(classes.getStartTime()))
-				.setParameter(6, format.format(classes.getEndTime()))
-				.list();
-	}
 	@SuppressWarnings("deprecation")
 	@Override
 	public Float queryProcessingBeatByWorkpieceIdAndProcessIdAndDeviceSiteId(Long workpieceId, Long processId,

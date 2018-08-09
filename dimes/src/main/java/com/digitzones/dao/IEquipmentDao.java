@@ -17,4 +17,11 @@ public interface IEquipmentDao extends ICommonDao<Equipment> {
 	 * @return
 	 */
 	public Serializable addEquipment(Equipment equipment,File pic);
+	/**
+	 * 更新装备
+	 * @param equipment
+	 * @param pic
+	 * @return
+	 */
+	public void updateEquipment(Equipment equipment,File pic);
 }

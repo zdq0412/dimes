@@ -35,13 +35,13 @@ public class PositionController {
 	@RequestMapping("/queryPositionsByDepartmentId.do")
 	@ResponseBody
 	public ModelMap queryPositionsByDepartmentId(@RequestParam("id")Long deptId,@RequestParam(defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
-		Pager<Position> pager = positionService.queryObjs("select p from Position p inner join p.department d where d.id=?0", page, rows,new Object[] {deptId});
+		Pager<Position> pager = positionService.queryObjs("select p from Position p inner join p.department d where d.id=?0 order by p.code", page, rows,new Object[] {deptId});
 		ModelMap mm = new ModelMap();
 		mm.addAttribute("rows",pager.getData());
 		mm.addAttribute("total", pager.getTotalCount());
 		return mm;
 	}
-	
+
 	@RequestMapping("/queryPositions.do")
 	@ResponseBody
 	public List<Position> queryPositionsByDepartmentId(@RequestParam("deptid")Long deptId) {
@@ -62,15 +62,9 @@ public class PositionController {
 			modelMap.addAttribute("success", false);
 			modelMap.addAttribute("msg", "职位编码已被使用");
 		}else {
-			Position position4Name = positionService.queryByProperty("name", position.getName());
-			if(position4Name!=null) {
-				modelMap.addAttribute("success", false);
-				modelMap.addAttribute("msg", "职位名称已被使用");
-			}else {
-				positionService.addPosition(position);
-				modelMap.addAttribute("success", true);
-				modelMap.addAttribute("msg", "添加成功!");
-			}
+			positionService.addPosition(position);
+			modelMap.addAttribute("success", true);
+			modelMap.addAttribute("msg", "添加成功!");
 		}
 		return modelMap;
 	}

@@ -13,7 +13,7 @@
 						<label class="topjui-form-label">设备站点代码</label>
 						<div class="topjui-input-block">
 							<input type="text" name="code" data-toggle="topjui-textbox"
-								data-options="required:true" id="code" readonly="readonly">
+								data-options="required:true" id="code">
 						</div>
 					</div>
 				</div>

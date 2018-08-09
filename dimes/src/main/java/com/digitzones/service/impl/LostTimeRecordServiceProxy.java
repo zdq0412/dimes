@@ -140,4 +140,14 @@ public class LostTimeRecordServiceProxy implements ILostTimeRecordService {
 		
 		lostTimeRecordService.deleteLostTimeRecord(lostTimeRecord);
 	}
+
+	@Override
+	public Integer queryLostTimeFromBeginOfMonthUntilTheDate(Date date, Boolean halt) {
+		return lostTimeRecordService.queryLostTimeFromBeginOfMonthUntilTheDate(date, halt);
+	}
+
+	@Override
+	public Long queryLostTime4TheDate(Date date) {
+		return lostTimeRecordService.queryLostTime4TheDate(date);
+	}
 }

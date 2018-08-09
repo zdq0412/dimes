@@ -152,9 +152,9 @@ public class DepartmentController {
 	public ModelMap queryDepartmentsByParentId(@RequestParam(value="pid",required=false)Long pid,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
 		Pager<Object[]> pager = null;
 		if(pid==null) {
-			pager = departmentService.queryObjs("from Department d inner join d.parent p ", page, rows, new Object[] {});
+			pager = departmentService.queryObjs("from Department d inner join d.parent p order by d.code", page, rows, new Object[] {});
 		}else {
-			pager = departmentService.queryObjs("from Department d inner join d.parent p  where p.id=?0", page, rows, new Object[] {pid});
+			pager = departmentService.queryObjs("from Department d inner join d.parent p  where p.id=?0 order by d.code", page, rows, new Object[] {pid});
 		}
 
 		Pager<DepartmentVO> pagerDeptVO = new Pager<>();

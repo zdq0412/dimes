@@ -14,6 +14,14 @@ public interface IWorkpieceProcessDeviceSiteMappingDao extends ICommonDao<Workpi
 	 */
 	public Long queryCountByWorkpieceId(Long workpieceId);
 	/**
+	 * 根据工件ID，工序ID和设备站点ID查找加工节拍
+	 * @param workPieceId
+	 * @param processId
+	 * @param deviceSiteId
+	 * @return
+	 */
+	public Float queryProcessingBeat(Long workPieceId,Long processId,Long deviceSiteId);
+	/**
 	 * 根据生产单元id查询该生产单元下的加工节拍
 	 * @param productionUnitId
 	 * @return

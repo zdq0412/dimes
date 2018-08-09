@@ -3,6 +3,7 @@ package com.digitzones.service;
 import java.util.Date;
 import java.util.List;
 
+import com.digitzones.model.Classes;
 import com.digitzones.model.ProcessRecord;
 /**
  * 加工信息service
@@ -94,4 +95,17 @@ public interface IProcessRecordService extends ICommonService<ProcessRecord> {
 	 * @return
 	 */
 	public Integer queryCountByClassesIdAndDay(Long classesId,Date day,Long productionUnitId);
+	/**
+	 * 查询当前班次下的给定设备站点的加工数量、总标准节拍、总短停机时间
+	 * @param c
+	 * @param deviceSiteId
+	 * @return
+	 */
+	public Object[] queryCountAndSumOfStandardBeatAndSumOfShortHalt4CurrentClass(Classes c,Long deviceSiteId,Date date);
+	/**
+	 * 查询从月初一直到给定时间的加工总数、总标准节拍和总短停机时间
+	 * @param date
+	 * @return 0:生产数量 1:总标准节拍 2:总短停机时间
+	 */
+	public Object[] queryCountAndSumOfStandardBeatAndSumOfShortHaltFromBeginOfMonthUntilTheDate(Date date);
 }

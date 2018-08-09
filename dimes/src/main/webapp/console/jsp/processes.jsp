@@ -460,7 +460,6 @@
            			if(code==null || ''===$.trim(code)){
            				return false;
            			}
-           			
            			var name = $('#name').val();
            			if(name==null || ''===$.trim(name)){
            				return false;

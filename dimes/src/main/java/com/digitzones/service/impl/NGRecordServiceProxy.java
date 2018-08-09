@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.digitzones.constants.Constant;
+import com.digitzones.model.Classes;
 import com.digitzones.model.NGRecord;
 import com.digitzones.model.Pager;
 import com.digitzones.model.User;
@@ -141,5 +142,20 @@ public class NGRecordServiceProxy implements INGRecordService {
 		//启动流程
 		runtimeService.startProcessInstanceByKey((String)args.get("businessKey"),""+id, variables);
 		return id;
+	}
+
+	@Override
+	public Integer queryNgCount4Class(Classes classes, Long deviceSiteId,Date date) {
+		return ngRecordService.queryNgCount4Class(classes, deviceSiteId,date);
+	}
+
+	@Override
+	public Integer queryNgCountFromBeginOfMonthUntilTheDate(Date date) {
+		return ngRecordService.queryNgCountFromBeginOfMonthUntilTheDate(date);
+	}
+
+	@Override
+	public Long queryNgCount4TheDate(Date date) {
+		return ngRecordService.queryNgCount4TheDate(date);
 	}
 }

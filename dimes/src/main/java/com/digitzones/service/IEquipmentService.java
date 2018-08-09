@@ -29,4 +29,10 @@ public interface IEquipmentService extends ICommonService<Equipment> {
 	 * @return
 	 */
 	public Serializable addEquipment(Equipment equipment,File pic);
+	/**
+	 * 更新装备
+	 * @param equipment
+	 * @param pic
+	 */
+	public void updateEquipment(Equipment equipment,File pic);
 }

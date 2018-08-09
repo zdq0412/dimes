@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.digitzones.constants.Constant;
 import com.digitzones.dao.IProcessRecordDao;
+import com.digitzones.model.Classes;
 import com.digitzones.model.ProcessRecord;
 @Repository
 public class ProcessRecordDaoImpl extends CommonDaoImpl<ProcessRecord> implements IProcessRecordDao {
@@ -191,7 +192,7 @@ public class ProcessRecordDaoImpl extends CommonDaoImpl<ProcessRecord> implement
 		String sql = "select COUNT(pr.id) from PROCESSRECORD pr inner join DEVICESITE site on pr.deviceSiteId=site.id"
 				+ " inner join Device d on site.device_id = d.id "
 				+ " where year(pr.collectionDate)=?0 and month(pr.collectionDate)=?1"
-				+ " and day(pr.collectionDate)=?2 and pr.classesId=?3 and d.production_id=?4";
+				+ " and day(pr.collectionDate)=?2 and pr.classesId=?3 and d.productionunit_id=?4";
 		
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH)+1;
@@ -296,5 +297,52 @@ public class ProcessRecordDaoImpl extends CommonDaoImpl<ProcessRecord> implement
 			return (Integer) list.get(0);
 		}
 		return 0;
+	}
+	@SuppressWarnings({ "deprecation"})
+	@Override
+	public Object[] queryCountAndSumOfStandardBeatAndSumOfShortHalt4CurrentClass(Classes classes, Long deviceSiteId,Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.set(Calendar.HOUR, 0);
+		c.set(Calendar.MINUTE,0);
+
+		Date begin = c.getTime();
+		c.set(Calendar.HOUR, 23);
+		c.set(Calendar.MINUTE,59);
+		Date end = c.getTime();
+
+		String sql = "select count(pr.id) _count,sum(pr.standardBeat) sumStandardBeat,sum(pr.realBeat-pr.standardBeat) from ProcessRecord pr  inner join Classes c on pr.classesid=c.id where "
+				+ " pr.deviceSiteId=?0 and c.id=?1  and (pr.collectionDate between ?2 and ?3 ) and " + 
+				" (c.beginTime<c.endTime and CONVERT(varchar(100),pr.collectionDate,108) >= CONVERT(varchar(100),c.beginTime,108) and CONVERT(varchar(100),pr.collectionDate,108)<=CONVERT(varchar(100),c.endTime,108)) or ((c.beginTime>c.endTime ) " + 
+				" and ((CONVERT(varchar(100),pr.collectionDate,108) >= CONVERT(varchar(100),c.beginTime,108) and CONVERT(varchar(100),pr.collectionDate,108)<='23:59')) or "
+				+ " (CONVERT(varchar(100),pr.collectionDate,108) >= '00:00' and CONVERT(varchar(100),pr.collectionDate,108)<=CONVERT(varchar(100),c.endTime,108))) "; 
+		Object[] list = (Object[]) getSession().createSQLQuery(sql)
+				.setParameter(0, deviceSiteId)
+				.setParameter(1,classes.getId())
+				.setParameter(2, begin)
+				.setParameter(3,end)
+				.uniqueResult();
+		
+		return list;
+	}
+	@SuppressWarnings("deprecation")
+	@Override
+	public Object[] queryCountAndSumOfStandardBeatAndSumOfShortHaltFromBeginOfMonthUntilTheDate(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.set(Calendar.DATE, 1);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE,0);
+		c.set(Calendar.SECOND, 0);
+		
+		Date beginOfMonth = c.getTime();
+		String sql = "select count(pr.id) _count,sum(pr.standardBeat) sumStandardBeat,sum(pr.realBeat-pr.standardBeat) "
+				+ " from ProcessRecord pr  where  pr.collectionDate between ?0 and ?1 "; 
+		Object[] list = (Object[]) getSession().createSQLQuery(sql)
+												.setParameter(0, beginOfMonth)
+												.setParameter(1, date)
+												.uniqueResult();
+		
+		return list;
 	}
 }

@@ -32,6 +32,7 @@ import com.digitzones.service.IDeviceSiteService;
 import com.digitzones.service.IProcessRecordService;
 import com.digitzones.service.IWorkSheetDetailService;
 import com.digitzones.service.IWorkSheetService;
+import com.digitzones.service.IWorkpieceProcessDeviceSiteMappingService;
 import com.digitzones.service.IWorkpieceService;
 @Controller
 @RequestMapping("/processRecord")
@@ -42,6 +43,12 @@ public class ProcessRecordController {
 	private IWorkSheetDetailService workSheetDetailService;
 	private IClassesService classService;
 	private IWorkpieceService workpieceService;
+	private IWorkpieceProcessDeviceSiteMappingService workpieceProcessDeviceSiteMappingService;
+	@Autowired
+	public void setWorkpieceProcessDeviceSiteMappingService(
+			IWorkpieceProcessDeviceSiteMappingService workpieceProcessDeviceSiteMappingService) {
+		this.workpieceProcessDeviceSiteMappingService = workpieceProcessDeviceSiteMappingService;
+	}
 	@Autowired
 	public void setWorkpieceService(IWorkpieceService workpieceService) {
 		this.workpieceService = workpieceService;
@@ -130,6 +137,9 @@ public class ProcessRecordController {
 					processRecord.setWorkPieceId(workpiece.getId());
 				}
 			}
+			//查找标准节拍
+			Float processingBeat = workpieceProcessDeviceSiteMappingService.queryProcessingBeat(processRecord.getWorkPieceId(), processRecord.getProcessId(), processRecord.getDeviceSiteId());
+			processRecord.setStandardBeat(processingBeat);
 			processRecordService.addObj(processRecord);
 			modelMap.addAttribute("success", true);
 			modelMap.addAttribute("msg", "添加成功!");
@@ -167,9 +177,10 @@ public class ProcessRecordController {
 			pr.setProcessId(processRecord.getProcessId());
 			pr.setStoveNumber(processRecord.getStoveNumber());
 			pr.setStatus(processRecord.getStatus());
+			pr.setRealBeat(processRecord.getRealBeat());
 			processRecordService.updateObj(processRecord);
 			modelMap.addAttribute("success", true);
-			modelMap.addAttribute("msg", "添加成功!");
+			modelMap.addAttribute("msg", "更新成功!");
 		}
 		return modelMap;
 	}

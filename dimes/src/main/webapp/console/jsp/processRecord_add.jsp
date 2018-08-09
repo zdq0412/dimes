@@ -74,7 +74,7 @@
 						<label class="topjui-form-label">工件代码</label>
 						<div class="topjui-input-block">
 							<input type="text" name="workPieceCode" data-toggle="topjui-textbox"
-								data-options="required:false" id="workPieceCode">
+								data-options="required:true" id="workPieceCode">
 						</div>
 					</div>
 				</div>
@@ -119,7 +119,7 @@
 						<label class="topjui-form-label">工序代码</label>
 						<div class="topjui-input-block">
 								<input id="processCode" data-toggle="topjui-combobox" name="processCode" 
-								data-options="valueField:'processCode',textField:'processCode',
+								data-options="required:true,valueField:'processCode',textField:'processCode',
 								onSelect:function(rec){
 									$('#processName').textbox('setValue',rec.processName);
 									$('#processId').val(rec.processId);
@@ -143,6 +143,15 @@
 						<div class="topjui-input-block">
 							<input type="text" name="batchNumber" data-toggle="topjui-textbox"
 								data-options="required:false" id="batchNumber">
+						</div>
+					</div>
+				</div>
+				<div class="topjui-row">
+					<div class="topjui-col-sm12">
+						<label class="topjui-form-label">即时节拍</label>
+						<div class="topjui-input-block">
+							<input type="number" name="realBeat" data-toggle="topjui-textbox"
+								data-options="required:false" id="realBeat">
 						</div>
 					</div>
 				</div>

@@ -14,7 +14,7 @@
 								<input id="deviceId" data-toggle="topjui-combobox" name="deviceId" 
 								data-options="valueField:'id',textField:'name',
 								url:'deviceSite/queryAllDeviceSitesByDeviceId.do?deviceId={parentDeviceId}',required:true">
-								<input type="hidden" name="parentDeviceId">
+								<input type="hidden" name="parentDeviceId" >
 						</div>
 					</div>
 				</div>

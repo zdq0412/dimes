@@ -86,7 +86,22 @@ public class ProcessRecord {
 	private Boolean deleted = false;
 	/**加工状态,NG,OK*/
 	private String status;
-	
+	/**即时节拍*/
+	private float realBeat;
+	/**标准节拍*/
+	private float standardBeat;
+	public float getStandardBeat() {
+		return standardBeat;
+	}
+	public void setStandardBeat(float standardBeat) {
+		this.standardBeat = standardBeat;
+	}
+	public float getRealBeat() {
+		return realBeat;
+	}
+	public void setRealBeat(float realBeat) {
+		this.realBeat = realBeat;
+	}
 	public Long getWorkSheetId() {
 		return workSheetId;
 	}

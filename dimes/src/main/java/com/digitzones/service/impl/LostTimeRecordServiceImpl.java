@@ -117,4 +117,14 @@ public class LostTimeRecordServiceImpl implements ILostTimeRecordService {
 		lostTimeRecord.setDeleted(true);
 		this.updateObj(lostTimeRecord);
 	}
+
+	@Override
+	public Integer queryLostTimeFromBeginOfMonthUntilTheDate(Date date, Boolean halt) {
+		return lostTimeRecordDao.queryLostTimeFromBeginOfMonthUntilTheDate(date, halt);
+	}
+
+	@Override
+	public Long queryLostTime4TheDate(Date date) {
+		return lostTimeRecordDao.queryLostTime4TheDate(date);
+	}
 }

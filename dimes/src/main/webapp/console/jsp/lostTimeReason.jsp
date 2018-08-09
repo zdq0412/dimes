@@ -129,6 +129,14 @@
         valueField: 'id',
         textField: 'name',
         url: 'productionUnit/queryAllProductionUnits.do',
+        onLoadSuccess: function () { //加载完成后,val[0]写死设置选中第一项
+                var val = $(this).combobox('getData');
+                for (var item in val[0]) {
+                    if (item == 'id') {
+                        $(this).combobox('select', val[0][item]);
+                    }
+                }
+            },
         onSelect: function(rec){
         	requestLostTime(rec.id);
         }">

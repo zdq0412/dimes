@@ -72,4 +72,19 @@ public class DeviceServiceImpl implements IDeviceService {
 	public Serializable addDevice(Device device, File file) {
 		return this.deviceDao.addDevice(device, file);
 	}
+
+	@Override
+	public Integer queryDeviceSiteCountByDeviceId(Long deviceId) {
+		return deviceDao.queryDeviceSiteCountByDeviceId(deviceId);
+	}
+
+	@Override
+	public Integer queryClassesCountByDeviceId(Long deviceId) {
+		return deviceDao.queryClassesCountByDeviceId(deviceId);
+	}
+
+	@Override
+	public void updateDevice(Device device, File photo) {
+		deviceDao.updateDevice(device, photo);
+	}
 }

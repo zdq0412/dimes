@@ -112,6 +112,16 @@ public class ClassesController {
 		}
 		return modelMap;
 	}
+	
+	/**
+	 * 查找所有班次类别
+	 * @return
+	 */
+	@RequestMapping("/queryAllClassTypes.do")
+	@ResponseBody
+	public List<ClassType> queryAllClassTypes(){
+		return classesTypeService.queryAllClassTypes();
+	}
 	/**
 	 * 根据id查询班次信息
 	 * @param id
@@ -225,8 +235,9 @@ public class ClassesController {
 	@RequestMapping("/queryDevicesByClassesId.do")
 	@ResponseBody
 	public ModelMap queryDevicesByClassesId(Long classesId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
-		String hql = "select ds from DeviceSite ds left join ds.device d inner join d.classesDevice cd inner join cd.classes c  where c.id=?0";
-		Pager<DeviceSite> pager = classesService.queryObjs(hql, page, rows, new Object[] {classesId});
+		String hql = "select ds from DeviceSite ds right join ds.device d inner join d.classesDevice cd inner join cd.classes c  where c.id=?0"
+				+ " and d.disabled=?1";
+		Pager<DeviceSite> pager = classesService.queryObjs(hql, page, rows, new Object[] {classesId,false});
 		ModelMap modelMap = new ModelMap();
 		modelMap.addAttribute("total", pager.getTotalCount());
 		modelMap.addAttribute("rows", pager.getData());

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ include file="../../common/jsp/head.jsp" %>
+    <% User user = (User)session.getAttribute("loginUser"); %>
      <script type="text/javascript" src="console/js/static/public/js/topjui.index.js" charset="utf-8"></script>
     <title>DIMES</title>
 </head>
@@ -28,56 +29,13 @@
          style="height: 50px; padding:0;margin:0; overflow: hidden;">
         <table style="float:left;border-spacing:0px;">
             <tr>
-                <td class="webname">
-                    <span class="fa fa-envira" style="font-size:26px; padding-right:8px;"></span>TopJUI前端框架
-                </td>
+                <td class="webname"><span class="fa fa-qrcode" style="font-size:26px; padding-right:8px;"></span>迪筑工业技术</td>
+
                 <td class="collapseMenu" style="text-align: center;cursor: pointer;">
                     <span class="fa fa-chevron-circle-left" style="font-size: 18px;"></span>
                 </td>
                 <td>
                     <table id="topmenucontent" cellpadding="0" cellspacing="0">
-                    <!-- <tr>
-                        <td id="1325" title="TopJUI静态演示" class="topmenu selected systemName">
-                            <a class="l-btn-text bannerMenu" href="javascript:void(0)">
-                                <p>
-                                    <lable class="fa fa-tree"></lable>
-                                </p>
-                                <p><span style="white-space:nowrap;">TopJUI静态演示</span></p>
-                            </a>
-                        </td>
-                        <td id="60" title="TopJUI开发文档" class="topmenu systemName">
-                            <a class="l-btn-text bannerMenu" href="javascript:void(0)">
-                                <p>
-                                    <lable class="fa fa-book"></lable>
-                                </p>
-                                <p><span style="white-space:nowrap;">TopJUI开发文档</span></p>
-                            </a>
-                        </td>
-                        <td id="9000" title="TopJUI动态演示" class="topmenu systemName">
-                            <a class="l-btn-text bannerMenu" href="http://demo.ewsd.cn/login" target="_blank">
-                                <p>
-                                    <lable class="fa fa-leaf"></lable>
-                                </p>
-                                <p><span style="white-space:nowrap;">TopJUI动态演示</span></p>
-                            </a>
-                        </td>
-                        <td id="9001" title="TopJUI官方网站" class="topmenu systemName">
-                            <a class="l-btn-text bannerMenu" href="https://www.topjui.com" target="_blank">
-                                <p>
-                                    <lable class="fa fa-home"></lable>
-                                </p>
-                                <p><span style="white-space:nowrap;">TopJUI官方网站</span></p>
-                            </a>
-                        </td>
-                        <td id="9002" title="TopJUI交流社区" class="topmenu systemName">
-                            <a class="l-btn-text bannerMenu" href="https://ask.topjui.com" target="_blank">
-                                <p>
-                                    <lable class="fa  fa-wechat"></lable>
-                                </p>
-                                <p><span style="white-space:nowrap;">TopJUI交流社区</span></p>
-                            </a>
-                        </td>
-                        </tr> -->
                     </table>
                 </td>
             </tr>
@@ -85,7 +43,9 @@
         <span style="float: right; padding-right: 10px; height: 50px; line-height: 50px;">
             <a href="javascript:void(0)" data-toggle="topjui-menubutton"
                data-options="iconCls:'fa fa-user',hasDownArrow:false"
-               style="color:#fff;">TopJUI前端框架</a>|
+               style="color:#fff;"><% if(user!=null) {%>
+               		<%=user.getUsername() %>
+               <%} %></a>|
             <a href="javascript:void(0)" id="mb3" data-toggle="topjui-menubutton"
                data-options="menu:'#mm3',iconCls:'fa fa-cog',hasDownArrow:true" style="color:#fff;">设置</a>
             <div id="mm3" style="width:74px;">
@@ -131,20 +91,20 @@
 
     <div id="center" data-options="region:'center',border:false" style="overflow:hidden;">
         <div id="index_tabs" style="width:100%;height:100%">
-            <div title="系统首页" iconCls="fa fa-home" data-options="border:true,iframe:true,
-            content:'<iframe src=\'console/js/html/portal/index.html\' scrolling=\'auto\' frameborder=\'0\' style=\'width:100%;height:100%;\'></iframe>'"></div>
+            <div title="工作区" iconCls="fa fa-home" data-options="border:true,iframe:true,
+            content:'<iframe src=\'console/js/html/portal/index.jsp\' scrolling=\'auto\' frameborder=\'0\' style=\'width:100%;height:100%;\'></iframe>'"></div>
         </div>
     </div>
 
     <div data-options="region:'south',border:true"
          style="text-align:center;height:30px;line-height:30px;border-bottom:0;overflow:hidden;">
-        <span style="float:left;padding-left:5px;width:30%;text-align: left;">当前用户：TopJUI前端框架</span>
+        <span style="float:left;padding-left:5px;width:30%;text-align: left;">当前用户：<% if(user!=null) {%>
+               		<%=user.getUsername() %>
+               <%} %></span>
         <span style="padding-right:5px;width:40%">
-            版权所有 © 2014-2017
-            <a href="https://www.ewsd.cn" target="_blank">深圳易网时代信息技术有限公司</a>
-            <a href="http://www.miitbeian.gov.cn" target="_blank">粤ICP备16028103号-1</a>
+            版权所有 ©2015-2035 嘉兴市迪筑工业技术有限公司  
         </span>
-        <span style="float:right;padding-right:5px;width:30%;text-align: right;">版本：<script>document.write(topJUI.version)</script></span>
+        <span style="float:right;padding-right:5px;width:30%;text-align: right;">版本：V2.1.0</span>
     </div>
 </div>
 

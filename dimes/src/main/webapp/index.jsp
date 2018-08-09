@@ -44,11 +44,17 @@
     	//提交登录表单
     	function login(){
     		$('#loginForm').form({
+    		   // url:'j_spring_security_check',
     		    url:'user/login.do',
     		    onSubmit: function(){
     		    },
     		    success:function(data){
-    		    	window.location.href="console/jsp/console.jsp";
+    		    	data = $.parseJSON(data);
+    		    	if(data.success){
+	    		    	window.location.href="console/jsp/console.jsp";
+    		    	}else{
+	    		    	window.location.href="index.jsp";
+    		    	}
     		    }
     		});
     		$('#loginForm').submit();
@@ -225,7 +231,7 @@
     </div>
     <div id="id01" class="modal">
 
-        <form class="modal-content animate" id="loginForm">
+        <form class="modal-content animate" id="loginForm" method="post">
             <div class="imgcontainer">
                 <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
                 <img src="front/imgs/img_avatar.png" alt="Avatar" class="avatar">

@@ -116,12 +116,12 @@
        }">
 		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
 			onclick="openDeployDialog()">部署流程</a> 
-		<a href="javascript:void(0)" data-toggle="topjui-menubutton"
+		<!-- <a href="javascript:void(0)" data-toggle="topjui-menubutton"
 			data-options="method:'doAjax',
        extend: '#departmentDg-toolbar',
        iconCls:'fa fa-trash',
        url:'workflow/deleteProcessDeployment.do',
-       grid: {uncheckedMsg:'请先勾选要删除的数据',id:'departmentDg',param:'deploymentId:deploymentId'}">删除</a>
+       grid: {uncheckedMsg:'请先勾选要删除的数据',id:'departmentDg',param:'deploymentId:deploymentId'}">删除</a> -->
 	</div>
 	<!-- 部门表格工具栏结束 -->
 	

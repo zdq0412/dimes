@@ -43,7 +43,7 @@ public class UserController {
 	@SuppressWarnings("unchecked")
 	public ModelMap queryUsers(@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
 		ModelMap modelMap = new ModelMap();
-		Pager<User> pager = userService.queryObjs("from User u", page, rows, new Object[] {});
+		Pager<User> pager = userService.queryObjs("from User u order by createDate", page, rows, new Object[] {});
 		modelMap.addAttribute("total",pager.getTotalCount());
 		modelMap.addAttribute("rows", pager.getData());
 		return modelMap;
@@ -170,16 +170,18 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("/login.do")
-	public String login(User user,HttpServletRequest request) {
+	@ResponseBody
+	public ModelMap login(User user,HttpServletRequest request) {
+		ModelMap modelMap = new ModelMap();
 		HttpSession session = request.getSession();
 		User u = userService.login(user.getUsername(), new PasswordEncoder(user.getUsername()).encode(user.getPassword()));
-		String returnPage = "redirect:/console/jsp/console.jsp";
 		if(u==null) {
-			returnPage = "redirect:/login.jsp";
+			modelMap.addAttribute("success",false);
 		}else {
+			modelMap.addAttribute("success",true);
 			session.setAttribute(Constant.User.LOGIN_USER, u);
 		}
-		return returnPage;
+		return modelMap;
 	}
 	/**
 	 * 查询非当前的所有用户

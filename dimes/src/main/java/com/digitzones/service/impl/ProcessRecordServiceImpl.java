@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.digitzones.dao.IProcessRecordDao;
 import com.digitzones.dao.IWorkSheetDetailDao;
+import com.digitzones.model.Classes;
 import com.digitzones.model.Pager;
 import com.digitzones.model.ProcessRecord;
 import com.digitzones.model.WorkSheetDetail;
@@ -203,5 +204,15 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 		c.setTime(date);
 		Integer result = processRecordDao.queryWorkSheetScrapCountPerMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
 		return result==null?0:result;
+	}
+
+	@Override
+	public Object[] queryCountAndSumOfStandardBeatAndSumOfShortHalt4CurrentClass(Classes c, Long deviceSiteId,Date date) {
+		return processRecordDao.queryCountAndSumOfStandardBeatAndSumOfShortHalt4CurrentClass(c, deviceSiteId,date);
+	}
+
+	@Override
+	public Object[] queryCountAndSumOfStandardBeatAndSumOfShortHaltFromBeginOfMonthUntilTheDate(Date date) {
+		return processRecordDao.queryCountAndSumOfStandardBeatAndSumOfShortHaltFromBeginOfMonthUntilTheDate(date);
 	}
 }

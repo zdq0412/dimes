@@ -1,6 +1,7 @@
 package com.digitzones.service.impl;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class DeviceSiteServiceImpl implements IDeviceSiteService {
 
 	@Override
 	public List<DeviceSite> queryDeviceSitesByProductionUnitId(Long productionUnitId) {
-		String hql = "from DeviceSite ds where ds.device.productionUnit.id=?0";
+		String hql = "select ds from DeviceSite ds inner join ds.device d inner join d.productionUnit p where p.id=?0";
 		return deviceSiteDao.findByHQL(hql, new Object[] {productionUnitId});
 	}
 
@@ -83,5 +84,30 @@ public class DeviceSiteServiceImpl implements IDeviceSiteService {
 	@Override
 	public List<DeviceSite> queryDeviceSitesByClassesId(Long classesId) {
 		return this.deviceSiteDao.queryDeviceSitesByClassesId(classesId);
+	}
+
+	@Override
+	public Integer queryLostTimeCountByDeviceSiteId(Long deviceSiteId) {
+		return deviceSiteDao.queryLostTimeCountByDeviceSiteId(deviceSiteId);
+	}
+
+	@Override
+	public Integer queryPressLightCountByDeviceSiteId(Long deviceSiteId) {
+		return deviceSiteDao.queryPressLightCountByDeviceSiteId(deviceSiteId);
+	}
+
+	@Override
+	public Integer queryProcessDeviceSiteMappingCountByDeviceSiteId(Long deviceSiteId) {
+		return deviceSiteDao.queryProcessDeviceSiteMappingCountByDeviceSiteId(deviceSiteId);
+	}
+
+	@Override
+	public List<BigDecimal> queryDeviceSiteIdsByProductionUnitId(Long productionUnitId) {
+		return deviceSiteDao.queryDeviceSiteIdsByProductionUnitId(productionUnitId);
+	}
+
+	@Override
+	public List<BigDecimal> queryAllDeviceSiteIds() {
+		return deviceSiteDao.queryAllDeviceSiteIds();
 	}
 }

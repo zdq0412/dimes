@@ -26,10 +26,6 @@ public class OeeServiceImpl implements IOeeService {
 		return oeeDao.queryLostTimeByDeviceSiteId(today, deviceSiteId, c);
 	}
 	@Override
-	public List<Object[]> queryNGInfo(Date today, Long deviceSiteId, Classes classes) {
-		return oeeDao.queryNGInfo(today, deviceSiteId, classes);
-	}
-	@Override
 	public List<Object[]> queryNGInfo4CurrentDay(Date today, Long deviceSiteId) {
 		return oeeDao.queryNGInfo4CurrentDay(today, deviceSiteId);
 	}

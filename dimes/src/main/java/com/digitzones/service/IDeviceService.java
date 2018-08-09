@@ -30,5 +30,22 @@ public interface IDeviceService extends ICommonService<Device> {
 	 * @return
 	 */
 	public Serializable addDevice(Device device,File file);
-	
+	/**
+	 * 更新设备
+	 * @param device
+	 * @param photo 设备图片
+	 */
+	public void updateDevice(Device device,File photo);
+	/**
+	 * 查询设备下设备站点的数量
+	 * @param deviceId
+	 * @return
+	 */
+	public Integer queryDeviceSiteCountByDeviceId(Long deviceId);
+	/**
+	 * 根据设备ID查找班次数
+	 * @param deviceId
+	 * @return
+	 */
+	public Integer queryClassesCountByDeviceId(Long deviceId);
 }

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ include file="../../common/jsp/head.jsp" %>
+    <link type="text/css" href="console/js/topjui/css/topjui.timeaxis.css" rel="stylesheet">
     <script>
     	function timeAxis(id){
     		 $.get("workflow/queryWorkflow.do",{businessKey:id},function(data){

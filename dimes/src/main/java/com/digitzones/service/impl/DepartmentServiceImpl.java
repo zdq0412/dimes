@@ -20,12 +20,12 @@ public class DepartmentServiceImpl  implements IDepartmentService {
 
 	@Override
 	public List<Department> queryTopDepartment() {
-		return departmentDao.findByHQL("from Department d where d.parent is null", new Object[] {});
+		return departmentDao.findByHQL("from Department d where d.parent is null order by code", new Object[] {});
 	}
 
 	@Override
 	public List<Department> querySubDepartment(Serializable pid) {
-		return departmentDao.findByHQL("from Department d where d.id = ?0 ", new Object[] {pid});
+		return departmentDao.findByHQL("from Department d where d.id = ?0 order by code", new Object[] {pid});
 	}
 
 	@Override

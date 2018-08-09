@@ -435,11 +435,11 @@ public class LostTimeRecordController {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(c.getEndTime());
 			long totalMinutes = 0;
-			//班次开始时间大于结束时间
+			//班次开始时间小于结束时间
 			if(calendar.get(Calendar.HOUR_OF_DAY)<cal.get(Calendar.HOUR_OF_DAY)) {
 				totalMinutes = cal.get(Calendar.HOUR_OF_DAY)*60+cal.get(Calendar.MINUTE)-calendar.get(Calendar.HOUR_OF_DAY)*60-calendar.get(Calendar.MINUTE);
 			}else {
-				totalMinutes = 24*60+(calendar.get(Calendar.HOUR_OF_DAY)*60+calendar.get(Calendar.MINUTE))-(cal.get(Calendar.HOUR_OF_DAY)*60-cal.get(Calendar.MINUTE));
+				totalMinutes = 24*60+(cal.get(Calendar.HOUR_OF_DAY)*60+cal.get(Calendar.MINUTE))-(calendar.get(Calendar.HOUR_OF_DAY)*60+calendar.get(Calendar.MINUTE));
 			}
 
 			double sumHours = totalMinutes*1.0/60;

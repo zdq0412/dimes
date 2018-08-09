@@ -37,10 +37,6 @@ import com.digitzones.vo.DeviceVO;
 public class DeviceController {
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private QRConfig config ;
-	@Autowired
-	public void setConfig(QRConfig config) {
-		this.config = config;
-	}
 	private QREncoder qrEncoder = new QREncoder();
 	private IDeviceService deviceService;
 	private IProductionUnitService productionUnitService;
@@ -48,7 +44,10 @@ public class DeviceController {
 	public void setProductionUnitService(IProductionUnitService productionUnitService) {
 		this.productionUnitService = productionUnitService;
 	}
-
+	@Autowired
+	public void setConfig(QRConfig config) {
+		this.config = config;
+	}
 	@Autowired
 	public void setDeviceService(IDeviceService deviceService) {
 		this.deviceService = deviceService;
@@ -143,6 +142,14 @@ public class DeviceController {
 			id = id.replace("'", "");
 		}
 		ModelMap modelMap = new ModelMap();
+		//查询该设备是否已排班，排班的设备不允许停用
+		Integer classesCount = deviceService.queryClassesCountByDeviceId(Long.valueOf(id));
+		if(classesCount>0) {
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("message", "该设备已排班，不允许停用!");
+			modelMap.addAttribute("title", "操作提示!");
+			return modelMap;
+		}
 		Device d = deviceService.queryObjById(Long.valueOf(id));
 		d.setDisabled(true);
 
@@ -202,7 +209,7 @@ public class DeviceController {
 			modelMap.addAttribute("success", false);
 			modelMap.addAttribute("msg", "设备编码已被使用");
 		}else {
-			if(device.getPhotoName()!=null) {
+			if(device.getPhotoName()!=null &&!"".equals(device.getPhotoName())) {
 				String dir = request.getServletContext().getRealPath("/");
 				File file = new File(dir,device.getPhotoName());
 				deviceService.addDevice(device,file);
@@ -294,6 +301,7 @@ public class DeviceController {
 		vo.setProductionUnit(device.getProductionUnit());
 		vo.setTrader(device.getTrader());
 		vo.setStatus(device.getStatus());
+		vo.setDisabled(device.getDisabled());
 		return vo;
 	}
 	/**
@@ -303,9 +311,15 @@ public class DeviceController {
 	 */
 	@RequestMapping("/updateDevice.do")
 	@ResponseBody
-	public ModelMap updateDevice(Device device) {
+	public ModelMap updateDevice(Device device,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
-		deviceService.updateObj(device);
+		if(device.getPhotoName()!=null &&!"".equals(device.getPhotoName())) {
+			String dir = request.getServletContext().getRealPath("/");
+			File file = new File(dir,device.getPhotoName());
+			deviceService.updateDevice(device,file);
+		}else {
+			deviceService.updateObj(device);
+		}
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("msg", "编辑成功!");
 		return modelMap;
@@ -323,6 +337,22 @@ public class DeviceController {
 			id = id.replace("'", "");
 		}
 		ModelMap modelMap = new ModelMap();
+
+		Integer count = deviceService.queryDeviceSiteCountByDeviceId(Long.valueOf(id));
+		if(count>0) {
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("message", "该设备下存在站点，不允许删  除!");
+			return modelMap;
+		}
+		//查询该设备是否已排班，排班的设备不允许停用
+		Integer classesCount = deviceService.queryClassesCountByDeviceId(Long.valueOf(id));
+		if(classesCount>0) {
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("message", "该设备已排班，不允许停用!");
+			modelMap.addAttribute("title", "操作提示!");
+			return modelMap;
+		}
 		deviceService.deleteObj(Long.valueOf(id));
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("statusCode", 200);

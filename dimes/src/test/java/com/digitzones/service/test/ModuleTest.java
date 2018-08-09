@@ -96,6 +96,7 @@ public class ModuleTest {
 		Module parent1 = new Module();
 		parent1.setName("运营中心");
 		parent1.setIcon("fa fa-server");
+		parent1.setPriority(1);
 		moduleService.addModule(parent1);
 		
 		
@@ -114,6 +115,7 @@ public class ModuleTest {
 		Module parent2 = new Module();
 		parent2.setName("数字中心");
 		parent2.setIcon("fa fa-bar-chart-o");
+		parent2.setPriority(2);
 		moduleService.addModule(parent2);
 		
 		
@@ -262,7 +264,8 @@ public class ModuleTest {
 		
 		Module parent3 = new Module();
 		parent3.setName("执行数据");
-		parent3.setIcon("fa fa-book");
+		parent3.setIcon("fa fa-object-ungroup");
+		parent3.setPriority(3);
 		moduleService.addModule(parent3);
 		
 
@@ -361,10 +364,48 @@ public class ModuleTest {
 		son104.setLeaf(true);
 		moduleService.addModule(son104);
 		
+		Module parent4_1 = new Module();
+		parent4_1.setName("质量中心");
+		parent4_1.setIcon("fa fa-calendar-check-o");
+		parent4_1.setPriority(4);
+		moduleService.addModule(parent4_1);
+		
+		
+		
+		Module basicSon4_p = new Module();
+		basicSon4_p.setParent(parent4_1);
+		basicSon4_p.setName("追溯管理");
+		moduleService.addModule(basicSon4_p);
+		
+		Module basicSon4_1 = new Module();
+		basicSon4_1.setParent(parent4_1);
+		basicSon4_1.setName("反向追溯");
+		basicSon4_1.setParent(basicSon4_p);
+		basicSon4_1.setLeaf(true);
+		moduleService.addModule(basicSon4_1);
+		
+		Module basicSon4_2 = new Module();
+		basicSon4_2.setParent(parent4_1);
+		basicSon4_2.setName("正向追溯");
+		basicSon4_2.setParent(basicSon4_p);
+		basicSon4_2.setLeaf(true);
+		moduleService.addModule(basicSon4_2);
+		
+		Module basicSon4_3 = new Module();
+		basicSon4_3.setParent(parent4_1);
+		basicSon4_3.setName("参数追溯");
+		basicSon4_3.setParent(basicSon4_p);
+		basicSon4_3.setLeaf(true);
+		moduleService.addModule(basicSon4_3);
+		
+		
+		
+		
 		
 		Module parent4 = new Module();
 		parent4.setName("基础资料");
 		parent4.setIcon("fa fa-bullseye");
+		parent4.setPriority(5);
 		moduleService.addModule(parent4);
 		
 		Module basicSon1 = new Module();
@@ -521,12 +562,13 @@ public class ModuleTest {
 		
 		Module sysSetParent = new Module();
 		sysSetParent.setName("系统设置");
+		sysSetParent.setPriority(6);
 		sysSetParent.setIcon("fa fa-cog");
 		
 		moduleService.addModule(sysSetParent);
-		
 		Module sysSetChild = new Module();
 		sysSetChild.setName("系统设置");
+		
 		sysSetChild.setParent(sysSetParent);
 		moduleService.addModule(sysSetChild);
 		
@@ -784,60 +826,38 @@ public class ModuleTest {
 	}
 	@Test
 	public void add() {
-		/*Role r0 = new Role();
-		r0.setAllowDelete(false);
-		r0.setRoleName("NG审核人");
-		r0.setDisable(false);
-		r0.setNote("不合格品审核人，预设角色，不允许删除和修改!");
-		roleService.addObj(r0);
+		/*Module parent4_1 = new Module();
+		parent4_1.setName("质量中心");
+		parent4_1.setIcon("fa fa-calendar-check-o");
+		parent4_1.setPriority(4);
+		moduleService.addModule(parent4_1);
 		
-		Role r1 = new Role();
-		r1.setAllowDelete(false);
-		r1.setRoleName("NG复核人");
-		r1.setDisable(false);
-		r1.setNote("不合格品复核人，预设角色，不允许删除和修改!");
-		roleService.addObj(r1);
 		
-		Role r2 = new Role();
-		r2.setAllowDelete(false);
-		r2.setRoleName("NG确认人");
-		r2.setDisable(false);
-		r2.setNote("不合格品确认人，预设角色，不允许删除和修改!");
-		roleService.addObj(r2);
 		
-		Role r3 = new Role();
-		r3.setAllowDelete(false);
-		r3.setRoleName("按灯恢复人");
-		r3.setDisable(false);
-		r3.setNote("按灯恢复人，预设角色，不允许删除和修改!");
-		roleService.addObj(r3);
+		Module basicSon4_p = new Module();
+		basicSon4_p.setParent(parent4_1);
+		basicSon4_p.setName("追溯管理");
+		moduleService.addModule(basicSon4_p);
 		
-		Role r4 = new Role();
-		r4.setAllowDelete(false);
-		r4.setRoleName("熄灯人");
-		r4.setDisable(false);
-		r4.setNote("熄灯人，预设角色，不允许删除和修改!");
-		roleService.addObj(r4);
+		Module basicSon4_1 = new Module();
+		basicSon4_1.setParent(parent4_1);
+		basicSon4_1.setName("反向追溯");
+		basicSon4_1.setParent(basicSon4_p);
+		basicSon4_1.setLeaf(true);
+		moduleService.addModule(basicSon4_1);
 		
-		Role r5 = new Role();
-		r5.setAllowDelete(false);
-		r5.setRoleName("熄灯人");
-		r5.setDisable(false);
-		r5.setNote("熄灯人，预设角色，不允许删除和修改!");
-		roleService.addObj(r5);
+		Module basicSon4_2 = new Module();
+		basicSon4_2.setParent(parent4_1);
+		basicSon4_2.setName("正向追溯");
+		basicSon4_2.setParent(basicSon4_p);
+		basicSon4_2.setLeaf(true);
+		moduleService.addModule(basicSon4_2);
 		
-		Role r6 = new Role();
-		r6.setAllowDelete(false);
-		r6.setRoleName("按灯确认人");
-		r6.setDisable(false);
-		r6.setNote("按灯确认人，预设角色，不允许删除和修改!");
-		roleService.addObj(r6);
-		
-		Role r7 = new Role();
-		r7.setAllowDelete(false);
-		r7.setRoleName("损时确认人");
-		r7.setDisable(false);
-		r7.setNote("损时确认人，预设角色，不允许删除和修改!");
-		roleService.addObj(r7);*/
+		Module basicSon4_3 = new Module();
+		basicSon4_3.setParent(parent4_1);
+		basicSon4_3.setName("参数追溯");
+		basicSon4_3.setParent(basicSon4_p);
+		basicSon4_3.setLeaf(true);
+		moduleService.addModule(basicSon4_3);*/
 	}
 }

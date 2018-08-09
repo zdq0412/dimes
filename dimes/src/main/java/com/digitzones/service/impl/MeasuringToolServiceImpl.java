@@ -66,4 +66,9 @@ public class MeasuringToolServiceImpl implements IMeasuringToolService {
 	public Serializable addMeasuringTool(Equipment equipment, File pic) {
 		return equipmentDao.addMeasuringTool(equipment, pic);
 	}
+
+	@Override
+	public void updateMeasuringTool(Equipment equipment, File pic) {
+		equipmentDao.updateMeasuringTool(equipment, pic);
+	}
 }

@@ -86,7 +86,7 @@ public class MeasuringToolController {
 			modelMap.addAttribute("success", false);
 			modelMap.addAttribute("msg", "量具编码已被使用");
 		}else {
-			if(measuringTool.getPicName()!=null) {
+			if(measuringTool.getPicName()!=null &&!"".equals(measuringTool.getPicName())) {
 				String dir = request.getServletContext().getRealPath("/");
 				File file = new File(dir,measuringTool.getPicName());
 				measuringToolService.addMeasuringTool(measuringTool, file);
@@ -137,9 +137,15 @@ public class MeasuringToolController {
 	 */
 	@RequestMapping("/updateEquipment.do")
 	@ResponseBody
-	public ModelMap updateEquipment(Equipment measuringTool) {
+	public ModelMap updateEquipment(Equipment measuringTool,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
-		measuringToolService.updateObj(measuringTool);
+		if(measuringTool.getPicName()!=null &&!"".equals(measuringTool.getPicName())) {
+			String dir = request.getServletContext().getRealPath("/");
+			File file = new File(dir,measuringTool.getPicName());
+			measuringToolService.updateMeasuringTool(measuringTool, file);
+		}else {
+			measuringToolService.updateObj(measuringTool);
+		}
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("msg", "编辑成功!");
 		return modelMap;

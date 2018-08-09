@@ -18,12 +18,6 @@ public interface IOeeService {
 	 */
 	public Integer queryLostTimeByDeviceSiteId(Date today,Long deviceSiteId,Classes c);
 	/**
-	 * 根据工序、工件、站点分组查询NG数 
-	 * @param today
-	 * @return
-	 */
-	public List<Object[]> queryNGInfo(Date today,Long deviceSiteId,Classes classes);
-	/**
 	 * 查询设备站点当天的NG信息
 	 * @param today
 	 * @param deviceSiteId

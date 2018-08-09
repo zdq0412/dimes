@@ -77,15 +77,16 @@
                         }"></th>
                         <th data-options="field:'serialNo',title:'生产序号',sortable:false"></th>
                         <th data-options="field:'no',title:'工单单号',sortable:true"></th>
-                        <th data-options="field:'workPieceCode',title:'工件代码',sortable:true"></th>
-                        <th data-options="field:'workPieceName',title:'工件名称',sortable:true"></th>
-                        <th data-options="field:'unitType',title:'规格型号',sortable:true"></th>
-                        <th data-options="field:'graphNumber',title:'图号',sortable:true"></th>
-                        <th data-options="field:'version',title:'版本号',sortable:true"></th>
-                        <th data-options="field:'processCode',title:'工序代码',sortable:true"></th>
-                        <th data-options="field:'processName',title:'工序名称',sortable:true"></th>
-                        <th data-options="field:'batchNumber',title:'批号',sortable:true"></th>
-                        <th data-options="field:'stoveNumber',title:'炉号',sortable:true"></th>
+                        <th data-options="field:'workPieceCode',title:'工件代码'"></th>
+                        <th data-options="field:'workPieceName',title:'工件名称'"></th>
+                        <th data-options="field:'unitType',title:'规格型号'"></th>
+                        <th data-options="field:'graphNumber',title:'图号'"></th>
+                        <th data-options="field:'version',title:'版本号'"></th>
+                        <th data-options="field:'realBeat',title:'即时节拍'"></th>
+                        <th data-options="field:'processCode',title:'工序代码'"></th>
+                        <th data-options="field:'processName',title:'工序名称'"></th>
+                        <th data-options="field:'batchNumber',title:'批号'"></th>
+                        <th data-options="field:'stoveNumber',title:'炉号'"></th>
                     </tr>
                     </thead>
                 </table>
@@ -235,11 +236,34 @@
            href:'console/jsp/processRecord_add.jsp',
            buttons:[
            	{text:'保存',handler:function(){
+           			var collectionDate = $('#collectionDate').val();
+           			if(!collectionDate){
+           				$.iMessager.alert('提示','请选择生产时间!');
+           				$('#collectionDate').focus();
+           				return false;
+           			}
+           	
            			var serialNo = $('#serialNo').val();
            			if(serialNo==null || ''===$.trim(serialNo)){
+           				$.iMessager.alert('提示','请输入生产序号!');
+           				$('#serialNo').focus();
            				return false;
            			}
            			
+           			
+           			var workPieceCode = $('#workPieceCode').val();
+           			if(!workPieceCode){
+           				$.iMessager.alert('提示','请输入工件代码!');
+           				$('#workPieceCode').focus();
+           				return false;
+           			}
+           			
+           			var processCode = $('#processCode').val();
+           			if(!processCode){
+           				$.iMessager.alert('提示','请输入工序代码!');
+           				$('#processCode').focus();
+           				return false;
+           			}
            			$.get('processRecord/addProcessRecord.do',{
            			collectionDate:$('#collectionDate').val(),
            			serialNo:$('#serialNo').val(),
@@ -258,7 +282,8 @@
            			deviceSiteCode:$('#departmentTg').iTreegrid('getSelected').code,
            			deviceSiteName:$('#departmentTg').iTreegrid('getSelected').name,
            			stoveNumber:$('#stoveNumber').val(),
-           			status:$('#status').val()
+           			status:$('#status').val(),
+           			realBeat:$('#realBeat').val()
            			},function(data){
            				if(data.success){
 	           				$('#departmentAddDialog').iDialog('close');
@@ -289,9 +314,33 @@
                 href: 'console/jsp/processRecord_edit.jsp',
                 url:'processRecord/queryProcessRecordById.do?id={id}',
                  buttons:[
-           	{text:'编辑',handler:function(){
-           		var serialNo = $('#serialNo').val();
+           	{text:'保存',handler:function(){
+           		var collectionDate = $('#collectionDate').val();
+           			if(!collectionDate){
+           				$.iMessager.alert('提示','请选择生产时间!');
+           				$('#collectionDate').focus();
+           				return false;
+           			}
+           	
+           			var serialNo = $('#serialNo').val();
            			if(serialNo==null || ''===$.trim(serialNo)){
+           				$.iMessager.alert('提示','请输入生产序号!');
+           				$('#serialNo').focus();
+           				return false;
+           			}
+           			
+           			
+           			var workPieceCode = $('#workPieceCode').val();
+           			if(!workPieceCode){
+           				$.iMessager.alert('提示','请输入工件代码!');
+           				$('#workPieceCode').focus();
+           				return false;
+           			}
+           			
+           			var processCode = $('#processCode').val();
+           			if(!processCode){
+           				$.iMessager.alert('提示','请输入工序代码!');
+           				$('#processCode').focus();
            				return false;
            			}
            			$.get('processRecord/updateProcessRecord.do',{
@@ -313,7 +362,8 @@
            			deviceSiteCode:$('#departmentDg').iDatagrid('getSelected').deviceSiteCode,
            			deviceSiteName:$('#departmentDg').iDatagrid('getSelected').deviceSiteName,
            			stoveNumber:$('#stoveNumber').val(),
-           			status:$('#status').val()
+           			status:$('#status').val(),
+           			realBeat:$('#realBeat').val()
            			},function(data){
            				if(data.success){
 	           				$('#departmentEditDialog').iDialog('close');

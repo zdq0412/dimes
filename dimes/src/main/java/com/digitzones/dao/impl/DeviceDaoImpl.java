@@ -19,7 +19,7 @@ public class DeviceDaoImpl extends CommonDaoImpl<Device> implements IDeviceDao {
 
 	@Override
 	public Serializable addDevice(Device device, File photo) {
-		if(photo!=null) {
+		if(photo!=null && photo.exists()) {
 			FileInputStream stream = null;
 			try {
 				stream = new FileInputStream(photo);
@@ -27,16 +27,41 @@ public class DeviceDaoImpl extends CommonDaoImpl<Device> implements IDeviceDao {
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e.getMessage());
-			}finally {
-				if(stream!=null) {
-					try {
-						stream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
 			}
 		}
 		return this.save(device);
+	}
+	@Override
+	public void updateDevice(Device device, File photo) {
+		if(photo!=null && photo.exists()) {
+			FileInputStream stream = null;
+			try {
+				stream = new FileInputStream(photo);
+				device.setPhoto(Hibernate.getLobCreator(getSession()).createBlob(stream, stream.available()));
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		this.update(device);
+	}
+	@SuppressWarnings("deprecation")
+	@Override
+	public Integer queryDeviceSiteCountByDeviceId(Long deviceId) {
+		String sql = "select count(ds.id) from deviceSite ds inner join device d on ds.device_id=d.id where d.id=?0";
+		Integer count = (Integer) getSession().createSQLQuery(sql)
+					.setParameter(0, deviceId)
+					.getSingleResult();
+		return count==null?0:count;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Integer queryClassesCountByDeviceId(Long deviceId) {
+		String sql = "select count(id) from CLASSES_DEVICE  where device_id=?0";
+		Integer count = (Integer) getSession().createSQLQuery(sql)
+					.setParameter(0, deviceId)
+					.getSingleResult();
+		return count==null?0:count;
 	}
 }

@@ -35,7 +35,7 @@ public class ModuleServiceImpl implements IModuleService {
 
 	@Override
 	public List<Module> queryTopModule() {
-		return moduleDao.findByHQL("from Module m where m.parent is null", new Object[] {});
+		return moduleDao.findByHQL("from Module m where m.parent is null order by priority asc", new Object[] {});
 	}
 
 	@Override

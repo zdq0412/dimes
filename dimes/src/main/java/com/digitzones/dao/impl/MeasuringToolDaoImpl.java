@@ -19,7 +19,7 @@ public class MeasuringToolDaoImpl extends CommonDaoImpl<Equipment> implements IM
 
 	@Override
 	public Serializable addMeasuringTool(Equipment equipment, File pic) {
-		if(pic!=null) {
+		if(pic!=null && pic.exists()) {
 			FileInputStream input = null;
 			try {
 				input = new FileInputStream(pic);
@@ -27,16 +27,23 @@ public class MeasuringToolDaoImpl extends CommonDaoImpl<Equipment> implements IM
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e.getMessage());
-			}finally {
-				if(input!=null) {
-					try {
-						input.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
 			}
 		}
 		return this.save(equipment);
+	}
+
+	@Override
+	public void updateMeasuringTool(Equipment equipment, File pic) {
+		if(pic!=null && pic.exists()) {
+			FileInputStream input = null;
+			try {
+				input = new FileInputStream(pic);
+				equipment.setPic(Hibernate.getLobCreator(getSession()).createBlob(input, input.available()));
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		this.update(equipment);
 	}
 }

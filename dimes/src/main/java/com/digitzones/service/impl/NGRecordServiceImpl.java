@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.digitzones.constants.Constant;
 import com.digitzones.dao.INGProcessMethodDao;
 import com.digitzones.dao.INGRecordDao;
+import com.digitzones.model.Classes;
 import com.digitzones.model.NGProcessMethod;
 import com.digitzones.model.NGRecord;
 import com.digitzones.model.Pager;
@@ -179,5 +180,20 @@ public class NGRecordServiceImpl implements INGRecordService {
 			record.setInputUsername(user.getUsername());
 		}
 		return this.addObj(record);
+	}
+
+	@Override
+	public Integer queryNgCount4Class(Classes classes, Long deviceSiteId,Date date) {
+		return ngRecordDao.queryNgCount4Class(classes, deviceSiteId, date);
+	}
+
+	@Override
+	public Integer queryNgCountFromBeginOfMonthUntilTheDate(Date date) {
+		return ngRecordDao.queryNgCountFromBeginOfMonthUntilTheDate(date);
+	}
+
+	@Override
+	public Long queryNgCount4TheDate(Date date) {
+		return ngRecordDao.queryNgCount4TheDate(date);
 	}
 }

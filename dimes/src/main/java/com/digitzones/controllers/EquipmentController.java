@@ -84,7 +84,7 @@ public class EquipmentController {
 			modelMap.addAttribute("success", false);
 			modelMap.addAttribute("msg", "装备编码已被使用");
 		}else {
-			if(equipment.getPicName()!=null) {
+			if(equipment.getPicName()!=null &&!"".equals(equipment.getPicName())) {
 				String dir = request.getServletContext().getRealPath("/");
 				File file = new File(dir,equipment.getPicName());
 				equipmentService.addEquipment(equipment, file);
@@ -135,9 +135,16 @@ public class EquipmentController {
 	 */
 	@RequestMapping("/updateEquipment.do")
 	@ResponseBody
-	public ModelMap updateEquipment(Equipment equipment) {
+	public ModelMap updateEquipment(Equipment equipment,HttpServletRequest request) {
 		ModelMap modelMap = new ModelMap();
-		equipmentService.updateObj(equipment);
+		
+		if(equipment.getPicName()!=null &&!"".equals(equipment.getPicName())) {
+			String dir = request.getServletContext().getRealPath("/");
+			File file = new File(dir,equipment.getPicName());
+			equipmentService.updateEquipment(equipment, file);
+		}else {
+			equipmentService.updateObj(equipment);
+		}
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("msg", "编辑成功!");
 		return modelMap;

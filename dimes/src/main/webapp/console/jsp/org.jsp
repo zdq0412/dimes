@@ -49,7 +49,7 @@
 			           childTab: [{id:'southTabs'}]">
                     <thead>
                     <tr>
-                        <th data-options="field:'id',title:'id',checkbox:false,width:'80px'"></th>
+                        <th data-options="field:'id',title:'id',checkbox:false,width:'80px',hidden:true"></th>
                         <th data-options="field:'code',title:'部门代码',width:'180px',align:'center'"></th>
                         <th data-options="field:'name',title:'部门名称',sortable:false"></th>
                         <th data-options="field:'note',title:'备注',sortable:true"></th>
@@ -104,10 +104,10 @@
                             <thead>
                             <tr>
                                 <th data-options="field:'id',title:'id',checkbox:true"></th>
-                                <th data-options="field:'code',title:'岗位代码',sortable:true"></th>
-                                <th data-options="field:'name',title:'岗位名称',sortable:true"></th>
-                                <th data-options="field:'note',title:'备注',sortable:true"></th>
-                                <th data-options="field:'deptCode',title:'部门代码',sortable:true,
+                                <th data-options="field:'code',title:'岗位代码'"></th>
+                                <th data-options="field:'name',title:'岗位名称'"></th>
+                                <th data-options="field:'note',title:'备注'"></th>
+                                <th data-options="field:'deptCode',title:'部门代码',
                                 formatter:function(value,row,index){
                                     if (row.department) {
                                         return row.department.code;
@@ -115,7 +115,7 @@
                                         return '';
                                     }
                                 }"></th>
-                                <th data-options="field:'deptName',title:'部门名称',sortable:true,
+                                <th data-options="field:'deptName',title:'部门名称',
                                 formatter:function(value,row,index){
                                     if (row.department) {
                                         return row.department.name;
@@ -123,7 +123,7 @@
                                         return '';
                                     }
                                 }"></th>
-                                <th data-options="field:'disabled',title:'停用',sortable:true,
+                                <th data-options="field:'disabled',title:'停用',
 		                        formatter:function(value,row,index){
 		                        	if(value){
 		                        		return 'Y';

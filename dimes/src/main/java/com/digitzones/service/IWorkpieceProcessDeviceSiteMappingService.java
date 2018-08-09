@@ -32,6 +32,14 @@ public interface IWorkpieceProcessDeviceSiteMappingService extends ICommonServic
 	 */
 	public Float queryProcessingBeatByProductionUnitId(Long productionUnitId);
 	/**
+	 * 根据工件ID，工序ID和设备站点ID查找加工节拍
+	 * @param workPieceId
+	 * @param processId
+	 * @param deviceSiteId
+	 * @return
+	 */
+	public Float queryProcessingBeat(Long workPieceId,Long processId,Long deviceSiteId);
+	/**
 	 * 根据班次id查询该班次下的加工节拍
 	 * @param classesId
 	 * @return

@@ -134,12 +134,12 @@ data: [{
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">上传图片</label>
 							<div class="topjui-input-block">
-								<input name="pic" data-toggle="topjui-uploadbox"
+								<input name="picName" data-toggle="topjui-uploadbox"
 									data-options="editable:false,
    buttonText:'上传图片',
    accept:'images',
    uploadUrl:'equipment/upload.do'"
-									type="text" id="pic">
+									type="text" id="picName">
 							</div>
 						</div>
 					</div>

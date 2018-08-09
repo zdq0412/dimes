@@ -122,6 +122,7 @@ public class ParameterController {
 		dspm.setUpLine(deviceSiteParameter.getUpLine());
 		dspm.setStandardValue(deviceSiteParameter.getStandardValue());
 		dspm.setNote(deviceSiteParameter.getNote());
+		dspm.setTrueValue(deviceSiteParameter.getTrueValue());
 		deviceSiteParameter.setUpdateDate(new Date());
 		deviceSiteParameterMappingService.updateObj(dspm);
 		modelMap.addAttribute("success", true);

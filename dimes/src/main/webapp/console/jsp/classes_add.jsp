@@ -30,24 +30,33 @@
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">班次类别</label>
 							<div class="topjui-input-block">
-								<input type="text" name="classTypeName"
-									data-toggle="topjui-textbox" data-options="required:true" id="classTypeName">
+								<input id="classTypeName" name="classTypeName"
+									data-toggle="topjui-combobox"
+									data-options="
+							        valueField: 'name',
+							        textField: 'name',
+							        editable:true,
+							        url: 'classes/queryAllClassTypes.do'">
 							</div>
 						</div>
 					</div>
 					<div class="topjui-row">
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">开始时间</label>
-							<div>
-								<input name="startTime" id="startTime" data-toggle="topjui-timespinner" data-options="required:true,width:80,min:'00:00'">
+							<div class="topjui-input-block">
+								<input name="startTime" id="startTime"
+									data-toggle="topjui-timespinner"
+									data-options="required:true,min:'00:00'">
 							</div>
 						</div>
 					</div>
 					<div class="topjui-row">
 						<div class="topjui-col-sm12">
 							<label class="topjui-form-label">结束时间</label>
-							<div>
-								<input name="endTime" id="endTime" data-toggle="topjui-timespinner" data-options="required:true,width:80,min:'00:00'">
+							<div class="topjui-input-block">
+								<input name="endTime" id="endTime"
+									data-toggle="topjui-timespinner"
+									data-options="required:true,min:'00:00'">
 							</div>
 						</div>
 					</div>

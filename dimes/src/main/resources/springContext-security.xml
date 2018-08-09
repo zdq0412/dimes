@@ -17,18 +17,10 @@
         http://www.springframework.org/schema/context/spring-context.xsd
          http://www.springframework.org/schema/security
         http://www.springframework.org/schema/security/spring-security.xsd">
-	<!-- 用户名密码过滤器 -->
-<!-- 	<beans:bean id="authenticationFilter"
-		class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
-		<beans:property name="authenticationManager"
-			ref="authenticationManager"></beans:property>
-		<beans:property name="usernameParameter"
-			value="username"></beans:property>
-		<beans:property name="passwordParameter"
-			value="password"></beans:property>
-	</beans:bean> -->
+        <!-- 用户登录 成功处理器 -->
+	<beans:bean id="loginSuccessHandler" class="com.digitzones.security.LoginSuccessHandler" />
 
-	<http pattern="/login.jsp" security="none" />
+	<http pattern="/index.jsp" security="none" />
 	<http pattern="/**/*.js" security="none" />
 	<http pattern="/**/*.css" security="none" />
 	<http pattern="/**/*.png" security="none" />
@@ -38,12 +30,12 @@
 	<http auto-config="true" use-expressions="true" authentication-manager-ref="authenticationManager">
 		<intercept-url pattern="/console/jsp/console.jsp"
 			access="isAuthenticated()" />
-		<form-login login-page="/login.jsp"
-			username-parameter="username" password-parameter="password" login-processing-url="/user/login.do"/>
+		<form-login login-page="/index.jsp"
+			username-parameter="username" password-parameter="password" 
+			login-processing-url="/j_spring_security_check"
+			authentication-success-handler-ref="loginSuccessHandler"/>
 		<logout />
 		<csrf disabled="true" />
-		<!-- <custom-filter ref="authenticationFilter"
-			before="FORM_LOGIN_FILTER" /> -->
 		<session-management>
 			<concurrency-control max-sessions="1"
 				error-if-maximum-exceeded="false" />
@@ -51,7 +43,6 @@
 	</http>
 	<authentication-manager
 		alias="authenticationManager">
-		
 		<authentication-provider
 			user-service-ref="userInfoService">
 			<password-encoder hash="md5">
@@ -59,5 +50,7 @@
 			</password-encoder>
 		</authentication-provider>
 	</authentication-manager>
+	
+	<!-- <beans:bean id="userInfoService" class="com.digitzones.service.impl.UserInfoService" autowire="byType"/> -->
 </beans:beans>
 

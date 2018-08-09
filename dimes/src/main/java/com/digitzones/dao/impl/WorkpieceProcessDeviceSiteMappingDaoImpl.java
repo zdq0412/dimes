@@ -40,4 +40,15 @@ public class WorkpieceProcessDeviceSiteMappingDaoImpl extends CommonDaoImpl<Work
 		}
 		return 0f;
 	}
+
+	@Override
+	public Float queryProcessingBeat(Long workPieceId, Long processId, Long deviceSiteId) {
+		String hql = "select wpdsm.processingBeat from WorkpieceProcessDeviceSiteMapping wpdsm where wpdsm.workpieceProcess.workpiece.id=?0"
+				+ " and wpdsm.workpieceProcess.process.id=?1 and wpdsm.deviceSite.id=?2" ;
+		return (Float) this.getSession().createQuery(hql)
+								.setParameter(0, workPieceId)
+								.setParameter(1, processId)
+								.setParameter(2, deviceSiteId)
+								.uniqueResult();
+	}
 }

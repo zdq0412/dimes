@@ -1,7 +1,4 @@
 package com.digitzones.controllers;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -13,20 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.digitzones.constants.Constant;
-import com.digitzones.model.Classes;
 import com.digitzones.model.Device;
 import com.digitzones.model.DeviceSite;
-import com.digitzones.model.DeviceSiteParameterMapping;
 import com.digitzones.model.Pager;
 import com.digitzones.model.PressLightRecord;
-import com.digitzones.service.IClassesService;
-import com.digitzones.service.IDeviceSiteParameterMappingService;
 import com.digitzones.service.IDeviceSiteService;
-import com.digitzones.service.ILostTimeRecordService;
-import com.digitzones.service.IOeeService;
 import com.digitzones.service.IPressLightRecordService;
-import com.digitzones.service.IProcessRecordService;
-import com.digitzones.service.IWorkpieceService;
 /**
  * 设备站点管理控制器
  * @author zdq
@@ -37,37 +26,6 @@ import com.digitzones.service.IWorkpieceService;
 public class DeviceSiteController {
 	private IDeviceSiteService deviceSiteService;
 	private IPressLightRecordService pressLightRecordService;
-	private IProcessRecordService processRecordService;
-	private IClassesService classesService;
-	private ILostTimeRecordService lostTimeRecordService;
-	private IDeviceSiteParameterMappingService deviceSiteParameterMappingService;
-	private IOeeService oeeService;
-	@Autowired
-	private IWorkpieceService workpieceService;
-	
-	public void setWorkpieceService(IWorkpieceService workpieceService) {
-		this.workpieceService = workpieceService;
-	}
-	@Autowired
-	public void setOeeService(IOeeService oeeService) {
-		this.oeeService = oeeService;
-	}
-	@Autowired
-	public void setDeviceSiteParameterMappingService(IDeviceSiteParameterMappingService deviceSiteParameterMappingService) {
-		this.deviceSiteParameterMappingService = deviceSiteParameterMappingService;
-	}
-	@Autowired
-	public void setLostTimeRecordService(ILostTimeRecordService lostTimeRecordService) {
-		this.lostTimeRecordService = lostTimeRecordService;
-	}
-	@Autowired
-	public void setClassesService(IClassesService classesService) {
-		this.classesService = classesService;
-	}
-	@Autowired
-	public void setProcessRecordService(IProcessRecordService processRecordService) {
-		this.processRecordService = processRecordService;
-	}
 	@Autowired
 	public void setPressLightRecordService(IPressLightRecordService pressLightRecordService) {
 		this.pressLightRecordService = pressLightRecordService;
@@ -88,11 +46,12 @@ public class DeviceSiteController {
 	@ResponseBody
 	public ModelMap queryDeviceSitesByDeviceId(@RequestParam(value="deviceId",required=false)Long deviceId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
 		Pager<Device> pager = null;
-		if(deviceId==null) {
+		/*if(deviceId==null) {
 			pager = deviceSiteService.queryObjs("select ds from DeviceSite ds inner join ds.device d ", page, rows, new Object[] {});
 		}else {
 			pager = deviceSiteService.queryObjs("select ds from DeviceSite ds inner join ds.device d  where d.id=?0", page, rows, new Object[] {deviceId});
-		}
+		}*/
+		pager = deviceSiteService.queryObjs("select ds from DeviceSite ds inner join ds.device d  where d.id=?0", page, rows, new Object[] {deviceId});
 
 		ModelMap mm = new ModelMap();
 		mm.addAttribute("rows",pager.getData());
@@ -149,6 +108,13 @@ public class DeviceSiteController {
 	@ResponseBody
 	public ModelMap updateDeviceSite(DeviceSite deviceSIte) {
 		ModelMap modelMap = new ModelMap();
+		//查询站点代码是否被使用
+		DeviceSite ds = deviceSiteService.queryByProperty("code", deviceSIte.getCode());
+		if(ds!=null) {
+			modelMap.addAttribute("success", false);
+			modelMap.addAttribute("msg", "站点代码已被使用!");
+			return modelMap;
+		}
 		deviceSiteService.updateObj(deviceSIte);
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("msg", "编辑成功!");
@@ -189,7 +155,34 @@ public class DeviceSiteController {
 			id = id.replace("'", "");
 		}
 		ModelMap modelMap = new ModelMap();
-		deviceSiteService.deleteObj(Long.valueOf(id));
+		
+		Long deviceSiteId = Long.valueOf(id);
+		
+		//查找该设备站点下的损时记录数
+		Integer lostTimeRecordCount = deviceSiteService.queryLostTimeCountByDeviceSiteId(deviceSiteId);
+		if(lostTimeRecordCount>0) {
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("message", "操作失败，该站点存在损时记录！");
+			return modelMap;
+		}
+		//查找该设备站点下的按灯记录数
+		Integer pressLightRecordCount = deviceSiteService.queryPressLightCountByDeviceSiteId(deviceSiteId);
+		if(pressLightRecordCount>0) {
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("message", "操作失败，该设备站点下存在按灯记录!");
+			return modelMap;
+		}
+		//查找该设备站点下的关联的工序数
+		Integer processCount = deviceSiteService.queryProcessDeviceSiteMappingCountByDeviceSiteId(deviceSiteId);
+		if(processCount>0) {
+			modelMap.addAttribute("statusCode", 300);
+			modelMap.addAttribute("title", "操作提示");
+			modelMap.addAttribute("message", "操作失败，该站点存在与之关联的工序！");
+			return modelMap;
+		}
+		deviceSiteService.deleteObj(deviceSiteId);
 		modelMap.addAttribute("success", true);
 		modelMap.addAttribute("statusCode", 200);
 		modelMap.addAttribute("title", "操作提示");
@@ -227,8 +220,8 @@ public class DeviceSiteController {
 	public ModelMap queryOtherDeviceSites(Long processId,@RequestParam(value="rows",defaultValue="20")Integer rows,@RequestParam(defaultValue="1")Integer page) {
 		ModelMap modelMap = new ModelMap();
 		String hql = "select ds from DeviceSite ds where ds.id not in ("
-				+ "select pdm.deviceSite.id from ProcessDeviceSiteMapping pdm where pdm.processes.id=?0 )";
-		Pager<DeviceSite> pager = deviceSiteService.queryObjs(hql, page, rows, new Object[] {processId});
+				+ "select pdm.deviceSite.id from ProcessDeviceSiteMapping pdm where pdm.processes.id=?0 and pdm.deviceSite.disabled=?1)";
+		Pager<DeviceSite> pager = deviceSiteService.queryObjs(hql, page, rows, new Object[] {processId,false});
 		modelMap.addAttribute("total", pager.getTotalCount());
 		modelMap.addAttribute("rows", pager.getData());
 		return modelMap;
@@ -253,118 +246,6 @@ public class DeviceSiteController {
 		modelMap.addAttribute("haltCount", haltCount);
 		modelMap.addAttribute("warnningCount", warnningCount);
 		modelMap.addAttribute("records", records);
-		return modelMap;
-	}
-	/**
-	 * oee算法
-	 * @param c
-	 * @param ds
-	 * @return
-	 */
-	private double queryOee(Classes c , DeviceSite ds,List<Object[]> idList) {
-		Date now = new Date();
-		double oee = 0;
-		//查询损时时间(包括计划停机时间)
-		double lostTime = lostTimeRecordService.queryLostTime(c,ds.getId(),new Date());
-		//查询计划停机时间
-		double planHaltTime = lostTimeRecordService.queryPlanHaltTime(c, ds.getId(),new Date());
-
-		if(idList != null && idList.size()>0) {
-			int sumNgAndProcessingBeat = 0;
-			for(Object[] ids : idList) {
-				Long workpieceId = workpieceService.queryByProperty("code", ids[3]+"").getId();
-				//根据工序,工件，设备站点查找标准节拍
-				Float processingBeat = oeeService.queryProcessingBeatByWorkpieceIdAndProcessIdAndDeviceSiteId(workpieceId, Long.parseLong(ids[2]==null?"0":ids[2]+""), Long.parseLong(ids[0]==null?"0":ids[0]+""));
-				if(processingBeat==null) {
-					processingBeat = 0f;
-				}
-				sumNgAndProcessingBeat+=Long.parseLong(ids[4]==null?"0":ids[4].toString())*processingBeat;
-			}
-			//oee公式:（总加工时间-损时时间-NG件数*标准节拍）/总加工时间 
-			//总加工时间，公式：总加工时间=当前时间-班次的开始时间 -计划停机时间
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(now);
-			int totalMinutes = calendar.get(Calendar.HOUR_OF_DAY)*60 + calendar.get(Calendar.MINUTE);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(c.getStartTime());
-			//查询计划停机时间
-			int classesBeginMinutes = cal.get(Calendar.HOUR_OF_DAY)*60 + cal.get(Calendar.MINUTE);
-			//总加工时间
-			double sumMinutes = totalMinutes - classesBeginMinutes - planHaltTime;
-			if(totalMinutes>classesBeginMinutes) {
-				oee = (sumMinutes-lostTime-sumNgAndProcessingBeat)/sumMinutes;
-				//
-			}else {
-				oee = (24+sumMinutes-lostTime-sumNgAndProcessingBeat)/(24*60+sumMinutes);
-			}
-		}else {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(now);
-			int totalMinutes = calendar.get(Calendar.HOUR_OF_DAY)*60 + calendar.get(Calendar.MINUTE);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(c.getStartTime());
-			int classesBeginMinutes = cal.get(Calendar.HOUR_OF_DAY)*60 + cal.get(Calendar.MINUTE);
-			//总加工时间
-			double sumMinutes = totalMinutes - classesBeginMinutes - planHaltTime;
-			if(totalMinutes>classesBeginMinutes) {
-				oee = (sumMinutes-lostTime)/sumMinutes;
-				//
-			}else {
-				oee = (24+sumMinutes-lostTime)/(24*60+sumMinutes);
-			}
-		}
-		return oee;
-	}
-	/**
-	 * 查询在参数状态页面显示的设备站点
-	 * @return
-	 */
-	@RequestMapping("/queryDeviceSite4ParameterStatusShow.do")
-	@ResponseBody
-	public ModelMap queryDeviceSite4ParameterStatusShow() {
-		DecimalFormat format = new DecimalFormat("#.00");
-
-		ModelMap modelMap = new ModelMap();
-		List<DeviceSite> deviceSites = deviceSiteService.queryDeviceSitesByShow(true);
-		List<String> oees = new ArrayList<>();
-		List<List<DeviceSiteParameterMapping>> list = new ArrayList<>();
-		//良品率
-		List<String> rtys = new ArrayList<>();
-		//查询当前班次
-		Classes c = classesService.queryCurrentClasses();
-		if(c==null) {
-			modelMap.addAttribute("error", "不存在当前班次信息!");
-			return modelMap;
-		}
-		Date now = new Date();
-		//根据设备站点查询加工信息
-		for(DeviceSite ds : deviceSites) {
-			//查询设备站点关联的参数
-			list.add(deviceSiteParameterMappingService.queryByDeviceSiteId(ds.getId()));
-			//根据设备站点id查询当天的加工数量
-			long count = processRecordService.queryCurrentDayCountByDeviceSiteId(ds.getId());
-			//根据设备站点id查询当前NG数量
-			List<Object[]> ids = oeeService.queryNGInfo(now, ds.getId(), c);
-			long sumNgCount = 0;
-			if(ids!=null&&ids.size()>0) {
-				for(Object[] o : ids) {
-					sumNgCount += Long.parseLong(o[4]==null?"0":o[4]+"");
-				}
-			}
-			//合格品数量
-			long notNgCount = count - sumNgCount;
-			if(count == 0) {
-				rtys.add("100");
-			}else {
-				rtys.add(format.format(notNgCount*1.0/count*100));
-			}
-			double oee = queryOee(c, ds, ids);
-			oees.add(format.format(oee*100));
-		}
-		modelMap.addAttribute("deviceSites", deviceSites);
-		modelMap.addAttribute("parameters", list);
-		modelMap.addAttribute("oees", oees);
-		modelMap.addAttribute("rtys", rtys);
 		return modelMap;
 	}
 } 

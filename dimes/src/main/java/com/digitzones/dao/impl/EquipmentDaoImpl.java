@@ -19,7 +19,7 @@ public class EquipmentDaoImpl extends CommonDaoImpl<Equipment> implements IEquip
 
 	@Override
 	public Serializable addEquipment(Equipment equipment, File pic) {
-		if(pic!=null) {
+		if(pic!=null && pic.exists()) {
 			FileInputStream input = null;
 			try {
 				input = new FileInputStream(pic);
@@ -27,16 +27,23 @@ public class EquipmentDaoImpl extends CommonDaoImpl<Equipment> implements IEquip
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e.getMessage());
-			}finally {
-				if(input!=null) {
-					try {
-						input.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
 			}
 		}
 		return this.save(equipment);
+	}
+
+	@Override
+	public void updateEquipment(Equipment equipment, File pic) {
+		if(pic!=null && pic.exists()) {
+			FileInputStream input = null;
+			try {
+				input = new FileInputStream(pic);
+				equipment.setPic(Hibernate.getLobCreator(getSession()).createBlob(input, input.available()));
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		this.update(equipment);
 	}
 }

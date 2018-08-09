@@ -81,4 +81,17 @@ public interface ILostTimeRecordService extends ICommonService<LostTimeRecord> {
 	 * @param lostTimeRecord
 	 */
 	public void deleteLostTimeRecord(LostTimeRecord lostTimeRecord);
+	/**
+	 * 查询从月初到给定时间的总损时(工厂级)
+	 * @param date
+	 * @param halt null:查询所有   true:只查询计划停机   false：只查询非计划停机
+	 * @return
+	 */
+	public Integer queryLostTimeFromBeginOfMonthUntilTheDate(Date date,Boolean halt);
+	/**
+	 * 查询指定日期(年月日)的损时记录数
+	 * @param date
+	 * @return
+	 */
+	public Long queryLostTime4TheDate(Date date);
 }

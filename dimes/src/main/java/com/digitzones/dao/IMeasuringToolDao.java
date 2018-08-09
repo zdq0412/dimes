@@ -17,4 +17,10 @@ public interface IMeasuringToolDao extends ICommonDao<Equipment> {
 	 * @return
 	 */
 	public Serializable addMeasuringTool(Equipment equipment,File pic);
+	/**
+	 * 更新量具	 
+	 * @param equipment
+	 * @param pic
+	 */
+	public void updateMeasuringTool(Equipment equipment,File pic);
 }
